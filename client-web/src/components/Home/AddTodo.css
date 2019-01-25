@@ -1,0 +1,48 @@
+.btn {
+  font-weight: normal;
+  color: dodgerblue;
+  font-size: 16px;
+}
+
+.disabled {
+  font-weight: normal;
+  color: darkgray;
+  font-size: 16px;
+}
+
+.input-box-container {
+  width: 100%;
+  background: white;
+}
+.input-box {
+  border: none;
+  width: 100%;
+  font-size: 16px;
+  height: 80px;
+  resize: none;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.input-box::placeholder {
+  color: #cccccc;
+}
+
+.input-box:focus {
+  outline: none !important;
+}
+
+.camera-container {
+  height: 24px;
+  background-color: white;
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+.tips {
+  margin-left: 16px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #9b9b9b;
+}

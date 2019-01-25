@@ -1,0 +1,64 @@
+import superagentPromise from 'superagent-promise';
+import _superagent from 'superagent';
+import commonStore from './stores/commonStore';
+
+const superagent = superagentPromise(_superagent, global.Promise);
+
+const API_ROOT = '/api';
+
+const encode = encodeURIComponent;
+const responseBody = res => res.body;
+
+const tokenPlugin = req => {
+  let token = commonStore.token;
+  if (token) {
+    req.set('authorization', `Bearer ${token}`);
+  }
+};
+
+const requests = {
+  del: url =>
+    superagent
+      .del(`${API_ROOT}${url}`)
+      .use(tokenPlugin)
+      .then(responseBody),
+  get: url =>
+    superagent
+      .get(`${API_ROOT}${url}`)
+      .use(tokenPlugin)
+      .then(responseBody),
+  put: (url, body) =>
+    superagent
+      .put(`${API_ROOT}${url}`, body)
+      .use(tokenPlugin)
+      .then(responseBody),
+  post: (url, body) =>
+    superagent
+      .post(`${API_ROOT}${url}`, body)
+      .use(tokenPlugin)
+      .then(responseBody)
+};
+
+const Message = {
+  get: () => requests.get('/messages'),
+  delete: id => requests.del(`/messages/${encode(id)}`),
+  update: (id, body) => requests.put(`/messages/${encode(id)}`, { message: { body } }),
+  add: body => requests.post('/messages/', { message: { body } })
+};
+
+const Auth = {
+  current: () => requests.get('/user'),
+  save: user => requests.put('/user', { user }),
+  login: (email, password) => requests.post('/users/login', { user: { email, password } }),
+  register: (email, username, password) => requests.post('/users', { user: { email, username, password } })
+};
+
+const Profile = {
+  get: username => requests.get(`/profiles/${username}`)
+};
+
+export default {
+  Message,
+  Auth,
+  Profile
+};
