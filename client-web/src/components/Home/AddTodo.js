@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { inject, observer } from 'mobx-react';
 import CameraIcon from '@material-ui/icons/CameraAltRounded';
 import './AddTodo.css';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -58,8 +57,6 @@ const styles = theme => ({
   }
 });
 
-@inject('routingStore')
-@observer
 class AddTodo extends Component {
   constructor(props) {
     super(props);
@@ -77,8 +74,7 @@ class AddTodo extends Component {
   validateForm = () => {
     const { content, deadlineAt } = this.state;
     if (!content) return false;
-    if (!deadlineAt) return false;
-    return true
+    return deadlineAt;
   };
 
   handleChangeContent = event => {
@@ -91,7 +87,7 @@ class AddTodo extends Component {
   };
 
   handleBack = () => {
-    this.props.routingStore.goBack();
+    this.props.onClose();
   };
 
   handleCloseDialog = () => {
@@ -105,7 +101,7 @@ class AddTodo extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div style={{ backgroundColor: '#fafafa', flex: 1 }}>
         <div className={classes.header}>
           <div className={classes.headerContainer}>
             <p className="btn" onClick={this.handleBack}>

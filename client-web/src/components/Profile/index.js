@@ -9,6 +9,9 @@ import ArrowRightIcon from '@material-ui/icons/ArrowForwardIos';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { inject, observer } from 'mobx-react';
 import Header from './Header';
+import { Dialog } from '@material-ui/core';
+import Setting from './Setting';
+import Slide from '@material-ui/core/Slide';
 
 const styles = {
   root: {
@@ -38,11 +41,26 @@ const styles = {
   }
 };
 
+function Transition(props) {
+  return <Slide direction="left" {...props} />;
+}
+
 @inject('routingStore')
 @observer
 class Profile extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      settingOpen: false
+    };
+  }
+
   handleSetting = () => {
-    this.props.routingStore.push('/setting');
+    this.setState({ settingOpen: true });
+  };
+
+  handleCloseSetting = () => {
+    this.setState({ settingOpen: false });
   };
 
   render() {
@@ -66,6 +84,15 @@ class Profile extends Component {
             </ListItem>
           </List>
         </div>
+        <Dialog
+          open={this.state.settingOpen}
+          onClose={this.handleCloseSetting}
+          fullScreen
+          transitionDuration={300}
+          TransitionComponent={Transition}
+        >
+          <Setting onClose={this.handleCloseSetting} />
+        </Dialog>
       </div>
     );
   }

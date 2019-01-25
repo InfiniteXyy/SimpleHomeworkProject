@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Typography, withStyles, Checkbox } from '@material-ui/core';
+import { Checkbox, Dialog, Typography, withStyles } from '@material-ui/core';
 import Header from './Header';
 import Badge from '@material-ui/core/Badge';
 import moment from 'moment';
@@ -9,6 +9,8 @@ import AddIcon from '@material-ui/icons/Add';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Fab from '@material-ui/core/Fab';
+import AddTodo from './AddTodo';
+import Slide from '@material-ui/core/Slide';
 
 const styles = theme => ({
   root: {
@@ -89,7 +91,7 @@ const styles = theme => ({
   },
   line: {
     height: 0.75,
-    margin: "0 10px",
+    margin: '0 10px',
     width: '100%',
     background: '#eeeeee'
   },
@@ -100,6 +102,10 @@ const styles = theme => ({
   }
 });
 
+function Transition(props) {
+  return <Slide direction="left" {...props} />;
+}
+
 const lists = [{ id: '1', title: '第一周' }, { id: '2', title: '第二周' }];
 
 @inject('todoListStore', 'routingStore')
@@ -108,7 +114,8 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      menuOpen: false
+      menuOpen: false,
+      addTodoOpen: false
     };
   }
 
@@ -133,7 +140,11 @@ class Home extends Component {
   };
 
   handleAddTodo = () => {
-    this.props.routingStore.push('/todoAdd');
+    this.setState({ addTodoOpen: true });
+  };
+
+  handleCloseAddTodo = () => {
+    this.setState({ addTodoOpen: false });
   };
 
   render() {
@@ -187,7 +198,7 @@ class Home extends Component {
                     <Typography
                       variant="subtitle1"
                       gutterBottom
-                      style={finished ? { textDecoration: 'line-through', color: "#9b9b9b" } : {}}
+                      style={finished ? { textDecoration: 'line-through', color: '#9b9b9b' } : {}}
                     >
                       {content}
                     </Typography>
@@ -225,6 +236,16 @@ class Home extends Component {
         <Fab color="primary" className={classes.fab} onClick={this.handleAddTodo}>
           <AddIcon />
         </Fab>
+
+        <Dialog
+          open={this.state.addTodoOpen}
+          onClose={this.handleCloseAddTodo}
+          fullScreen
+          transitionDuration={300}
+          TransitionComponent={Transition}
+        >
+          <AddTodo onClose={this.handleCloseAddTodo} />
+        </Dialog>
       </div>
     );
   }

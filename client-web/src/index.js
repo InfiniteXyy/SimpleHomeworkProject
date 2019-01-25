@@ -18,12 +18,14 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 import Blue from '@material-ui/core/colors/blue';
 import LightBlue from '@material-ui/core/colors/lightBlue';
+import Yellow from '@material-ui/core/colors/yellow';
 import 'moment/locale/zh-cn';
 
 const theme = createMuiTheme({
   palette: {
     primary: Blue,
-    secondary: LightBlue
+    secondary: LightBlue,
+    action: Yellow
   },
   typography: {
     useNextVariants: true,

@@ -17,7 +17,9 @@ import { ListItemIcon, ListItemSecondaryAction } from '@material-ui/core';
 const styles = theme => ({
   root: {
     paddingTop: 38,
-    width: '100%'
+    width: '100%',
+    backgroundColor: "#fafafa",
+    height: "100%"
   },
   header: {
     width: '100%',
@@ -51,7 +53,7 @@ const styles = theme => ({
 @observer
 class Setting extends Component {
   handleBack = () => {
-    this.props.routingStore.goBack();
+    this.props.onClose();
   };
   render() {
     const { classes } = this.props;
@@ -115,7 +117,7 @@ class Setting extends Component {
           </ListItem>
         </List>
 
-        <Typography variant="overline" style={{marginTop: 10, marginLeft: 16, color: "#bebebe"}}>
+        <Typography variant="overline" style={{ marginTop: 10, marginLeft: 16, color: '#bebebe' }}>
           Version 0.0.1 alpha
         </Typography>
       </div>

@@ -7,8 +7,6 @@ import SignIn from './SignIn';
 import Navigation from './Navigation';
 
 import { withStyles } from '@material-ui/core/styles';
-import Setting from './Profile/Setting';
-import AddTodo from './Home/AddTodo';
 
 const styles = {
   root: {
@@ -27,23 +25,12 @@ class App extends Component {
       <div>
         <div className={classes.root}>
           <Switch>
-            <Route path="/setting" children={<Setting />} />
-            <Route path="/todoAdd" children={<AddTodo />} />
-            <Route
-              path="*"
-              children={
-                <div>
-                  <Switch>
-                    <Route path="/" component={Home} exact />
-                    <Route path="/group" component={Group} />
-                    <Route path="/signIn" component={SignIn} />
-                    <Route path="/profile" component={Profile} />
-                  </Switch>
-                  <Navigation />
-                </div>
-              }
-            />
+            <Route path="/" component={Home} exact />
+            <Route path="/group" component={Group} />
+            <Route path="/signIn" component={SignIn} />
+            <Route path="/profile" component={Profile} />
           </Switch>
+          <Navigation />
         </div>
       </div>
     );
