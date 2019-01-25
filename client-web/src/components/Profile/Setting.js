@@ -13,13 +13,13 @@ import SunIcon from '@material-ui/icons/WbSunnyRounded';
 import ThemeIcon from '@material-ui/icons/ToysRounded';
 import CodeIcon from '@material-ui/icons/CodeRounded';
 import MoreIcon from '@material-ui/icons/MoreRounded';
-import { ListItemIcon, ListItemSecondaryAction } from '@material-ui/core';
+import { ListItemIcon } from '@material-ui/core';
 const styles = theme => ({
   root: {
     paddingTop: 38,
     width: '100%',
-    backgroundColor: "#fafafa",
-    height: "100%"
+    backgroundColor: '#fafafa',
+    height: '100%'
   },
   header: {
     width: '100%',
@@ -49,12 +49,17 @@ const styles = theme => ({
   }
 });
 
-@inject('routingStore')
+@inject('routingStore', 'authStore')
 @observer
 class Setting extends Component {
   handleBack = () => {
     this.props.onClose();
   };
+
+  handleLogout = () => {
+    this.props.authStore.logout();
+  };
+
   render() {
     const { classes } = this.props;
     return (
@@ -120,6 +125,8 @@ class Setting extends Component {
         <Typography variant="overline" style={{ marginTop: 10, marginLeft: 16, color: '#bebebe' }}>
           Version 0.0.1 alpha
         </Typography>
+
+        <div className="logout" onClick={this.handleLogout}>退出当前帐号</div>
       </div>
     );
   }

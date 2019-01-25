@@ -60,7 +60,7 @@ class AuthStore {
   register() {
     this.inProgress = true;
     this.errors = undefined;
-    return agent.Auth.register(this.values.username, this.values.email, this.values.password)
+    return agent.Auth.register(this.values.email, this.values.username, this.values.password)
       .then(({ user }) => commonStore.setToken(user.token))
       .then(() => userStore.pullUser())
       .catch(

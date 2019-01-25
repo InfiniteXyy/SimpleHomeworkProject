@@ -22,6 +22,11 @@ class CommonStore {
   setAppLoaded() {
     this.appLoaded = true;
   }
+
+  @action
+  setToken(token) {
+    this.token = token;
+  }
 }
 
 export default new CommonStore();

@@ -5,8 +5,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import SettingsIcon from '@material-ui/icons/Settings';
-import ArrowRightIcon from '@material-ui/icons/ArrowForwardIos';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { inject, observer } from 'mobx-react';
 import Header from './Header';
 import { Dialog } from '@material-ui/core';
@@ -32,12 +30,18 @@ const styles = {
   },
   list: {
     width: '100%',
-    marginTop: 20
+    marginTop: 20,
+    padding: 0
   },
   listItem: {
+    height: 56,
     background: 'white',
-    borderTop: 'solid 0.5px #eaeaea',
-    borderBottom: 'solid 0.5px #eaeaea'
+    borderTop: 'solid 0.5px #eeeeee',
+    marginTop: 20,
+    borderBottom: 'solid 0.5px #eeeeee'
+  },
+  listText: {
+    fontSize: 16
   }
 };
 
@@ -45,7 +49,7 @@ function Transition(props) {
   return <Slide direction="left" {...props} />;
 }
 
-@inject('routingStore')
+@inject('userStore')
 @observer
 class Profile extends Component {
   constructor(props) {
@@ -63,11 +67,12 @@ class Profile extends Component {
     this.setState({ settingOpen: false });
   };
 
+
   render() {
-    const { classes } = this.props;
+    const { classes, userStore } = this.props;
     return (
       <div>
-        <Header />
+        <Header title={userStore.currentUser.username} />
         <div className={classes.root}>
           <div className={classes.card} />
           <List className={classes.list}>
@@ -75,12 +80,7 @@ class Profile extends Component {
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
-              <ListItemText primary="设置" />
-              <ListItemSecondaryAction style={{ height: 20 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon fontSize="small" />
-                </ListItemIcon>
-              </ListItemSecondaryAction>
+              <ListItemText classes={{ primary: classes.listText }} primary="设置" />
             </ListItem>
           </List>
         </div>

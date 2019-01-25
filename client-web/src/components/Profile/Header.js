@@ -10,7 +10,7 @@ const styles = {
     left: 0,
     position: 'fixed',
     color: '#9a9a9a',
-    backgroundColor: "white",
+    backgroundColor: 'white',
     fontWeight: 'bold',
     height: 48,
     display: 'flex',
@@ -21,11 +21,11 @@ const styles = {
 };
 
 function Header(props) {
-  const { classes } = props;
+  const { classes, title } = props;
 
   return (
     <div className={classes.root}>
-      <Typography variant="h6">InfiniteX</Typography>
+      <Typography variant="h6">{title}</Typography>
     </div>
   );
 }

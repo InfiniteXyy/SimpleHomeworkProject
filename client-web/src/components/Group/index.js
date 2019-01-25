@@ -9,7 +9,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import PeopleIcon from '@material-ui/icons/PeopleRounded';
 import StarIcon from '@material-ui/icons/StarRounded';
-import ArrowRightIcon from '@material-ui/icons/ArrowForwardIos';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
 
@@ -26,7 +25,7 @@ const styles = {
     backgroundColor: 'white',
     zIndex: 100,
     paddingBottom: 16,
-    borderBottom: 'solid 0.75px #aaaaaa'
+    borderBottom: 'solid 0.75px #cccccc'
   },
   header: {
     color: '#9a9a9a',
@@ -60,7 +59,7 @@ const styles = {
   bigList: {
     fontSize: 16,
     fontWeight: '500',
-    color: "#5c5c5c"
+    color: '#5c5c5c'
   },
   listItem: {
     borderTop: 'solid 1px #f1f1f1',
@@ -68,6 +67,9 @@ const styles = {
     height: 60,
     marginTop: 10,
     backgroundColor: 'white'
+  },
+  secondaryText: {
+    color: '#9b9b9b'
   },
   subtitle: {
     marginLeft: 16,
@@ -107,10 +109,8 @@ class Group extends React.Component {
                 <PeopleIcon color="primary" />
               </ListItemIcon>
               <ListItemText classes={{ primary: classes.bigList }} primary="我的群组" />
-              <ListItemSecondaryAction style={{ height: 20 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon fontSize="small" />
-                </ListItemIcon>
+              <ListItemSecondaryAction>
+                <ListItemText classes={{ primary: classes.secondaryText }} primary="2 个" />
               </ListItemSecondaryAction>
             </ListItem>
 
@@ -119,11 +119,6 @@ class Group extends React.Component {
                 <StarIcon color="primary" style={{ color: '#F5A623' }} />
               </ListItemIcon>
               <ListItemText classes={{ primary: classes.bigList }} primary="收藏" />
-              <ListItemSecondaryAction style={{ height: 20 }}>
-                <ListItemIcon>
-                  <ArrowRightIcon fontSize="small" />
-                </ListItemIcon>
-              </ListItemSecondaryAction>
             </ListItem>
           </List>
 

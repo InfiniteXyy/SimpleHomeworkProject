@@ -4,3 +4,10 @@
   color: #9b9b9b;
   margin-bottom: 2px;
 }
+
+.logout {
+  font-size: 14px;
+  color: palevioletred;
+  text-align: center;
+  margin-top: 10px;
+}

@@ -1,0 +1,54 @@
+.preview {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 140px;
+  background-color: white;
+  margin: 16px 0;
+}
+
+.line-container {
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.line-detail {
+  font-size: 12px;
+  color: #9b9b9b;
+  margin-left: 20px;
+}
+
+.line {
+  flex: 4;
+  height: 8px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+}
+
+.line > div {
+  background-color: lightblue;
+  height: 8px;
+  border-radius: 5px;
+  transition: 1s;
+}
+
+.card-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.card-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px;
+}
+.card-btn p {
+  font-size: 12px;
+  color: #757575;
+}

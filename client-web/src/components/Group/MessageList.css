@@ -1,7 +1,7 @@
 .message-container {
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: flex-start;
   border-left: 1px solid white;
   border-right: 1px solid white;
   border-bottom: 1px solid #f1f1f1;
@@ -13,7 +13,6 @@
   width: 32px;
   height: 32px;
   margin-right: 16px;
-
 }
 
 .message-header {
@@ -59,4 +58,9 @@ span > strong {
   font-size: 14px;
 }
 
-
+.empty-list {
+  color: #dddddd;
+  text-align: center;
+  padding: 30px;
+  font-size: 14px;
+}
