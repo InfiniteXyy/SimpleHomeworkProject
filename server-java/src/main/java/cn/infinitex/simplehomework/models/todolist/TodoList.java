@@ -17,4 +17,9 @@ public class TodoList {
   private long id;
   private long userId;
   private String title;
+
+  public TodoList(long userId, String title) {
+    this.userId = userId;
+    this.title = title;
+  }
 }
