@@ -74,7 +74,7 @@ class SignIn extends Component {
     return (
       <div>
         <div className={classes.header}>
-          <Typography variant="h6">{moment().format('M月d日')}</Typography>
+          <Typography variant="h6">{moment().format('M月d日 dddd')}</Typography>
         </div>
         <div className={classes.root}>
           <div className="preview">

@@ -48,9 +48,8 @@ const styles = theme => ({
     marginTop: 16,
     borderBottom: 'solid 1px #f1f1f1'
   },
-  listSecondaryText: {
-    color: '#9b9b9b',
-    fontSize: '123'
+  listItemSecondary: {
+    color: '#9b9b9b'
   },
   dialog: {
     flex: 1
@@ -121,20 +120,20 @@ class AddTodo extends Component {
             />
           </div>
           <div className="camera-container">
-            <CameraIcon color="primary" />
+            <CameraIcon style={{ color: '#9b9b9b' }} />
           </div>
         </div>
         <List className={classes.list}>
           <ListItem button className={classes.listItem} onClick={this.handleSetting}>
             <ListItemText primary="关联群组" />
             <ListItemSecondaryAction>
-              <ListItemText primary="无" />
+              <ListItemText classes={{ primary: classes.listItemSecondary }} primary="无" />
             </ListItemSecondaryAction>
           </ListItem>
           <ListItem button className={classes.listItem} onClick={this.handleSetting}>
             <ListItemText primary="添加到列表" />
             <ListItemSecondaryAction>
-              <ListItemText primary="默认列表" />
+              <ListItemText classes={{ primary: classes.listItemSecondary }} primary="默认列表" />
             </ListItemSecondaryAction>
           </ListItem>
         </List>
@@ -143,6 +142,7 @@ class AddTodo extends Component {
             <ListItemText primary="截止时间" />
             <ListItemSecondaryAction>
               <ListItemText
+                classes={{ primary: classes.listItemSecondary }}
                 primary={
                   this.state.deadlineAt ? moment(this.state.deadlineAt).format('M月D日 周dd H:mm') : '无截止时间'
                 }
@@ -152,7 +152,7 @@ class AddTodo extends Component {
           <ListItem button className={classes.listItem} onClick={this.handleSetting}>
             <ListItemText primary="提醒" />
             <ListItemSecondaryAction>
-              <ListItemText primary="截止前一周" />
+              <ListItemText classes={{ primary: classes.listItemSecondary }} primary="截止前一周" />
             </ListItemSecondaryAction>
           </ListItem>
         </List>

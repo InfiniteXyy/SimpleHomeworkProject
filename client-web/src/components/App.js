@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Router, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import Home from './Home';
 import Group from './Group';
 import Profile from './Profile';
@@ -9,6 +9,7 @@ import Navigation from './Navigation';
 import { withStyles } from '@material-ui/core/styles';
 import Login from './Login';
 import { inject, observer } from 'mobx-react';
+import GroupHomePage from './Group/GroupHomePage';
 
 const styles = {
   root: {
@@ -51,12 +52,19 @@ class App extends Component {
         <div>
           <div className={classes.root}>
             <Switch>
-              <Route path="/" component={Home} exact />
-              <Route path="/group" component={Group} />
-              <Route path="/signIn" component={SignIn} />
-              <Route path="/profile" component={Profile} />
+              <Route path="/group/:id" component={GroupHomePage} exact />
+              <Route path="*">
+                <div>
+                  <Switch>
+                    <Route path="/" component={Home} exact />
+                    <Route path="/group" component={Group} />
+                    <Route path="/signIn" component={SignIn} />
+                    <Route path="/profile" component={Profile} />
+                  </Switch>
+                  <Navigation />
+                </div>
+              </Route>
             </Switch>
-            <Navigation />
           </div>
         </div>
       );

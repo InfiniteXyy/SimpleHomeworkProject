@@ -10,12 +10,15 @@ buildscript {
     }
 }
 
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+}
+
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-
 
 group = 'com.ecnu.testcourse'
 version = '0.0.1-SNAPSHOT'
@@ -38,4 +41,8 @@ dependencies {
     testCompile("org.assertj:assertj-core:3.11.1")
     testCompile 'io.rest-assured:rest-assured:3.2.0'
     testCompile 'io.rest-assured:spring-mock-mvc:3.2.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    apt "org.projectlombok:lombok:1.18.4"
+
 }

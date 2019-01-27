@@ -5,12 +5,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * @author xuyiyang
  */
 @Table(name = "\"user\"")
 @Entity
+@Getter
+@NoArgsConstructor
 public class User {
 
   @Id
@@ -22,39 +26,12 @@ public class User {
   private String password;
   private String image;
 
+
   public User(String email, String username, String password, String image) {
     this.email = email;
     this.username = username;
     this.password = password;
     this.image = image;
-  }
-
-  public User() {
-
-  }
-
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public String getImage() {
-    return image;
   }
 
   public void update(String email, String username, String password, String image) {
@@ -71,4 +48,5 @@ public class User {
       this.image = image;
     }
   }
+
 }

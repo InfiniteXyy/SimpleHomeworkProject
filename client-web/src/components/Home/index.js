@@ -77,7 +77,7 @@ const styles = theme => ({
     alignItems: 'center'
   },
   moreDetail: {
-    minWidth: 80,
+    minWidth: 150,
     textAlign: 'center',
     margin: '10px 20px',
     fontSize: 13,
@@ -223,7 +223,7 @@ class Home extends Component {
           <div className={classes.line} />
 
           <Typography variant="body2" className={classes.moreDetail}>
-            没有更多啦
+            今天也是心情棒棒哒一天
           </Typography>
           <div className={classes.line} />
         </div>

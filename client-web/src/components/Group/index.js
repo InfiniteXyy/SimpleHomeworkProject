@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core';
+import { Dialog, withStyles } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
 import MessageList from './MessageList';
 import Typography from '@material-ui/core/Typography';
@@ -11,6 +11,8 @@ import PeopleIcon from '@material-ui/icons/PeopleRounded';
 import StarIcon from '@material-ui/icons/StarRounded';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
+import GroupList from './GroupList';
+import Slide from '@material-ui/core/Slide';
 
 const styles = {
   root: {
@@ -81,12 +83,30 @@ const styles = {
   }
 };
 
+function Transition(props) {
+  return <Slide direction="left" {...props} />;
+}
+
 @inject('messageStore')
 @observer
 class Group extends React.Component {
   componentDidMount() {
     this.props.messageStore.loadMessages();
   }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      groupListOpen: false
+    };
+  }
+
+  handleCloseGroupList = () => {
+    this.setState({ groupListOpen: false });
+  };
+  handleOpenGroupList = () => {
+    this.setState({ groupListOpen: true });
+  };
 
   render() {
     const { messageStore, classes } = this.props;
@@ -108,7 +128,11 @@ class Group extends React.Component {
               <ListItemIcon>
                 <PeopleIcon color="primary" />
               </ListItemIcon>
-              <ListItemText classes={{ primary: classes.bigList }} primary="我的群组" />
+              <ListItemText
+                classes={{ primary: classes.bigList }}
+                primary="我的群组"
+                onClick={this.handleOpenGroupList}
+              />
               <ListItemSecondaryAction>
                 <ListItemText classes={{ primary: classes.secondaryText }} primary="2 个" />
               </ListItemSecondaryAction>
@@ -118,7 +142,7 @@ class Group extends React.Component {
               <ListItemIcon>
                 <StarIcon color="primary" style={{ color: '#F5A623' }} />
               </ListItemIcon>
-              <ListItemText classes={{ primary: classes.bigList }} primary="收藏" />
+              <ListItemText classes={{ primary: classes.bigList }} primary="创建群组" />
             </ListItem>
           </List>
 
@@ -126,6 +150,16 @@ class Group extends React.Component {
 
           <MessageList messages={messageStore.messages} />
         </div>
+
+        <Dialog
+          open={this.state.groupListOpen}
+          onClose={this.handleCloseGroupList}
+          fullScreen
+          transitionDuration={300}
+          TransitionComponent={Transition}
+        >
+          <GroupList onClose={this.handleCloseGroupList} />
+        </Dialog>
       </div>
     );
   }

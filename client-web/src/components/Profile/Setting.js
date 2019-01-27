@@ -14,6 +14,7 @@ import ThemeIcon from '@material-ui/icons/ToysRounded';
 import CodeIcon from '@material-ui/icons/CodeRounded';
 import MoreIcon from '@material-ui/icons/MoreRounded';
 import { ListItemIcon } from '@material-ui/core';
+
 const styles = theme => ({
   root: {
     paddingTop: 38,
