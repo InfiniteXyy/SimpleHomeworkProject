@@ -1,61 +1,56 @@
 import { action, computed, observable } from 'mobx';
+import agent from '../agent';
 
-let temp = new Date();
-temp.setDate(30);
 export class TodoListStore {
   @observable
-  todos = [
-    {
-      id: '1',
-      content: '作业1',
-      deadlineAt: temp,
-      createdAt: new Date(),
-      createdBy: '计算机网络1班',
-      finished: false,
-      listId: '1'
-    },
-    {
-      id: '2',
-      content: '作业2',
-      deadlineAt: new Date(),
-      createdAt: new Date(),
-      createdBy: '计算机网络2班',
-      finished: false,
-      listId: '1'
-    }
-  ];
+  todoLists = [];
 
-  @observable currentListId = '1';
-  @observable showOnlyFinished = false;
+  @observable
+  currentListId = undefined;
 
-  @computed
-  get todosInList() {
-    const temp = this.todos.filter(i => i.listId === this.currentListId);
-    if (this.showOnlyFinished) {
-      return temp.filter(i => !i.finished);
-    } else {
-      return temp;
-    }
+  @action
+  loadTodos() {
+    return agent.TodoList.get().then(
+      action(({ lists }) => {
+        this.todoLists = lists;
+        if (this.currentListId === undefined) this.currentListId = lists[0].id;
+      })
+    );
   }
 
   @action
-  toggleShowAll(type) {
-    this.showOnlyFinished = !type;
+  addTodoList(title) {
+    agent.TodoList.add(title).then(
+      action(({ list }) => {
+        this.todoLists.push(list);
+      })
+    );
   }
 
+  @action
+  addTodo(listId, content, deadlineAt) {
+    agent.Todo.add(listId, content, deadlineAt).then(
+      action(({ task }) => {
+        this.todoLists.forEach(i => {
+          if (i.id === listId) {
+            i.tasks.push(task);
+          }
+        });
+      })
+    );
+  }
+
+  @computed
+  get currentTasks() {
+    if (!this.currentListId) {
+      return [];
+    } else {
+      return this.todoLists.filter(i => i.id === this.currentListId)[0].tasks;
+    }
+  }
   @action
   toggleList(id) {
     this.currentListId = id;
-  }
-
-  @action
-  toggleTodo(id) {
-    let temp = this.todos.filter(i => i.id === id);
-    if (temp.length < 1) {
-      return null;
-    } else {
-      temp[0].finished = !temp[0].finished;
-    }
   }
 }
 

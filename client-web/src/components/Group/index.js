@@ -12,7 +12,7 @@ import StarIcon from '@material-ui/icons/StarRounded';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
 import GroupList from './GroupList';
-import Slide from '@material-ui/core/Slide';
+import { SlideTransition } from '../utils';
 
 const styles = {
   root: {
@@ -83,10 +83,6 @@ const styles = {
   }
 };
 
-function Transition(props) {
-  return <Slide direction="left" {...props} />;
-}
-
 @inject('messageStore')
 @observer
 class Group extends React.Component {
@@ -156,7 +152,7 @@ class Group extends React.Component {
           onClose={this.handleCloseGroupList}
           fullScreen
           transitionDuration={300}
-          TransitionComponent={Transition}
+          TransitionComponent={SlideTransition}
         >
           <GroupList onClose={this.handleCloseGroupList} />
         </Dialog>

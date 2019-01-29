@@ -53,6 +53,15 @@ const Auth = {
   register: (email, username, password) => requests.post('/users', { user: { email, username, password } })
 };
 
+const TodoList = {
+  get: () => requests.get('/todolist/'),
+  add: title => requests.post('/todolist/', { list: { title: title } })
+};
+
+const Todo = {
+  add: (listId, content, deadlineAt) => requests.post('/todo', { todo: { listId, content, deadlineAt } })
+};
+
 const Profile = {
   get: username => requests.get(`/profiles/${username}`)
 };
@@ -60,5 +69,7 @@ const Profile = {
 export default {
   Message,
   Auth,
-  Profile
+  Profile,
+  TodoList,
+  Todo
 };

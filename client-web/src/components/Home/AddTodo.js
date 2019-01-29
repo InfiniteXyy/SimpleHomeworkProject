@@ -17,6 +17,10 @@ import TextField from '@material-ui/core/TextField';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import { inject, observer } from 'mobx-react';
 
 const styles = theme => ({
   root: {
@@ -50,21 +54,19 @@ const styles = theme => ({
   },
   listItemSecondary: {
     color: '#9b9b9b'
-  },
-  dialog: {
-    flex: 1
   }
 });
 
+@inject('todoListStore')
+@observer
 class AddTodo extends Component {
   constructor(props) {
     super(props);
     this.state = {
       content: '',
-      relatedGroupId: '',
-      belongToList: '',
-      alarmAt: '',
+      noticeAt: '',
       deadlineAt: '',
+      linkListId: '',
       tags: [],
       dialogOpen: false
     };
@@ -85,16 +87,26 @@ class AddTodo extends Component {
     window.temp = this.state.deadlineAt;
   };
 
+  handleChangeList = (event, value) => {
+    this.setState({ linkListId: value });
+  };
+
   handleBack = () => {
     this.props.onClose();
   };
 
-  handleCloseDialog = () => {
-    this.setState({ dialogOpen: false });
+  handleAdd = () => {
+    const { content, deadlineAt, linkListId } = this.state;
+    this.props.todoListStore.addTodo(linkListId, content, deadlineAt);
+    this.handleBack();
   };
 
-  handleOpenDialog = () => {
-    this.setState({ dialogOpen: true });
+  handleCloseDialog = () => {
+    this.setState({ dialogOpen: 0 });
+  };
+
+  handleOpenDialog = id => () => {
+    this.setState({ dialogOpen: id });
   };
 
   render() {
@@ -107,7 +119,9 @@ class AddTodo extends Component {
               取消
             </p>
             <Typography variant="subtitle1">新建任务</Typography>
-            <p className={`${this.validateForm() ? 'btn' : 'disabled'}`}>添加</p>
+            <p onClick={this.handleAdd} className={`${this.validateForm() ? 'btn' : 'disabled'}`}>
+              添加
+            </p>
           </div>
         </div>
         <div className={classes.root}>
@@ -130,15 +144,22 @@ class AddTodo extends Component {
               <ListItemText classes={{ primary: classes.listItemSecondary }} primary="无" />
             </ListItemSecondaryAction>
           </ListItem>
-          <ListItem button className={classes.listItem} onClick={this.handleSetting}>
+          <ListItem button className={classes.listItem} onClick={this.handleOpenDialog(2)}>
             <ListItemText primary="添加到列表" />
             <ListItemSecondaryAction>
-              <ListItemText classes={{ primary: classes.listItemSecondary }} primary="默认列表" />
+              <ListItemText
+                classes={{ primary: classes.listItemSecondary }}
+                primary={
+                  this.state.linkListId
+                    ? this.props.todoListStore.todoLists.filter(i => i.id.toString() === this.state.linkListId)[0].title
+                    : '默认列表'
+                }
+              />
             </ListItemSecondaryAction>
           </ListItem>
         </List>
         <List className={classes.list}>
-          <ListItem button className={classes.listItem} onClick={this.handleOpenDialog}>
+          <ListItem button className={classes.listItem} onClick={this.handleOpenDialog(1)}>
             <ListItemText primary="截止时间" />
             <ListItemSecondaryAction>
               <ListItemText
@@ -167,28 +188,81 @@ class AddTodo extends Component {
           </ListItem>
         </List>
         <p className="tips">只有任务的发起者有权限修改任务备注</p>
-        <Dialog className={classes.dialog} open={this.state.dialogOpen} onClose={this.handleCloseDialog}>
-          <DialogTitle id="form-dialog-title">设置截止时间</DialogTitle>
-          <DialogContent>
-            <TextField
-              label="截止时间"
-              type="datetime-local"
-              style={{ width: 230 }}
-              fullWidth
-              defaultValue={this.state.deadlineAt}
-              onChange={this.handleChangeDeadline}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleCloseDialog} color="primary">
-              重置
-            </Button>
-            <Button onClick={this.handleCloseDialog} color="primary">
-              关闭
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <DeadlineDialog
+          open={this.state.dialogOpen === 1}
+          handleClose={this.handleCloseDialog}
+          defaultValue={this.state.deadlineAt}
+          handleChange={this.handleChangeDeadline}
+        />
+        <ListDialog
+          open={this.state.dialogOpen === 2}
+          handleClose={this.handleCloseDialog}
+          handleChange={this.handleChangeList}
+          options={this.props.todoListStore.todoLists}
+          selectedValue={this.state.linkListId}
+        />
       </div>
+    );
+  }
+}
+
+class DeadlineDialog extends Component {
+  render() {
+    const { open, handleClose, handleChange, defaultValue } = this.props;
+    return (
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>设置截止时间</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="截止时间"
+            type="datetime-local"
+            style={{ width: 230 }}
+            fullWidth
+            defaultValue={defaultValue}
+            onChange={handleChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} style={{ color: 'red' }}>
+            重置
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            关闭
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+}
+
+class ListDialog extends Component {
+  render() {
+    const { open, handleClose, handleChange, options, selectedValue } = this.props;
+
+    return (
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>设置添加到列表</DialogTitle>
+        <DialogContent>
+          <RadioGroup style={{ width: 230 }} value={selectedValue.toString()} onChange={handleChange}>
+            {options.map(option => (
+              <FormControlLabel
+                value={option.id.toString()}
+                key={option.id.toString()}
+                control={<Radio />}
+                label={<Typography variant="subtitle1">{option.title}</Typography>}
+              />
+            ))}
+          </RadioGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} style={{ color: 'red' }}>
+            重置
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            关闭
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   }
 }
