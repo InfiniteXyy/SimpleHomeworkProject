@@ -59,7 +59,15 @@ const TodoList = {
 };
 
 const Todo = {
-  add: (listId, content, deadlineAt) => requests.post('/todo', { todo: { listId, content, deadlineAt } })
+  add: (listId, content, deadlineAt) => requests.post('/todo/', { todo: { listId, content, deadlineAt } })
+};
+
+const Group = {
+  add: (title, nameId) => requests.post('/group', { group: { title, nameId } }),
+  get: nameId => requests.get(`/group/${encode(nameId)}`),
+  getMyGroups: () => requests.get('/group'),
+  join: groupId => requests.post(`/group/join?groupId=${groupId}`),
+  leave: groupId => requests.post(`/group/leave?groupId=${groupId}`)
 };
 
 const Profile = {
@@ -67,6 +75,7 @@ const Profile = {
 };
 
 export default {
+  Group,
   Message,
   Auth,
   Profile,

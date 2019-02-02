@@ -14,10 +14,11 @@ import ThemeIcon from '@material-ui/icons/ToysRounded';
 import CodeIcon from '@material-ui/icons/CodeRounded';
 import MoreIcon from '@material-ui/icons/MoreRounded';
 import { ListItemIcon } from '@material-ui/core';
+import StackHeader from '../StackHeader';
 
 const styles = theme => ({
   root: {
-    paddingTop: 38,
+    paddingTop: 46,
     width: '100%',
     backgroundColor: '#fafafa',
     height: '100%'
@@ -65,17 +66,7 @@ class Setting extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <div className={classes.header}>
-          <div className={classes.headerContainer}>
-            <p className="btn" onClick={this.handleBack}>
-              返回
-            </p>
-            <Typography variant="subtitle1">设置</Typography>
-            <p className="btn" onClick={this.handleBack}>
-              关于
-            </p>
-          </div>
-        </div>
+        <StackHeader title="设置" handleClickLeft={this.handleBack} />
         <p className="list-subtitle">账号设置</p>
         <List className={classes.listContainer}>
           <ListItem className={classes.listItem}>
@@ -127,7 +118,9 @@ class Setting extends Component {
           Version 0.0.1 alpha
         </Typography>
 
-        <div className="logout" onClick={this.handleLogout}>退出当前帐号</div>
+        <div className="logout" onClick={this.handleLogout}>
+          退出当前帐号
+        </div>
       </div>
     );
   }

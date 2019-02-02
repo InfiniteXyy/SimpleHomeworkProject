@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, withStyles } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
-import MessageList from './MessageList';
+import { MessageList } from './MessageList';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import ListItem from '@material-ui/core/ListItem';
@@ -83,11 +83,12 @@ const styles = {
   }
 };
 
-@inject('messageStore')
+@inject('messageStore', 'commonStore', 'groupStore')
 @observer
 class Group extends React.Component {
   componentDidMount() {
     this.props.messageStore.loadMessages();
+    this.props.groupStore.loadGroups();
   }
 
   constructor(props) {
@@ -105,7 +106,8 @@ class Group extends React.Component {
   };
 
   render() {
-    const { messageStore, classes } = this.props;
+    const { messageStore, groupStore, classes } = this.props;
+    const { groups } = groupStore;
     return (
       <div>
         <div className={classes.appbar}>
@@ -130,11 +132,17 @@ class Group extends React.Component {
                 onClick={this.handleOpenGroupList}
               />
               <ListItemSecondaryAction>
-                <ListItemText classes={{ primary: classes.secondaryText }} primary="2 个" />
+                <ListItemText classes={{ primary: classes.secondaryText }} primary={`${groups.length} 个`} />
               </ListItemSecondaryAction>
             </ListItem>
 
-            <ListItem button style={styles.listItem} onClick={this.handleSetting}>
+            <ListItem
+              button
+              style={styles.listItem}
+              onClick={() => {
+                this.props.commonStore.toggleSnackbar('123');
+              }}
+            >
               <ListItemIcon>
                 <StarIcon color="primary" style={{ color: '#F5A623' }} />
               </ListItemIcon>
@@ -154,7 +162,7 @@ class Group extends React.Component {
           transitionDuration={300}
           TransitionComponent={SlideTransition}
         >
-          <GroupList onClose={this.handleCloseGroupList} />
+          <GroupList groups={groups} onClose={this.handleCloseGroupList} />
         </Dialog>
       </div>
     );

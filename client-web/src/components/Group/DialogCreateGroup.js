@@ -6,6 +6,7 @@ import Input from '@material-ui/core/Input';
 import StackHeader from '../StackHeader';
 import { SlideTransition } from '../utils';
 import Button from '@material-ui/core/Button';
+import { inject, observer } from 'mobx-react';
 
 const styles = {
   bigTitle: {
@@ -32,7 +33,29 @@ const styles = {
   }
 };
 
+@inject('groupStore', 'commonStore')
+@observer
 class DialogCreateGroup extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: '',
+      nameId: ''
+    };
+  }
+
+  handleChange = key => event => {
+    this.setState({ [key]: event.target.value });
+  };
+
+  handleSubmit = () => {
+    const { title, nameId } = this.state;
+    this.props.groupStore.createGroup(title, nameId).then(() => {
+      this.props.handleClose();
+      this.props.commonStore.toggleSnackbar('创建群组成功！');
+    });
+  };
+
   render() {
     const { classes, open, handleClose } = this.props;
     return (
@@ -47,16 +70,16 @@ class DialogCreateGroup extends Component {
           <form className={classes.form}>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="title">群组名称</InputLabel>
-              <Input id="title" name="title" />
+              <Input id="title" name="title" onChange={this.handleChange('title')} />
             </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="id">群组号</InputLabel>
-              <Input id="id" name="id" />
+              <Input id="id" name="id" onChange={this.handleChange('nameId')} />
             </FormControl>
           </form>
         </div>
         <div className={classes.buttonContainer}>
-          <Button variant="outlined" size="large" type="submit" onClick={this.handleSubmit} fullWidth color="primary">
+          <Button variant="outlined" size="large" onClick={this.handleSubmit} fullWidth color="primary">
             立即创建
           </Button>
         </div>

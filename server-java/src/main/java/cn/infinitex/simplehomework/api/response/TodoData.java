@@ -19,6 +19,7 @@ public class TodoData {
   public Map<String, Object> getData() {
     return new HashMap<String, Object>() {{
       put("id", todo.getId());
+      put("listId", todo.getListId());
       put("content", todo.getContent());
       put("deadlineAt", todo.getDeadlineAt());
       put("noticeAt", todo.getNoticeAt());

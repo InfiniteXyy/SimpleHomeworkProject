@@ -172,7 +172,7 @@ class Home extends Component {
           <div>
             {tasks.map(item => {
               const { finished, id, content, deadlineAt, createdAt, createdBy } = item;
-              const deadline = moment(deadlineAt);
+              const deadline = deadlineAt ? moment(deadlineAt).format('M月D日 周dd H:mm 截止') : '无截止时间';
               return (
                 <div className={classes.todoItem} key={item.id}>
                   <div className={classes.checkbox}>
@@ -187,7 +187,7 @@ class Home extends Component {
                       {content}
                     </Typography>
                     <Typography variant="body1" gutterBottom>
-                      {`${deadline.format('M月D日 周dd H:mm 截止')}`}
+                      {deadline}
                     </Typography>
                     <div className={classes.timeContainer}>
                       <Typography variant="body2">{createdBy ? createdBy : '我'}</Typography>

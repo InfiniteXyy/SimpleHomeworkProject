@@ -10,6 +10,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Login from './Login';
 import { inject, observer } from 'mobx-react';
 import GroupHomePage from './Group/GroupHomePage';
+import Snackbar from '@material-ui/core/Snackbar';
+import MySnackbarContent from './Snackbar';
 
 const styles = {
   root: {
@@ -37,6 +39,10 @@ class App extends Component {
     }
   }
 
+  handleCloseSnackbar = () => {
+    this.props.commonStore.toggleSnackbar('', '', false);
+  };
+
   render() {
     const { classes } = this.props;
     if (this.props.commonStore.appLoaded) {
@@ -47,6 +53,8 @@ class App extends Component {
           </div>
         );
       }
+
+      const { snackbarPayload, snackbarOpen } = this.props.commonStore;
 
       return (
         <div>
@@ -66,6 +74,18 @@ class App extends Component {
               </Route>
             </Switch>
           </div>
+
+          <Snackbar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            open={snackbarOpen}
+            onClose={this.handleCloseSnackbar}
+          >
+            <MySnackbarContent
+              variant={snackbarPayload.type}
+              message={snackbarPayload.content}
+              onClose={this.handleCloseSnackbar}
+            />
+          </Snackbar>
         </div>
       );
     }

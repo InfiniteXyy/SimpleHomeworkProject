@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, ListItemText, ListSubheader, withStyles } from '@material-ui/core';
+import { List, ListItemSecondaryAction, ListItemText, ListSubheader, withStyles } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
 import ListItem from '@material-ui/core/ListItem';
 import StackHeader from '../StackHeader';
@@ -8,6 +8,7 @@ import GroupAddIcon from '@material-ui/icons/GroupAddRounded';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import DialogCreateGroup from './DialogCreateGroup';
 import DialogJoinGroup from './DialogJoinGroup';
+import GroupHomePage from './GroupHomePage';
 
 const styles = {
   root: {
@@ -20,38 +21,44 @@ const styles = {
     backgroundColor: 'white'
   },
   groupItem: {
+    height: 50,
     backgroundColor: 'white',
     borderTop: 'solid 1px #f1f1f1'
   },
   list: {
     borderBottom: 'solid 1px #f1f1f1',
     paddingBottom: 0
+  },
+  secondaryText: {
+    color: '#9b9b9b'
   }
 };
 
-@inject('groupStore', 'routingStore')
+const roles = {
+  creator: '群主'
+};
+
+@inject('routingStore')
 @observer
 class GroupList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dialogOpen: ''
+      dialogOpen: '',
+      payload: undefined
     };
   }
 
-  toggleDialog = (type, title) => () => {
+  toggleDialog = (type, title, payload) => () => {
     if (!type) {
       this.setState({ dialogOpen: '' });
     } else {
-      this.setState({ dialogOpen: title });
+      this.setState({ dialogOpen: title, payload });
     }
   };
 
-  handleGroupDetail = id => () => {
-    this.props.routingStore.push(`/group/${id}`);
-  };
   render() {
-    const { classes, onClose } = this.props;
+    const { classes, onClose, groups } = this.props;
     return (
       <div style={{ backgroundColor: '#fafafa', height: '100%' }}>
         <StackHeader title="群组列表" handleClickLeft={onClose} />
@@ -72,17 +79,13 @@ class GroupList extends Component {
             </ListItem>
           </List>
 
-          <List className={classes.list} subheader={<ListSubheader>管理的群组</ListSubheader>}>
-            {this.props.groupStore.groups.map(i => (
-              <ListItem style={styles.groupItem} button key={i.id} onClick={this.handleGroupDetail(i.id)}>
+          <List className={classes.list} subheader={<ListSubheader>我的群组</ListSubheader>}>
+            {groups.map(i => (
+              <ListItem style={styles.groupItem} button key={i.id} onClick={this.toggleDialog(true, 'group', i)}>
                 <ListItemText primary={i.title} />
-              </ListItem>
-            ))}
-          </List>
-          <List className={classes.list} subheader={<ListSubheader>加入的群组</ListSubheader>}>
-            {this.props.groupStore.groups.map(i => (
-              <ListItem style={styles.groupItem} button key={i.id} onClick={this.handleGroupDetail(i.id)}>
-                <ListItemText primary={i.title} />
+                <ListItemSecondaryAction>
+                  <ListItemText classes={{ primary: classes.secondaryText }} primary={roles[i.tag]} />
+                </ListItemSecondaryAction>
               </ListItem>
             ))}
           </List>
@@ -90,6 +93,11 @@ class GroupList extends Component {
 
         <DialogCreateGroup open={this.state.dialogOpen === 'create'} handleClose={this.toggleDialog(false)} />
         <DialogJoinGroup open={this.state.dialogOpen === 'join'} handleClose={this.toggleDialog(false)} />
+        <GroupHomePage
+          open={this.state.dialogOpen === 'group'}
+          payload={this.state.payload}
+          handleClose={this.toggleDialog(false)}
+        />
       </div>
     );
   }

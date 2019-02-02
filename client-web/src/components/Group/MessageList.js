@@ -1,6 +1,6 @@
 import React from 'react';
-import moment from 'moment';
 import Avatar from '@material-ui/core/Avatar';
+import MoreIcon from '@material-ui/icons/ExpandMoreRounded';
 
 import './MessageList.css';
 
@@ -12,20 +12,24 @@ const Message = props => {
   const { item } = props;
   return (
     <div className="message-container">
-      <Avatar
-        style={{ width: 32, height: 32, marginRight: 16 }}
-        src={item.author.image === '' ? defaultValue.avatar : item.author.image}
-      />
-      <div className="right-container">
-        <div className="message-header">
-          <div>
-            <strong>{item.author.username}</strong>
-            <span>{`@${item.author.username}`}</span>
-          </div>
-          <span className="message-date">{moment(item.createdAt).fromNow()}</span>
+      <div className="message-header">
+        <Avatar
+          style={{ height: 44, width: 44 }}
+          src={item.author.image === '' ? defaultValue.avatar : item.author.image}
+        />
+
+        <div className="header-right">
+          <div className="author-name">{item.author.username}</div>
+          <div className="author-from">来自 {item.groupTitle}</div>
         </div>
+
+        <div className="more-icon-container">
+          <MoreIcon className="more-icon" />
+        </div>
+      </div>
+
+      <div className="message-body">
         <p>{item.body}</p>
-        {item.imageUrl ? <img alt="img" style={{ maxHeight: 220 }} src={item.imageUrl} /> : null}
       </div>
     </div>
   );
@@ -33,6 +37,7 @@ const Message = props => {
 
 const MessageList = props => {
   const { messages } = props;
+
   if (!messages) {
     return null;
   }
@@ -50,4 +55,4 @@ const MessageList = props => {
   );
 };
 
-export default MessageList;
+export { MessageList, Message };

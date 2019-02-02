@@ -13,14 +13,15 @@ export class TodoListStore {
     return agent.TodoList.get().then(
       action(({ lists }) => {
         this.todoLists = lists;
-        if (this.currentListId === undefined) this.currentListId = lists[0].id;
+        if (lists.length === 0) this.currentListId = 0;
+        else if (this.currentListId === undefined) this.currentListId = lists[0].id;
       })
     );
   }
 
   @action
   addTodoList(title) {
-    agent.TodoList.add(title).then(
+    return agent.TodoList.add(title).then(
       action(({ list }) => {
         this.todoLists.push(list);
       })
@@ -29,10 +30,10 @@ export class TodoListStore {
 
   @action
   addTodo(listId, content, deadlineAt) {
-    agent.Todo.add(listId, content, deadlineAt).then(
+    return agent.Todo.add(listId, content, deadlineAt).then(
       action(({ task }) => {
         this.todoLists.forEach(i => {
-          if (i.id === listId) {
+          if (i.id.toString() === listId) {
             i.tasks.push(task);
           }
         });
@@ -45,6 +46,7 @@ export class TodoListStore {
     if (!this.currentListId) {
       return [];
     } else {
+      if (this.todoLists.length === 0) return [];
       return this.todoLists.filter(i => i.id === this.currentListId)[0].tasks;
     }
   }

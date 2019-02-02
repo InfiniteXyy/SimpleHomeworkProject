@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/todo/")
+@RequestMapping("api/todo")
 public class TodoApi {
 
   private TodoListRepository todoListRepository;
@@ -38,7 +39,7 @@ public class TodoApi {
   }
 
 
-  @RequestMapping(method = RequestMethod.POST)
+  @PostMapping("/")
   public ResponseEntity createTodo(
       @RequestHeader(value = "Authorization") String authorization,
       @Valid @RequestBody NewTodoParam newTodoParam,

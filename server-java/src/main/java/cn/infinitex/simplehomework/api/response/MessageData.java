@@ -1,39 +1,40 @@
 package cn.infinitex.simplehomework.api.response;
 
+import cn.infinitex.simplehomework.models.group.Group;
 import cn.infinitex.simplehomework.models.message.Message;
 import cn.infinitex.simplehomework.models.user.User;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 
 /**
  * @author xuyiyang
  */
+
+@AllArgsConstructor
 public class MessageData {
 
   private User author;
   private Message message;
-
-  public MessageData(User author, Message message) {
-    this.author = author;
-    this.message = message;
-  }
+  private Group group;
 
   public Map<String, Object> getData() {
-    return new HashMap<String, Object>(16) {{
+    return new HashMap<String, Object>() {{
       put("id", message.getId());
       put("body", message.getBody());
       put("createdAt", message.getCreatedAt());
-      put("updatedAt", message.getUpdatedAt());
       put("imageUrl", message.getImageUrl());
-      put("author", new HashMap<String, Object>(16) {{
+      put("groupTitle", group.getTitle());
+      put("payload", message.getPayload());
+      put("author", new HashMap<String, Object>() {{
         put("username", author.getUsername());
         put("image", author.getImage());
       }});
     }};
   }
 
-  public Map<String, Object> getWrappedData() {
-    return new HashMap<String, Object>(16) {{
+  public Map<String, Object> getJson() {
+    return new HashMap<String, Object>() {{
       put("message", getData());
     }};
   }

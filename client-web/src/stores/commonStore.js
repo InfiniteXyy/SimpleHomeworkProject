@@ -4,6 +4,8 @@ class CommonStore {
   @observable appName = 'Simple Homework';
   @observable token = window.localStorage.getItem('jwt');
   @observable appLoaded = false;
+  @observable snackbarPayload = { content: '', type: 'info' };
+  @observable snackbarOpen = false;
 
   constructor() {
     reaction(
@@ -16,6 +18,12 @@ class CommonStore {
         }
       }
     );
+  }
+
+  @action
+  toggleSnackbar(content, type = 'success', toggle = true) {
+    this.snackbarOpen = toggle;
+    if (toggle) this.snackbarPayload = { content, type };
   }
 
   @action

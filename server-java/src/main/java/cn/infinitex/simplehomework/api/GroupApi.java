@@ -13,7 +13,10 @@ import cn.infinitex.simplehomework.utils.JsonHelper;
 import cn.infinitex.simplehomework.utils.ValidationHandler;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,6 +51,15 @@ public class GroupApi {
     this.userRepository = userRepository;
     this.userGroupRepository = userGroupRepository;
     this.auth = auth;
+  }
+
+  public static Group findGroupInList(List<Group> groups, long id) {
+    for (Group g : groups) {
+      if (g.getId() == id) {
+        return g;
+      }
+    }
+    return null;
   }
 
 
@@ -73,8 +86,6 @@ public class GroupApi {
       return ResponseEntity.status(401)
           .body(ValidationHandler.wrapErrorRoot(JsonHelper.object("validation", e.getMessage())));
     }
-
-
   }
 
   @PostMapping("join")
@@ -129,6 +140,32 @@ public class GroupApi {
       Group group = optionalGroup.get();
       User creator = userRepository.findById(group.getCreatorId()).get();
       return ResponseEntity.ok(new GroupData(group, creator).getJson());
+    }
+  }
+
+  @RequestMapping(method = RequestMethod.GET)
+  public ResponseEntity getGroups(
+      @RequestHeader(value = "Authorization") String authorization
+  ) {
+    try {
+      User user = auth.authorize(authorization);
+
+      List<UserGroup> userGroups = userGroupRepository.findByUserId(user.getId());
+
+      List<Long> groupIds = userGroups.stream().map(
+          UserGroup::getGroupId).collect(
+          Collectors.toList());
+
+      List<Group> groups = groupRepository.findByIdIn(groupIds);
+
+      List<Map<String, Object>> groupDataList = userGroups.stream()
+          .map(i -> new UserGroupData(i, findGroupInList(groups, i.getGroupId())).getData())
+          .collect(Collectors.toList());
+
+      return ResponseEntity.ok(JsonHelper.object("groups", groupDataList));
+    } catch (Exception e) {
+      return ResponseEntity.status(401)
+          .body(ValidationHandler.wrapErrorRoot(JsonHelper.object("validation", e.getMessage())));
     }
   }
 

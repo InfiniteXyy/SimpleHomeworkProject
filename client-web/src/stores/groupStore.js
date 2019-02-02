@@ -1,17 +1,23 @@
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
+import agent from '../agent';
 
 export class GroupStore {
   @observable
-  groups = [
-    {
-      id: '1',
-      title: '计算机网络一班'
-    },
-    {
-      id: '2',
-      title: '计算机网络二班'
-    }
-  ];
+  groups = [];
+
+  @action
+  createGroup(title, nameId) {
+    return agent.Group.add(title, nameId).then(action(({ list }) => {}));
+  }
+
+  @action
+  loadGroups() {
+    return agent.Group.getMyGroups().then(
+      action(({ groups }) => {
+        this.groups = groups.map(item => ({ ...item.group, joinAt: item.joinAt, tag: item.tag }));
+      })
+    );
+  }
 }
 
 export default new GroupStore();

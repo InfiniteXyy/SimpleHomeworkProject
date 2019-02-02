@@ -73,9 +73,9 @@ class AddTodo extends Component {
   }
 
   validateForm = () => {
-    const { content, deadlineAt } = this.state;
+    const { content, linkListId } = this.state;
     if (!content) return false;
-    return deadlineAt;
+    return linkListId;
   };
 
   handleChangeContent = event => {
@@ -97,8 +97,9 @@ class AddTodo extends Component {
 
   handleAdd = () => {
     const { content, deadlineAt, linkListId } = this.state;
-    this.props.todoListStore.addTodo(linkListId, content, deadlineAt);
-    this.handleBack();
+    this.props.todoListStore.addTodo(linkListId, content, deadlineAt).then(() => {
+      this.handleBack();
+    });
   };
 
   handleCloseDialog = () => {
@@ -139,7 +140,7 @@ class AddTodo extends Component {
         </div>
         <List className={classes.list}>
           <ListItem button className={classes.listItem} onClick={this.handleOpenDialog(2)}>
-            <ListItemText primary="添加到列表" />
+            <ListItemText primary="添加到列表 *" />
             <ListItemSecondaryAction>
               <ListItemText
                 classes={{ primary: classes.listItemSecondary }}
