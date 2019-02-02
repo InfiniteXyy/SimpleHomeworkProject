@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joda.time.DateTime;
 
 @Entity
 @Getter
@@ -24,4 +25,16 @@ public class UserGroup {
 
   private String attendedIn;
 
+  public UserGroup(long userId, long groupId) {
+    this.userId = userId;
+    this.groupId = groupId;
+    this.attendedIn = new DateTime().toString();
+  }
+
+  public UserGroup(long userId, long groupId, String tags) {
+    this.userId = userId;
+    this.groupId = groupId;
+    this.tags = tags;
+    this.attendedIn = new DateTime().toString();
+  }
 }

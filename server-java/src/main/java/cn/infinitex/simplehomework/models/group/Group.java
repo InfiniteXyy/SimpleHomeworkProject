@@ -19,4 +19,11 @@ public class Group {
   private long id;
   private long creatorId;
   private String title;
+  private String nameId;
+
+  public Group(long creatorId, String title, String nameId) {
+    this.creatorId = creatorId;
+    this.title = title;
+    this.nameId = nameId;
+  }
 }

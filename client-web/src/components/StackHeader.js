@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
@@ -47,7 +47,7 @@ const StackHeader = props => ({
             <Typography variant="subtitle1">{title}</Typography>
           </div>
           <div style={{ flex: 1 }} className={classes.center}>
-            <p>{rightTitle ? rightTitle : null}</p>
+            <p onClick={handleClickRight}>{rightTitle ? rightTitle : null}</p>
           </div>
         </div>
       </div>

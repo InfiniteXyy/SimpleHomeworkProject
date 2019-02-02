@@ -138,7 +138,7 @@ class Group extends React.Component {
               <ListItemIcon>
                 <StarIcon color="primary" style={{ color: '#F5A623' }} />
               </ListItemIcon>
-              <ListItemText classes={{ primary: classes.bigList }} primary="创建群组" />
+              <ListItemText classes={{ primary: classes.bigList }} primary="收藏" />
             </ListItem>
           </List>
 

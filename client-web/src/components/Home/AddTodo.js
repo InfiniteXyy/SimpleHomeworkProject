@@ -138,12 +138,6 @@ class AddTodo extends Component {
           </div>
         </div>
         <List className={classes.list}>
-          <ListItem button className={classes.listItem} onClick={this.handleSetting}>
-            <ListItemText primary="关联群组" />
-            <ListItemSecondaryAction>
-              <ListItemText classes={{ primary: classes.listItemSecondary }} primary="无" />
-            </ListItemSecondaryAction>
-          </ListItem>
           <ListItem button className={classes.listItem} onClick={this.handleOpenDialog(2)}>
             <ListItemText primary="添加到列表" />
             <ListItemSecondaryAction>
@@ -187,7 +181,7 @@ class AddTodo extends Component {
             </ListItemSecondaryAction>
           </ListItem>
         </List>
-        <p className="tips">只有任务的发起者有权限修改任务备注</p>
+        <p className="tips">你可以随时添加或删除备注</p>
         <DeadlineDialog
           open={this.state.dialogOpen === 1}
           handleClose={this.handleCloseDialog}

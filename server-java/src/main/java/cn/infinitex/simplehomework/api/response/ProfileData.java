@@ -15,12 +15,16 @@ public class ProfileData {
     this.user = user;
   }
 
-  public Map<String, Object> getUserData() {
+  public Map<String, Object> getJson() {
+    return new HashMap<String, Object>() {{
+      put("user", getData());
+    }};
+  }
+
+  public Map<String, Object> getData() {
     return new HashMap<String, Object>(16) {{
-      put("user", new HashMap<String, Object>(16) {{
-        put("username", user.getUsername());
-        put("image", user.getImage());
-      }});
+      put("username", user.getUsername());
+      put("image", user.getImage());
     }};
   }
 }

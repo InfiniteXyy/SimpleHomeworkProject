@@ -36,7 +36,7 @@ public class ProfileApi {
             put("username", "not found");
           }}));
     } else {
-      return ResponseEntity.ok(new ProfileData(optionalUser.get()).getUserData());
+      return ResponseEntity.ok(new ProfileData(optionalUser.get()).getJson());
     }
   }
 }

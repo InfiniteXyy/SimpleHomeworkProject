@@ -30,8 +30,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (this.props.commonStore.token) {
-      this.props.userStore.pullUser().finally(() => {
+    if (this.props.commonStore.token && !this.props.userStore.currentUser) {
+      this.props.userStore.pullUser().then(() => {
         this.props.commonStore.setAppLoaded();
       });
     }

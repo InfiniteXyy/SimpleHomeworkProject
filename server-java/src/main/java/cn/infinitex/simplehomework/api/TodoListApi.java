@@ -47,12 +47,11 @@ public class TodoListApi {
     }
     try {
       User user = auth.authorize(authorization);
-      // 一个简单的增加基本上只要改这点，其它都一样就行
-      // *** start ***
+
       TodoList todoList = new TodoList(user.getId(), newTodoListParam.getTitle());
       todoListRepository.save(todoList);
       return ResponseEntity.ok(new TodoListData(todoList, new ArrayList<>()).getJson());
-      // *** end ***
+
     } catch (Exception e) {
       return ResponseEntity.status(401)
           .body(ValidationHandler.wrapErrorRoot(JsonHelper.object("token", "unauthorized")));

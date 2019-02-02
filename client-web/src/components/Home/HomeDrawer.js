@@ -12,7 +12,6 @@ import ListAltIcon from '@material-ui/icons/ListAltRounded';
 import Divider from '@material-ui/core/Divider';
 import { SlideTransition } from '../utils';
 import { inject, observer } from 'mobx-react';
-import todoListStore from '../../stores/todoListStore';
 import StackHeader from '../StackHeader';
 
 import ListIcon from '@material-ui/icons/ListRounded';
