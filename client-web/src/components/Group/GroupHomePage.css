@@ -1,0 +1,12 @@
+.list-root {
+}
+
+.list-item {
+  background-color: white;
+  height: 60px;
+  border-bottom: 0.75px solid #eeeeee;
+}
+
+.page-root {
+  height: 100%;
+}

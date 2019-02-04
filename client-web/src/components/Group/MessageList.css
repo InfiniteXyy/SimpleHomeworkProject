@@ -36,7 +36,7 @@
 }
 
 .more-icon {
-  color: #757575;
+  color: #999999;
 }
 
 .message-body > p {
@@ -44,8 +44,40 @@
 }
 
 .empty-list {
-  color: #dddddd;
+  color: #9b9b9b;
   text-align: center;
-  padding: 30px;
-  font-size: 14px;
+  padding: 20px;
+  font-size: 12px;
+}
+
+.message-payload {
+  padding-top: 10px;
+}
+
+.payload-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #4a4a4a;
+  font-weight: 500;
+}
+
+.payload-content {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  color: #4a4a4a;
+}
+
+.icon {
+  margin-right: 16px;
+}
+
+.green {
+  color: mediumseagreen;
+}
+
+.brown {
+  color: sandybrown;
 }

@@ -1,6 +1,7 @@
 package cn.infinitex.simplehomework.api;
 
 import cn.infinitex.simplehomework.api.response.GroupData;
+import cn.infinitex.simplehomework.api.response.GroupDetail;
 import cn.infinitex.simplehomework.api.response.UserGroupData;
 import cn.infinitex.simplehomework.models.group.Group;
 import cn.infinitex.simplehomework.models.group.GroupRepository;
@@ -139,7 +140,10 @@ public class GroupApi {
     } else {
       Group group = optionalGroup.get();
       User creator = userRepository.findById(group.getCreatorId()).get();
-      return ResponseEntity.ok(new GroupData(group, creator).getJson());
+
+      List<User> members = userRepository
+          .findByIdIn(userGroupRepository.findUserIdsByGroupId(group.getId()));
+      return ResponseEntity.ok(new GroupDetail(group, creator, members).getJson());
     }
   }
 

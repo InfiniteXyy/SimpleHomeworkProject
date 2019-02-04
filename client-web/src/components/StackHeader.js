@@ -3,6 +3,8 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 
+import classNames from 'classnames';
+
 const styles = {
   header: {
     width: '100%',
@@ -10,7 +12,8 @@ const styles = {
     position: 'fixed',
     color: '#9a9a9a',
     backgroundColor: 'white',
-    height: 46
+    height: 46,
+    zIndex: 100
   },
   headerContainer: {
     height: '100%',
@@ -29,12 +32,20 @@ const styles = {
   verticalCenter: {
     display: 'flex',
     alignItems: 'center'
+  },
+  right: {
+    justifyContent: 'flex-end'
   }
 };
 
-const StackHeader = props => ({
+class StackHeader extends React.Component {
   render() {
-    const { classes, leftTitle, rightTitle, title, handleClickLeft, handleClickRight } = props;
+    const { classes, leftTitle, rightTitle, title, handleClickLeft, handleClickRight, rightEnabled } = this.props;
+    const clickRight = () => {
+      if (rightEnabled) {
+        handleClickRight();
+      }
+    };
     return (
       <div className={classes.header}>
         <div className={classes.headerContainer}>
@@ -46,14 +57,16 @@ const StackHeader = props => ({
           <div style={{ flex: 1 }} className={classes.center}>
             <Typography variant="subtitle1">{title}</Typography>
           </div>
-          <div style={{ flex: 1 }} className={classes.center}>
-            <p onClick={handleClickRight}>{rightTitle ? rightTitle : null}</p>
+          <div style={{ flex: 1 }} className={classNames(classes.right, classes.verticalCenter)}>
+            <p className={classNames('btn', { disabled: !rightEnabled })} onClick={clickRight}>
+              {rightTitle ? rightTitle : null}
+            </p>
           </div>
         </div>
       </div>
     );
   }
-});
+}
 
 StackHeader.propTypes = {
   classes: PropTypes.object,
@@ -61,7 +74,8 @@ StackHeader.propTypes = {
   rightTitle: PropTypes.string,
   title: PropTypes.string.isRequired,
   handleClickLeft: PropTypes.func.isRequired,
-  handleClickRight: PropTypes.func
+  handleClickRight: PropTypes.func,
+  rightEnabled: PropTypes.bool
 };
 
 export default withStyles(styles)(StackHeader);

@@ -38,7 +38,7 @@ const roles = {
   creator: '群主'
 };
 
-@inject('routingStore')
+@inject('routingStore', 'groupStore')
 @observer
 class GroupList extends Component {
   constructor(props) {
@@ -49,12 +49,16 @@ class GroupList extends Component {
     };
   }
 
-  toggleDialog = (type, title, payload) => () => {
+  toggleDialog = (type, title) => () => {
     if (!type) {
       this.setState({ dialogOpen: '' });
     } else {
-      this.setState({ dialogOpen: title, payload });
+      this.setState({ dialogOpen: title });
     }
+  };
+
+  openGroup = group => () => {
+    this.setState({ dialogOpen: 'group', payload: group });
   };
 
   render() {
@@ -81,7 +85,7 @@ class GroupList extends Component {
 
           <List className={classes.list} subheader={<ListSubheader>我的群组</ListSubheader>}>
             {groups.map(i => (
-              <ListItem style={styles.groupItem} button key={i.id} onClick={this.toggleDialog(true, 'group', i)}>
+              <ListItem style={styles.groupItem} button key={i.id} onClick={this.openGroup(i)}>
                 <ListItemText primary={i.title} />
                 <ListItemSecondaryAction>
                   <ListItemText classes={{ primary: classes.secondaryText }} primary={roles[i.tag]} />
@@ -95,7 +99,7 @@ class GroupList extends Component {
         <DialogJoinGroup open={this.state.dialogOpen === 'join'} handleClose={this.toggleDialog(false)} />
         <GroupHomePage
           open={this.state.dialogOpen === 'group'}
-          payload={this.state.payload}
+          group={this.state.payload}
           handleClose={this.toggleDialog(false)}
         />
       </div>

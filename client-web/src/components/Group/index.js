@@ -152,7 +152,7 @@ class Group extends React.Component {
 
           <p className={classes.subtitle}>最近消息</p>
 
-          <MessageList messages={messageStore.messages} />
+          <MessageList messages={messageStore.messages} loadItems={messageStore.loadMore} />
         </div>
 
         <Dialog

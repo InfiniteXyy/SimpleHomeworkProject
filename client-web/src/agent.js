@@ -40,10 +40,11 @@ const requests = {
 };
 
 const Message = {
-  get: () => requests.get('/messages'),
+  get: (groupId = '') => requests.get(`/messages?groupId=${groupId}`),
   delete: id => requests.del(`/messages/${encode(id)}`),
   update: (id, body) => requests.put(`/messages/${encode(id)}`, { message: { body } }),
-  add: body => requests.post('/messages/', { message: { body } })
+  add: (groupId, payload, body) => requests.post('/messages/', { message: { body, groupId, payload } }),
+  loadMore: (from, groupId = '') => requests.get(`/messages?from=${encode(from)}&groupId=${groupId}`)
 };
 
 const Auth = {

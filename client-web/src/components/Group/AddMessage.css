@@ -1,0 +1,54 @@
+.message-input-box-container {
+  margin-top: 10px;
+  padding: 16px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #eeeeee;
+  border-top: 1px solid #eeeeee;
+  background-color: white;
+}
+
+.message-input-box {
+  border: none;
+  width: 100%;
+  font-size: 16px;
+  height: 60px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.input-image {
+  height: 65px;
+  width: 65px;
+  margin-bottom: 16px;
+  border: 1px dashed #cccccc;
+  border-radius: 10px;
+  display: flex;
+  color: #cccccc;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.input-payload {
+  color: #9b9b9b;
+  size: 12px;
+  border-radius: 100%;
+}
+
+.payload-box-container {
+  margin-top: 16px;
+  background-color: white;
+  border-bottom: 1px solid #eeeeee;
+  border-top: 1px solid #eeeeee;
+}
+
+.payload-box {
+  border: none;
+  width: 100%;
+  font-size: 16px;
+  height: 65px;
+  resize: none;
+  padding: 16px;
+  box-sizing: border-box;
+}

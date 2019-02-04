@@ -1,76 +1,169 @@
 import React, { Component } from 'react';
-import { Dialog, withStyles } from '@material-ui/core';
+import { Avatar, Dialog, List, ListItemAvatar, ListItemText, withStyles } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
 import SwipeableViews from 'react-swipeable-views';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import { SlideTransition } from '../utils';
 import StackHeader from '../StackHeader';
+import ListItem from '@material-ui/core/ListItem';
 
+import './GroupHomePage.css';
+import { MessageList } from './MessageList';
+import Zoom from '@material-ui/core/Zoom';
+import Fab from '@material-ui/core/Fab';
+
+import AddIcon from '@material-ui/icons/Add';
+import AddMessage from './AddMessage';
+
+const canEdit = {
+  creator: true,
+  admin: true
+};
 const styles = theme => ({
   root: {
     width: '100%',
-    paddingTop: 46
+    height: '100%',
+    paddingTop: 102,
+    boxSizing: 'border-box'
   },
   tab: {
-    backgroundColor: 'white'
+    position: 'fixed',
+    top: 46,
+    width: '100%',
+    backgroundColor: 'white',
+    borderBottom: 'solid 0.75px #eeeeee',
+    zIndex: 100
+  },
+  fab: {
+    position: 'fixed',
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2
+  },
+  main: {
+    backgroundColor: '#fafafa'
   }
 });
-
-function TabContainer({ children }) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {children}
-    </Typography>
-  );
-}
 
 @inject('groupStore', 'routingStore')
 @observer
 class GroupHomePage extends Component {
+  reset = () => {
+    this.setState({ value: 0 });
+    this.props.groupStore.clearDetail();
+  };
+
   state = {
-    value: 0
+    value: 0,
+    dialogOpen: ''
+  };
+
+  toggleDialog = type => () => {
+    this.setState({ dialogOpen: type });
+  };
+
+  handleChangeValue = value => {
+    switch (value) {
+      case 0:
+        this.props.groupStore.loadMessage();
+        return;
+      case 1:
+        return;
+      case 2:
+        this.props.groupStore.loadDetail();
+        return;
+      default:
+        return;
+    }
   };
 
   handleChange = (event, value) => {
     this.setState({ value });
+    this.handleChangeValue(value);
   };
 
   handleChangeIndex = index => {
     this.setState({ value: index });
+    this.handleChangeValue(index);
+  };
+
+  onEnter = () => {
+    this.props.groupStore.toggleGroup(this.props.group);
+    this.props.groupStore.loadMessage();
   };
 
   render() {
-    const { open, payload, handleClose, classes } = this.props;
-    if (!payload) return <div />;
+    const { classes, open, group, groupStore, handleClose } = this.props;
+    if (!group) return <div />;
     return (
-      <Dialog open={open} fullScreen transitionDuration={300} TransitionComponent={SlideTransition}>
-        <div style={{ backgroundColor: '#fafafa' }}>
-          <StackHeader handleClickLeft={handleClose} title={payload.title} />
+      <Dialog
+        open={open}
+        fullScreen
+        transitionDuration={300}
+        TransitionComponent={SlideTransition}
+        onExited={this.reset}
+        onEnter={this.onEnter}
+        classes={{ paper: classes.main }}
+      >
+        <div style={{ height: '100%' }}>
+          <StackHeader handleClickLeft={handleClose} title={group.title} />
+          <Tabs
+            className={classes.tab}
+            value={this.state.value}
+            onChange={this.handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+          >
+            <Tab label="最新消息" disableRipple />
+            <Tab label="打卡任务" disableRipple />
+            <Tab label="群组成员" disableRipple />
+          </Tabs>
           <div className={classes.root}>
-            <Tabs
-              className={classes.tab}
-              value={this.state.value}
-              onChange={this.handleChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="fullWidth"
+            <SwipeableViews
+              index={this.state.value}
+              onChangeIndex={this.handleChangeIndex}
+              containerStyle={{ height: '100%' }}
+              style={{ height: '100%' }}
             >
-              <Tab label="最新消息" disableRipple />
-              <Tab label="打卡任务" disableRipple />
-              <Tab label="群组成员" disableRipple />
-            </Tabs>
-            <SwipeableViews index={this.state.value} onChangeIndex={this.handleChangeIndex}>
-              <TabContainer>Item One</TabContainer>
-              <TabContainer>Item Two</TabContainer>
-              <TabContainer>Item Three</TabContainer>
+              <MessageList messages={groupStore.groupMessages} loadItems={groupStore.loadMore(group.id)} />
+              <div />
+              <MemberList detail={groupStore.groupDetail} />
             </SwipeableViews>
+            {canEdit[group.tag] ? (
+              <Zoom in={this.state.value === 0} timeout={100} unmountOnExit>
+                <Fab className={classes.fab} color="primary" onClick={this.toggleDialog('message')}>
+                  <AddIcon />
+                </Fab>
+              </Zoom>
+            ) : (
+              <div />
+            )}
           </div>
         </div>
+
+        <AddMessage open={this.state.dialogOpen === 'message'} handleClose={this.toggleDialog('')} />
       </Dialog>
     );
   }
 }
 
+const MemberList = props => {
+  const { detail } = props;
+  if (!detail) {
+    return <div style={{ color: '#9b9b9b', textAlign: 'center', marginTop: 20, fontSize: 12 }}>加载中</div>;
+  }
+  return (
+    <List className="list-root">
+      {detail.members.map(i => (
+        <ListItem className="list-item" key={i.username} style={styles.listItem}>
+          <ListItemAvatar>
+            <Avatar src={i.image} />
+          </ListItemAvatar>
+          <ListItemText primary={i.username} />
+        </ListItem>
+      ))}
+    </List>
+  );
+};
 export default withStyles(styles)(GroupHomePage);

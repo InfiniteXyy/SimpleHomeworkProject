@@ -12,7 +12,6 @@ import TodoIcon from '@material-ui/icons/DescriptionRounded';
 import TodoListIcon from '@material-ui/icons/ListRounded';
 
 import AddTodo from './AddTodo';
-import Slide from '@material-ui/core/Slide';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
@@ -90,10 +89,6 @@ const styles = theme => ({
     }
   }
 });
-
-function Transition(props) {
-  return <Slide direction="left" {...props} />;
-}
 
 @inject('todoListStore', 'routingStore')
 @observer
@@ -236,9 +231,7 @@ class Home extends Component {
           />
         </SpeedDial>
 
-        <Dialog open={this.state.addTodoOpen} fullScreen transitionDuration={300} TransitionComponent={Transition}>
-          <AddTodo onClose={this.closeAddTodo} />
-        </Dialog>
+        <AddTodo open={this.state.addTodoOpen} onClose={this.closeAddTodo} />
 
         <HomeDrawer drawerOpen={this.state.drawerOpen} toggleDrawer={this.toggleDrawer} />
 

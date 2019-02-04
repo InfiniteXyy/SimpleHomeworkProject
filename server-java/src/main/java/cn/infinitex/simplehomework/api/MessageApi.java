@@ -60,7 +60,8 @@ public class MessageApi {
   public ResponseEntity listMessages(
       @RequestHeader(value = "Authorization") String authorization,
       @RequestParam(value = "limit", defaultValue = "10") int limit,
-      @RequestParam(value = "from", defaultValue = "") String from) {
+      @RequestParam(value = "from", defaultValue = "") String from,
+      @RequestParam(value = "groupId", defaultValue = "") String groupId) {
     try {
       User user = auth.authorize(authorization);
 
@@ -71,10 +72,20 @@ public class MessageApi {
       List<Message> messages;
       if (!"".equals(from)) {
         DateTime dt = DateTime.parse(from, ISODateTimeFormat.dateTimeParser());
-        messages = messageRepository.findTopMessagesSince(groupIds, limit, dt.toString());
+        if (!"".equals(groupId)) {
+          messages = messageRepository
+              .findTopMessagesByGroupIdSince(Long.valueOf(groupId), limit, dt.toString());
+        } else {
+          messages = messageRepository.findTopMessagesSince(groupIds, limit, dt.toString());
+        }
       } else {
-        messages = messageRepository.findTopMessages(groupIds, limit);
+        if (!"".equals(groupId)) {
+          messages = messageRepository.findTopMessagesByGroupId(Long.valueOf(groupId), limit);
+        } else {
+          messages = messageRepository.findTopMessages(groupIds, limit);
+        }
       }
+
       return ResponseEntity.ok(JsonHelper.object("messages", messages.stream().map(
           i -> new MessageData(
               userRepository.findById(i.getUserId()).get(),
@@ -87,7 +98,6 @@ public class MessageApi {
       return ResponseEntity.status(401)
           .body(ValidationHandler.wrapErrorRoot(JsonHelper.object("validation", e.getMessage())));
     }
-
   }
 
   @RequestMapping(method = RequestMethod.POST)

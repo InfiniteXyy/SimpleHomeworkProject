@@ -21,6 +21,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import { inject, observer } from 'mobx-react';
+import { SlideTransition } from '../utils';
 
 const styles = theme => ({
   root: {
@@ -57,7 +58,7 @@ const styles = theme => ({
   }
 });
 
-@inject('todoListStore')
+@inject('todoListStore', 'commonStore')
 @observer
 class AddTodo extends Component {
   constructor(props) {
@@ -84,7 +85,6 @@ class AddTodo extends Component {
 
   handleChangeDeadline = event => {
     this.setState({ deadlineAt: event.target.value });
-    window.temp = this.state.deadlineAt;
   };
 
   handleChangeList = (event, value) => {
@@ -99,6 +99,7 @@ class AddTodo extends Component {
     const { content, deadlineAt, linkListId } = this.state;
     this.props.todoListStore.addTodo(linkListId, content, deadlineAt).then(() => {
       this.handleBack();
+      this.props.commonStore.toggleSnackbar('添加成功');
     });
   };
 
@@ -110,98 +111,122 @@ class AddTodo extends Component {
     this.setState({ dialogOpen: id });
   };
 
+  handlePayload = () => {
+    this.props.todoListStore.loadTodos();
+    let { payload } = this.props;
+
+    if (!payload) {
+      return;
+    }
+    payload = JSON.parse(payload);
+    this.setState({
+      content: payload.content,
+      deadlineAt: payload.deadlineAt
+    });
+  };
+
   render() {
-    const { classes } = this.props;
+    const { classes, open } = this.props;
     return (
-      <div style={{ backgroundColor: '#fafafa', flex: 1 }}>
-        <div className={classes.header}>
-          <div className={classes.headerContainer}>
-            <p className="btn" onClick={this.handleBack}>
-              取消
-            </p>
-            <Typography variant="subtitle1">新建任务</Typography>
-            <p onClick={this.handleAdd} className={`${this.validateForm() ? 'btn' : 'disabled'}`}>
-              添加
-            </p>
+      <Dialog
+        open={open}
+        fullScreen
+        transitionDuration={300}
+        TransitionComponent={SlideTransition}
+        onEnter={this.handlePayload}
+      >
+        <div style={{ backgroundColor: '#fafafa', flex: 1 }}>
+          <div className={classes.header}>
+            <div className={classes.headerContainer}>
+              <p className="btn" onClick={this.handleBack}>
+                取消
+              </p>
+              <Typography variant="subtitle1">新建任务</Typography>
+              <p onClick={this.handleAdd} className={`${this.validateForm() ? 'btn' : 'disabled'}`}>
+                添加
+              </p>
+            </div>
           </div>
-        </div>
-        <div className={classes.root}>
-          <div className="input-box-container">
-            <textarea
-              placeholder="请在此填写任务内容"
-              className="input-box"
-              maxLength={70}
-              onChange={this.handleChangeContent}
-            />
-          </div>
-          <div className="camera-container">
-            <CameraIcon style={{ color: '#9b9b9b' }} />
-          </div>
-        </div>
-        <List className={classes.list}>
-          <ListItem button className={classes.listItem} onClick={this.handleOpenDialog(2)}>
-            <ListItemText primary="添加到列表 *" />
-            <ListItemSecondaryAction>
-              <ListItemText
-                classes={{ primary: classes.listItemSecondary }}
-                primary={
-                  this.state.linkListId
-                    ? this.props.todoListStore.todoLists.filter(i => i.id.toString() === this.state.linkListId)[0].title
-                    : '默认列表'
-                }
+          <div className={classes.root}>
+            <div className="input-box-container">
+              <textarea
+                placeholder="请在此填写任务内容"
+                className="input-box"
+                maxLength={70}
+                value={this.state.content}
+                onChange={this.handleChangeContent}
               />
-            </ListItemSecondaryAction>
-          </ListItem>
-        </List>
-        <List className={classes.list}>
-          <ListItem button className={classes.listItem} onClick={this.handleOpenDialog(1)}>
-            <ListItemText primary="截止时间" />
-            <ListItemSecondaryAction>
-              <ListItemText
-                classes={{ primary: classes.listItemSecondary }}
-                primary={
-                  this.state.deadlineAt ? moment(this.state.deadlineAt).format('M月D日 周dd H:mm') : '无截止时间'
-                }
-              />
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem button className={classes.listItem} onClick={this.handleSetting}>
-            <ListItemText primary="提醒" />
-            <ListItemSecondaryAction>
-              <ListItemText classes={{ primary: classes.listItemSecondary }} primary="截止前一周" />
-            </ListItemSecondaryAction>
-          </ListItem>
-        </List>
-        <List className={classes.list}>
-          <ListItem button className={classes.listItem} onClick={this.handleSetting}>
-            <ListItemText primary="备注" />
-            <ListItemSecondaryAction style={{ height: 20 }}>
-              <ListItemIcon>
-                <SMSIcon fontSize="small" color="disabled" />
-              </ListItemIcon>
-            </ListItemSecondaryAction>
-          </ListItem>
-        </List>
-        <p className="tips">你可以随时添加或删除备注</p>
-        <DeadlineDialog
-          open={this.state.dialogOpen === 1}
-          handleClose={this.handleCloseDialog}
-          defaultValue={this.state.deadlineAt}
-          handleChange={this.handleChangeDeadline}
-        />
-        <ListDialog
-          open={this.state.dialogOpen === 2}
-          handleClose={this.handleCloseDialog}
-          handleChange={this.handleChangeList}
-          options={this.props.todoListStore.todoLists}
-          selectedValue={this.state.linkListId}
-        />
-      </div>
+            </div>
+            <div className="camera-container">
+              <CameraIcon style={{ color: '#9b9b9b' }} />
+            </div>
+          </div>
+          <List className={classes.list}>
+            <ListItem button className={classes.listItem} onClick={this.handleOpenDialog(2)}>
+              <ListItemText primary="添加到列表 *" />
+              <ListItemSecondaryAction>
+                <ListItemText
+                  classes={{ primary: classes.listItemSecondary }}
+                  primary={
+                    this.state.linkListId
+                      ? this.props.todoListStore.todoLists.filter(i => i.id.toString() === this.state.linkListId)[0]
+                          .title
+                      : '无'
+                  }
+                />
+              </ListItemSecondaryAction>
+            </ListItem>
+          </List>
+          <List className={classes.list}>
+            <ListItem button className={classes.listItem} onClick={this.handleOpenDialog(1)}>
+              <ListItemText primary="截止时间" />
+              <ListItemSecondaryAction>
+                <ListItemText
+                  classes={{ primary: classes.listItemSecondary }}
+                  primary={
+                    this.state.deadlineAt ? moment(this.state.deadlineAt).format('M月D日 周dd H:mm') : '无截止时间'
+                  }
+                />
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem button className={classes.listItem} onClick={this.handleSetting}>
+              <ListItemText primary="提醒" />
+              <ListItemSecondaryAction>
+                <ListItemText classes={{ primary: classes.listItemSecondary }} primary="截止前一周" />
+              </ListItemSecondaryAction>
+            </ListItem>
+          </List>
+          <List className={classes.list}>
+            <ListItem button className={classes.listItem} onClick={this.handleSetting}>
+              <ListItemText primary="备注" />
+              <ListItemSecondaryAction style={{ height: 20 }}>
+                <ListItemIcon>
+                  <SMSIcon fontSize="small" color="disabled" />
+                </ListItemIcon>
+              </ListItemSecondaryAction>
+            </ListItem>
+          </List>
+          <p className="tips">你可以随时添加或删除备注</p>
+          <DeadlineDialog
+            open={this.state.dialogOpen === 1}
+            handleClose={this.handleCloseDialog}
+            defaultValue={this.state.deadlineAt}
+            handleChange={this.handleChangeDeadline}
+          />
+          <ListDialog
+            open={this.state.dialogOpen === 2}
+            handleClose={this.handleCloseDialog}
+            handleChange={this.handleChangeList}
+            options={this.props.todoListStore.todoLists}
+            selectedValue={this.state.linkListId}
+          />
+        </div>
+      </Dialog>
     );
   }
 }
 
-class DeadlineDialog extends Component {
+export class DeadlineDialog extends Component {
   render() {
     const { open, handleClose, handleChange, defaultValue } = this.props;
     return (
