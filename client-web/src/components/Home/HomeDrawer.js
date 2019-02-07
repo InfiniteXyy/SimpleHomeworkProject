@@ -8,6 +8,7 @@ import List from '@material-ui/core/List';
 
 import InboxIcon from '@material-ui/icons/InboxRounded';
 import MailIcon from '@material-ui/icons/MailRounded';
+import SettingIcon from '@material-ui/icons/SettingsRounded';
 import ListAltIcon from '@material-ui/icons/ListAltRounded';
 import Divider from '@material-ui/core/Divider';
 import { SlideTransition } from '../utils';
@@ -18,6 +19,7 @@ import ListIcon from '@material-ui/icons/ListRounded';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 import EditIcon from '@material-ui/icons/EditRounded';
 import Avatar from '@material-ui/core/Avatar';
+import Setting from '../Profile/Setting';
 
 const styles = {
   root: {}
@@ -32,20 +34,16 @@ class HomeDrawer extends React.Component {
     };
   }
 
-  toggleDialog = (title, type) => () => {
-    if (type) {
-      this.setState({ dialogOpen: title });
-    } else {
-      this.setState({ dialogOpen: '' });
-    }
+  toggleDialog = title => () => {
+    this.setState({ dialogOpen: title });
   };
 
   render() {
-    const { classes, drawerOpen, toggleDrawer } = this.props;
+    const { classes, open, handleClose } = this.props;
     const { currentUser } = this.props.userStore;
     return (
       <div className={classes.root}>
-        <Drawer open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Drawer open={open} onClose={handleClose}>
           <div style={{ width: 250 }}>
             <div style={{ paddingLeft: 16, paddingBottom: 16 }}>
               <Avatar src={currentUser.image} style={{ height: 60, width: 60, margin: '16px 0' }} />
@@ -54,7 +52,7 @@ class HomeDrawer extends React.Component {
             </div>
             <Divider />
             <List>
-              <ListItem button onClick={this.toggleDialog('manageList', true)}>
+              <ListItem button onClick={this.toggleDialog('manageList')}>
                 <ListItemIcon>
                   <ListAltIcon />
                 </ListItemIcon>
@@ -72,14 +70,19 @@ class HomeDrawer extends React.Component {
                 </ListItemIcon>
                 <ListItemText primary="收集箱" />
               </ListItem>
+              <ListItem button onClick={this.toggleDialog('setting')}>
+                <ListItemIcon>
+                  <SettingIcon />
+                </ListItemIcon>
+                <ListItemText primary="设置" />
+              </ListItem>
             </List>
           </div>
         </Drawer>
 
-        <DialogManageList
-          open={this.state.dialogOpen === 'manageList'}
-          handleClose={this.toggleDialog('manageList', false)}
-        />
+        <DialogManageList open={this.state.dialogOpen === 'manageList'} handleClose={this.toggleDialog('')} />
+
+        <Setting open={this.state.dialogOpen === 'setting'} handleClose={this.toggleDialog('')} />
       </div>
     );
   }

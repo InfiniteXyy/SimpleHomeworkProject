@@ -233,7 +233,7 @@ class Home extends Component {
 
         <AddTodo open={this.state.addTodoOpen} onClose={this.closeAddTodo} />
 
-        <HomeDrawer drawerOpen={this.state.drawerOpen} toggleDrawer={this.toggleDrawer} />
+        <HomeDrawer open={this.state.drawerOpen} handleClose={this.toggleDrawer(false)} />
 
         <AddListDialog
           open={this.state.addTodoListOpen}

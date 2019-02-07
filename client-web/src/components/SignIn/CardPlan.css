@@ -1,0 +1,21 @@
+.week-title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.week-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: #9b9b9b;
+  margin-bottom: 16px;
+}
+
+.week-titles {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  margin-top: 16px;
+  background-color: white;
+}

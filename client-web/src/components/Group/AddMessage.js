@@ -128,7 +128,7 @@ class AddMessage extends React.Component {
               icon={<NoteAddIcon fontSize="small" />}
             />
           </div>
-          <Fade in={this.state.hasTodo}>
+          <Fade in={this.state.hasTodo} timeout={300}>
             <div className="payload-box-container">
               <textarea
                 placeholder="任务内容"

@@ -71,6 +71,12 @@ const Group = {
   leave: groupId => requests.post(`/group/leave?groupId=${groupId}`)
 };
 
+const Card = {
+  get: () => requests.get('/card'),
+  create: (title, creatorTitle, weekdays, daytime, coverImg, groupId = '0') =>
+    requests.post('/card/', { card: { title, creatorTitle, weekdays, daytime, coverImg, groupId } })
+};
+
 const Profile = {
   get: username => requests.get(`/profiles/${username}`)
 };
@@ -81,5 +87,6 @@ export default {
   Auth,
   Profile,
   TodoList,
-  Todo
+  Todo,
+  Card
 };

@@ -1,0 +1,19 @@
+.background-gray {
+  background-color: #fafafa;
+}
+
+.background-white {
+  background-color: white;
+}
+
+.border-vert {
+  border-bottom: 0.75px solid #eeeeee;
+  border-top: 0.75px solid #eeeeee;
+}
+
+.empty-tip {
+  color: #9b9b9b;
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+}

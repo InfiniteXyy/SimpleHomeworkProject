@@ -13,6 +13,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
 import GroupList from './GroupList';
 import { SlideTransition } from '../utils';
+import HomeDrawer from '../Home/HomeDrawer';
+import MenuIcon from '@material-ui/icons/DehazeRounded';
 
 const styles = {
   root: {
@@ -27,16 +29,20 @@ const styles = {
     backgroundColor: 'white',
     zIndex: 100,
     paddingBottom: 16,
-    borderBottom: 'solid 0.75px #cccccc'
+    borderBottom: 'solid 0.75px #eeeeee'
   },
   header: {
     color: '#9a9a9a',
     fontWeight: 'bold',
     height: 48,
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    paddingLeft: 16
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    zIndex: 100,
+    paddingLeft: 16,
+    paddingRight: 16,
+    width: '100%',
+    boxSizing: 'border-box'
   },
   search: {
     padding: '0 16px 0',
@@ -94,7 +100,8 @@ class Group extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      groupListOpen: false
+      groupListOpen: false,
+      drawerOpen: false
     };
   }
 
@@ -105,6 +112,10 @@ class Group extends React.Component {
     this.setState({ groupListOpen: true });
   };
 
+  toggleDrawerOpen = drawerOpen => () => {
+    this.setState({ drawerOpen });
+  };
+
   render() {
     const { messageStore, groupStore, classes } = this.props;
     const { groups } = groupStore;
@@ -113,6 +124,7 @@ class Group extends React.Component {
         <div className={classes.appbar}>
           <div className={classes.header}>
             <Typography variant="h6">群组</Typography>
+            <MenuIcon onClick={this.toggleDrawerOpen(true)} />
           </div>
 
           <div className={classes.search}>
@@ -164,6 +176,7 @@ class Group extends React.Component {
         >
           <GroupList groups={groups} onClose={this.handleCloseGroupList} />
         </Dialog>
+        <HomeDrawer open={this.state.drawerOpen} handleClose={this.toggleDrawerOpen(false)} />
       </div>
     );
   }

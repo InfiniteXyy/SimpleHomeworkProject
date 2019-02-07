@@ -13,8 +13,9 @@ import SunIcon from '@material-ui/icons/WbSunnyRounded';
 import ThemeIcon from '@material-ui/icons/ToysRounded';
 import CodeIcon from '@material-ui/icons/CodeRounded';
 import MoreIcon from '@material-ui/icons/MoreRounded';
-import { ListItemIcon } from '@material-ui/core';
+import { Dialog, ListItemIcon } from '@material-ui/core';
 import StackHeader from '../StackHeader';
+import { SlideTransition } from '../utils';
 
 const styles = theme => ({
   root: {
@@ -54,74 +55,72 @@ const styles = theme => ({
 @inject('routingStore', 'authStore')
 @observer
 class Setting extends Component {
-  handleBack = () => {
-    this.props.onClose();
-  };
-
   handleLogout = () => {
     this.props.authStore.logout();
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, open, handleClose } = this.props;
     return (
-      <div className={classes.root}>
-        <StackHeader title="设置" handleClickLeft={this.handleBack} />
-        <p className="list-subtitle">账号设置</p>
-        <List className={classes.listContainer}>
-          <ListItem className={classes.listItem}>
-            <ListItemIcon>
-              <AccountIcon />
-            </ListItemIcon>
-            <ListItemText primary="账号与安全" />
-          </ListItem>
-          <ListItem className={classes.listItem}>
-            <ListItemIcon>
-              <SchoolIcon />
-            </ListItemIcon>
-            <ListItemText primary="学期设置" />
-          </ListItem>
-        </List>
-        <p className="list-subtitle">基本设置</p>
-        <List className={classes.listContainer}>
-          <ListItem className={classes.listItem}>
-            <ListItemIcon>
-              <SunIcon />
-            </ListItemIcon>
-            <ListItemText primary="夜间模式" />
-          </ListItem>
-          <ListItem className={classes.listItem}>
-            <ListItemIcon>
-              <ThemeIcon />
-            </ListItemIcon>
-            <ListItemText primary="主题" />
-          </ListItem>
-        </List>
+      <Dialog open={open} fullScreen transitionDuration={300} TransitionComponent={SlideTransition}>
+        <div className={classes.root}>
+          <StackHeader title="设置" handleClickLeft={handleClose} />
+          <p className="list-subtitle">账号设置</p>
+          <List className={classes.listContainer}>
+            <ListItem className={classes.listItem}>
+              <ListItemIcon>
+                <AccountIcon />
+              </ListItemIcon>
+              <ListItemText primary="账号与安全" />
+            </ListItem>
+            <ListItem className={classes.listItem}>
+              <ListItemIcon>
+                <SchoolIcon />
+              </ListItemIcon>
+              <ListItemText primary="学期设置" />
+            </ListItem>
+          </List>
+          <p className="list-subtitle">基本设置</p>
+          <List className={classes.listContainer}>
+            <ListItem className={classes.listItem}>
+              <ListItemIcon>
+                <SunIcon />
+              </ListItemIcon>
+              <ListItemText primary="夜间模式" />
+            </ListItem>
+            <ListItem className={classes.listItem}>
+              <ListItemIcon>
+                <ThemeIcon />
+              </ListItemIcon>
+              <ListItemText primary="主题" />
+            </ListItem>
+          </List>
 
-        <p className="list-subtitle">其它</p>
-        <List className={classes.listContainer}>
-          <ListItem className={classes.listItem}>
-            <ListItemIcon>
-              <CodeIcon />
-            </ListItemIcon>
-            <ListItemText primary="开源库" />
-          </ListItem>
-          <ListItem className={classes.listItem}>
-            <ListItemIcon>
-              <MoreIcon />
-            </ListItemIcon>
-            <ListItemText primary="关于简记" />
-          </ListItem>
-        </List>
+          <p className="list-subtitle">其它</p>
+          <List className={classes.listContainer}>
+            <ListItem className={classes.listItem}>
+              <ListItemIcon>
+                <CodeIcon />
+              </ListItemIcon>
+              <ListItemText primary="开源库" />
+            </ListItem>
+            <ListItem className={classes.listItem}>
+              <ListItemIcon>
+                <MoreIcon />
+              </ListItemIcon>
+              <ListItemText primary="关于简记" />
+            </ListItem>
+          </List>
 
-        <Typography variant="overline" style={{ marginTop: 10, marginLeft: 16, color: '#bebebe' }}>
-          Version 0.0.1 alpha
-        </Typography>
+          <Typography variant="overline" style={{ marginTop: 10, marginLeft: 16, color: '#bebebe' }}>
+            Version 0.0.1 alpha
+          </Typography>
 
-        <div className="logout" onClick={this.handleLogout}>
-          退出当前帐号
+          <div className="logout" onClick={this.handleLogout}>
+            退出当前帐号
+          </div>
         </div>
-      </div>
+      </Dialog>
     );
   }
 }

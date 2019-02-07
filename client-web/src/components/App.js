@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import Home from './Home';
 import Group from './Group';
-import Profile from './Profile';
 import SignIn from './SignIn';
 import Navigation from './Navigation';
 
@@ -12,6 +11,8 @@ import { inject, observer } from 'mobx-react';
 import GroupHomePage from './Group/GroupHomePage';
 import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContent from './Snackbar';
+
+import './App.css';
 
 const styles = {
   root: {
@@ -67,7 +68,6 @@ class App extends Component {
                     <Route path="/" component={Home} exact />
                     <Route path="/group" component={Group} />
                     <Route path="/signIn" component={SignIn} />
-                    <Route path="/profile" component={Profile} />
                   </Switch>
                   <Navigation />
                 </div>

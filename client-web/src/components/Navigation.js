@@ -6,7 +6,6 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import SubjectIcon from '@material-ui/icons/Subject';
-import PersonIcon from '@material-ui/icons/Person';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 
 const styles = {
@@ -42,12 +41,6 @@ class Navigation extends React.Component {
           className={classes.actionButton}
           label={'打卡'}
           icon={<DateRangeIcon />}
-        />
-        <BottomNavigationAction
-          value="/profile"
-          className={classes.actionButton}
-          label={'我的'}
-          icon={<PersonIcon />}
         />
       </BottomNavigation>
     );

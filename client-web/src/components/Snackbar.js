@@ -15,7 +15,6 @@ import * as PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-
 const styles = theme => ({
   success: {
     backgroundColor: green[600]

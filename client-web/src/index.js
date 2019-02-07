@@ -1,19 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './components/App';
 import { Provider } from 'mobx-react';
 import { Router } from 'react-router-dom';
 import messageStore from './stores/messageStore';
 import userStore from './stores/userStore';
 import commonStore from './stores/commonStore';
 import authStore from './stores/authStore';
-import checkOutStore from './stores/checkOutStore';
 import todoListStore from './stores/todoListStore';
 import groupStore from './stores/groupStore';
+import cardStore from './stores/cardStore';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router';
 
+import App from './components/App';
 import { createMuiTheme } from '@material-ui/core/styles';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
@@ -52,9 +52,9 @@ const stores = {
   userStore,
   commonStore,
   authStore,
-  checkOutStore,
   todoListStore,
-  groupStore
+  groupStore,
+  cardStore
 };
 
 window.stores = stores;

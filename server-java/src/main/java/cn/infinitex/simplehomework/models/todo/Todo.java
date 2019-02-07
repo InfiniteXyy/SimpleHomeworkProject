@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joda.time.DateTime;
 
 @Entity
 @Getter
@@ -21,13 +22,16 @@ public class Todo {
   private String createdAt;
   private String noticeAt;
   private String imageUrl;
+  private Boolean finished;
 
   public Todo(long listId, String content, String deadlineAt, String noticeAt,
       String imageUrl) {
     this.listId = listId;
     this.content = content;
     this.deadlineAt = deadlineAt;
+    this.createdAt = new DateTime().toString();
     this.noticeAt = noticeAt;
     this.imageUrl = imageUrl;
+    this.finished = false;
   }
 }
