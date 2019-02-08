@@ -60,7 +60,8 @@ const TodoList = {
 };
 
 const Todo = {
-  add: (listId, content, deadlineAt) => requests.post('/todo/', { todo: { listId, content, deadlineAt } })
+  add: (listId, content, deadlineAt) => requests.post('/todo/', { todo: { listId, content, deadlineAt } }),
+  toggle: (todoId, type) => requests.post(`/todo/${todoId}?type=${type}`)
 };
 
 const Group = {

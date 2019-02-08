@@ -34,4 +34,8 @@ public class Todo {
     this.imageUrl = imageUrl;
     this.finished = false;
   }
+
+  public void setFinished(Boolean finished) {
+    this.finished = finished;
+  }
 }

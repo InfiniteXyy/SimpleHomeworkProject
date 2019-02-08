@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Dialog, withStyles } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
+import Dialog from '@material-ui/core/Dialog';
+import withStyles from '@material-ui/core/styles/withStyles';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import StackHeader from '../StackHeader';

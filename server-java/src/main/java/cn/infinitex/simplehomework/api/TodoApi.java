@@ -15,10 +15,12 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -59,6 +61,33 @@ public class TodoApi {
       Todo todo = new Todo(newTodoParam.getListId(), newTodoParam.getContent(),
           newTodoParam.getDeadlineAt(), newTodoParam.getNoticeAt(), newTodoParam.getImageUrl());
       todoRepository.save(todo);
+      return ResponseEntity.ok(new TodoData(todo).getJson());
+    } catch (Exception e) {
+      return ResponseEntity.status(401)
+          .body(ValidationHandler.wrapErrorRoot(JsonHelper.object("validation", e.getMessage())));
+    }
+  }
+
+  @PostMapping("/{todoId}")
+  public ResponseEntity toggleTodoStatus(
+      @RequestHeader(value = "Authorization") String authorization,
+      @PathVariable String todoId,
+      @RequestParam(value = "type") boolean type) {
+    try {
+      User user = auth.authorize(authorization);
+      Long id = Long.valueOf(todoId);
+      Optional<Todo> todoOptional = todoRepository.findById(id);
+      if (!todoOptional.isPresent()) {
+        throw new Exception("todoid wrong");
+      }
+      Todo todo = todoOptional.get();
+      if (todoListRepository.findById(todo.getListId()).get().getUserId() != user.getId()) {
+        throw new Exception("todo not belongs to you");
+      }
+
+      todo.setFinished(type);
+      todoRepository.save(todo);
+
       return ResponseEntity.ok(new TodoData(todo).getJson());
     } catch (Exception e) {
       return ResponseEntity.status(401)

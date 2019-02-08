@@ -2,8 +2,6 @@ import React from 'react';
 import { Dialog, withStyles } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
 import { MessageList } from './MessageList';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -13,36 +11,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
 import GroupList from './GroupList';
 import { SlideTransition } from '../utils';
-import HomeDrawer from '../Home/HomeDrawer';
-import MenuIcon from '@material-ui/icons/DehazeRounded';
 
 const styles = {
   root: {
-    width: '100%',
-    paddingTop: 96
-  },
-  appbar: {
-    width: '100%',
-    top: 0,
-    left: 0,
-    position: 'fixed',
-    backgroundColor: 'white',
-    zIndex: 100,
-    paddingBottom: 16,
-    borderBottom: 'solid 0.75px #eeeeee'
-  },
-  header: {
-    color: '#9a9a9a',
-    fontWeight: 'bold',
-    height: 48,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    zIndex: 100,
-    paddingLeft: 16,
-    paddingRight: 16,
-    width: '100%',
-    boxSizing: 'border-box'
+    width: '100%'
   },
   search: {
     padding: '0 16px 0',
@@ -70,8 +42,8 @@ const styles = {
     color: '#5c5c5c'
   },
   listItem: {
-    borderTop: 'solid 1px #f1f1f1',
-    borderBottom: 'solid 1px #f1f1f1',
+    borderTop: '0.75px solid #eeeeee',
+    borderBottom: '0.75px solid #eeeeee',
     height: 60,
     marginTop: 10,
     backgroundColor: 'white'
@@ -100,8 +72,7 @@ class Group extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      groupListOpen: false,
-      drawerOpen: false
+      groupListOpen: false
     };
   }
 
@@ -112,26 +83,11 @@ class Group extends React.Component {
     this.setState({ groupListOpen: true });
   };
 
-  toggleDrawerOpen = drawerOpen => () => {
-    this.setState({ drawerOpen });
-  };
-
   render() {
     const { messageStore, groupStore, classes } = this.props;
     const { groups } = groupStore;
     return (
       <div>
-        <div className={classes.appbar}>
-          <div className={classes.header}>
-            <Typography variant="h6">群组</Typography>
-            <MenuIcon onClick={this.toggleDrawerOpen(true)} />
-          </div>
-
-          <div className={classes.search}>
-            <InputBase placeholder="搜索…" classes={{ root: classes.inputRoot, input: classes.inputInput }} />
-          </div>
-        </div>
-
         <div className={classes.root}>
           <List className={classes.list}>
             <ListItem button style={styles.listItem} onClick={this.handleSetting}>
@@ -176,7 +132,6 @@ class Group extends React.Component {
         >
           <GroupList groups={groups} onClose={this.handleCloseGroupList} />
         </Dialog>
-        <HomeDrawer open={this.state.drawerOpen} handleClose={this.toggleDrawerOpen(false)} />
       </div>
     );
   }

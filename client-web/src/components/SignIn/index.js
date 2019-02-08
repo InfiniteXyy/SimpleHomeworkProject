@@ -5,7 +5,6 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import { inject, observer } from 'mobx-react';
 
 import Card from '@material-ui/core/Card';
@@ -18,7 +17,6 @@ import TabIcon from '@material-ui/icons/TabRounded';
 import ShopIcon from '@material-ui/icons/ShopRounded';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVertRounded';
-import MenuIcon from '@material-ui/icons/DehazeRounded';
 
 import './SignIn.css';
 
@@ -28,13 +26,10 @@ import CardPlan from './CardPlan';
 import Shop from './Shop';
 
 import classNames from 'classnames';
-import HomeDrawer from '../Home/HomeDrawer';
 
 const isoWD = [2, 3, 4, 5, 6, 7, 1];
 const styles = theme => ({
-  root: {
-    paddingTop: 40
-  },
+  root: {},
   media: {
     height: 0,
     paddingTop: '56.25%' // 16:9
@@ -49,23 +44,6 @@ const styles = theme => ({
   resetContainer: {
     padding: theme.spacing.unit * 3
   },
-  header: {
-    width: '100%',
-    top: 0,
-    left: 0,
-    justifyContent: 'space-between',
-    position: 'fixed',
-    color: '#9a9a9a',
-    backgroundColor: 'white',
-    fontWeight: 'bold',
-    height: 48,
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: 16,
-    paddingRight: 16,
-    boxSizing: 'border-box',
-    borderBottom: 'solid 0.75px #eeeeee'
-  },
   secondButton: {
     color: '#9b9b9b'
   }
@@ -75,12 +53,7 @@ const styles = theme => ({
 @observer
 class SignIn extends Component {
   state = {
-    dialogOpen: '',
-    drawerOpen: false
-  };
-
-  toggleDrawerOpen = drawerOpen => () => {
-    this.setState({ drawerOpen });
+    dialogOpen: ''
   };
 
   toggleDialog = type => () => {
@@ -97,10 +70,6 @@ class SignIn extends Component {
 
     return (
       <div>
-        <div className={classes.header}>
-          <Typography variant="h6">{moment().format('M月d日 dddd')}</Typography>
-          <MenuIcon onClick={this.toggleDrawerOpen(true)} />
-        </div>
         <div className={classes.root}>
           <div className={classNames('preview', 'border-vert')}>
             <div className="card-btn-container">
@@ -131,7 +100,6 @@ class SignIn extends Component {
         <CardToday open={this.state.dialogOpen === 'today'} onClose={this.toggleDialog('')} />
         <CardPlan open={this.state.dialogOpen === 'plan'} onClose={this.toggleDialog('')} />
         <Shop open={this.state.dialogOpen === 'shop'} onClose={this.toggleDialog('')} />
-        <HomeDrawer open={this.state.drawerOpen} handleClose={this.toggleDrawerOpen(false)} />
       </div>
     );
   }

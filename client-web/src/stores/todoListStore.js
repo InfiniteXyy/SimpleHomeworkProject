@@ -1,12 +1,9 @@
-import { action, computed, observable } from 'mobx';
+import { action, observable } from 'mobx';
 import agent from '../agent';
 
 export class TodoListStore {
   @observable
-  todoLists = [];
-
-  @observable
-  currentListId = undefined;
+  todoLists = undefined;
 
   @action
   loadTodos() {
@@ -41,18 +38,13 @@ export class TodoListStore {
     );
   }
 
-  @computed
-  get currentTasks() {
-    if (!this.currentListId) {
-      return [];
-    } else {
-      if (this.todoLists.length === 0) return [];
-      return this.todoLists.filter(i => i.id === this.currentListId)[0].tasks;
-    }
-  }
   @action
-  toggleList(id) {
-    this.currentListId = id;
+  toggleTodo(todo) {
+    return agent.Todo.toggle(todo.id, !todo.finished).then(
+      action(({ task }) => {
+        todo.finished = task.finished;
+      })
+    );
   }
 }
 

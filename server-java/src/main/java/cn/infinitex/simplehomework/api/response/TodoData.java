@@ -23,6 +23,7 @@ public class TodoData {
       put("content", todo.getContent());
       put("deadlineAt", todo.getDeadlineAt());
       put("noticeAt", todo.getNoticeAt());
+      put("finished", todo.getFinished());
     }};
   }
 

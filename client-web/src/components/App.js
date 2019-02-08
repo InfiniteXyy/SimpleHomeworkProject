@@ -13,12 +13,14 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MySnackbarContent from './Snackbar';
 
 import './App.css';
+import Header from './Header';
 
 const styles = {
   root: {
     marginBottom: 56,
     marginLeft: -8,
-    marginRight: -8
+    marginRight: -8,
+    marginTop: 56
   }
 };
 
@@ -64,6 +66,7 @@ class App extends Component {
               <Route path="/group/:id" component={GroupHomePage} exact />
               <Route path="*">
                 <div>
+                  <Header />
                   <Switch>
                     <Route path="/" component={Home} exact />
                     <Route path="/group" component={Group} />

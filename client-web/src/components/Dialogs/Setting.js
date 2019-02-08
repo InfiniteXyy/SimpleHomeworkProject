@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Dialog from '@material-ui/core/Dialog';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { inject, observer } from 'mobx-react';
 import './Setting.css';
 
@@ -13,7 +15,6 @@ import SunIcon from '@material-ui/icons/WbSunnyRounded';
 import ThemeIcon from '@material-ui/icons/ToysRounded';
 import CodeIcon from '@material-ui/icons/CodeRounded';
 import MoreIcon from '@material-ui/icons/MoreRounded';
-import { Dialog, ListItemIcon } from '@material-ui/core';
 import StackHeader from '../StackHeader';
 import { SlideTransition } from '../utils';
 

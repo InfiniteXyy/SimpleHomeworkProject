@@ -23,10 +23,10 @@ const styles = {
   groupItem: {
     height: 50,
     backgroundColor: 'white',
-    borderTop: 'solid 1px #f1f1f1'
+    borderTop: '0.75px solid #eeeeee'
   },
   list: {
-    borderBottom: 'solid 1px #f1f1f1',
+    borderBottom: '0.75px solid #eeeeee',
     paddingBottom: 0
   },
   secondaryText: {

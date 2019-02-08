@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Checkbox, Dialog, Tabs, Typography, withStyles } from '@material-ui/core';
-import Header from './Header';
+import { Dialog, Tabs, withStyles } from '@material-ui/core';
 import Badge from '@material-ui/core/Badge';
-import moment from 'moment';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
@@ -18,57 +16,10 @@ import TextField from '@material-ui/core/TextField';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import Tab from '@material-ui/core/Tab';
-import HomeDrawer from './HomeDrawer';
+import SwipeableViews from 'react-swipeable-views';
+import TodoList from './TodoList';
 
 const styles = theme => ({
-  root: {
-    margin: '4px 0',
-    paddingTop: 46
-  },
-  listRoot: {
-    backgroundColor: 'white',
-    overflow: 'hidden',
-    scrollbarWidth: 0,
-    scrollbarColor: 'red'
-  },
-  todoItem: {
-    backgroundColor: 'white',
-    borderBottom: 'solid 0.5px #eeeeee',
-    display: 'flex',
-    flexDirection: 'row',
-    paddingBottom: 20,
-    paddingTop: 20
-  },
-  margin: {
-    marginLeft: 24
-  },
-  itemCheckbox: {
-    fontSize: 16
-  },
-  timeContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  moreDetail: {
-    minWidth: 150,
-    textAlign: 'center',
-    margin: '10px 20px',
-    fontSize: 13,
-    color: '#cccccc'
-  },
-  moreContainer: {
-    marginTop: 16,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  line: {
-    height: 0.75,
-    margin: '0 10px',
-    width: '100%',
-    background: '#eeeeee'
-  },
   fab: {
     position: 'fixed',
     bottom: theme.spacing.unit * 2 + 56,
@@ -100,37 +51,21 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      addTodoOpen: false,
-      addTodoListOpen: false,
+      dialogOpen: '',
       speedDialOpen: false,
-      drawerOpen: false
+      curListId: 0
     };
   }
-
-  toggleDrawer = type => () => {
-    this.setState({ drawerOpen: type });
+  handleChange = (event, value) => {
+    this.setState({ curListId: value });
   };
 
-  handleClickList = id => () => {
-    this.props.todoListStore.toggleList(id);
+  handleChangeIndex = index => {
+    this.setState({ curListId: index });
   };
 
-  handleClickTodo = id => () => {};
-
-  openAddTodo = () => {
-    this.setState({ addTodoOpen: true, speedDialOpen: false });
-  };
-
-  closeAddTodo = () => {
-    this.setState({ addTodoOpen: false });
-  };
-
-  openAddTodoList = () => {
-    this.setState({ addTodoListOpen: true, speedDialOpen: false });
-  };
-
-  closeAddTodoList = () => {
-    this.setState({ addTodoListOpen: false });
+  toggleDialog = title => () => {
+    this.setState({ dialogOpen: title });
   };
 
   handleAddTodoList = title => {
@@ -138,23 +73,33 @@ class Home extends Component {
   };
 
   render() {
-    const { classes, todoListStore } = this.props;
-    const tasks = todoListStore.currentTasks;
+    const { classes } = this.props;
+    const todoLists = this.props.todoListStore.todoLists;
+    if (todoLists === undefined) {
+      return <div className="empty-tip">加载中 ...</div>;
+    }
+    if (todoLists.length === 0) {
+      return <div className="empty-tip">请先添加一个列表</div>;
+    }
     return (
       <div>
-        <Header onClick={this.toggleDrawer(true)} />
         <div className={classes.root}>
           <div className={classes.listRoot}>
-            <Tabs variant="scrollable" scrollButtons="auto" value={todoListStore.currentListId}>
-              {todoListStore.todoLists.map(item => {
+            <Tabs
+              style={{ backgroundColor: 'white' }}
+              variant="scrollable"
+              scrollButtons="auto"
+              value={this.state.curListId}
+              onChange={this.handleChange}
+            >
+              {todoLists.map((item, index) => {
                 return (
                   <Tab
                     key={item.id}
+                    value={index}
                     disableRipple
-                    value={item.id}
-                    onClick={this.handleClickList(item.id)}
                     label={
-                      <Badge badgeContent={item.tasks.length} color="primary">
+                      <Badge badgeContent={item.tasks.filter(i => !i.finished).length} color="primary">
                         {item.title}
                       </Badge>
                     }
@@ -162,49 +107,17 @@ class Home extends Component {
                 );
               })}
             </Tabs>
+            <SwipeableViews
+              index={this.state.curListId}
+              onChangeIndex={this.handleChangeIndex}
+              containerStyle={{ height: '100%' }}
+              style={{ height: '100%' }}
+            >
+              {todoLists.map(item => (
+                <TodoList key={item.id} tasks={item.tasks} />
+              ))}
+            </SwipeableViews>
           </div>
-
-          <div>
-            {tasks.map(item => {
-              const { finished, id, content, deadlineAt, createdAt, createdBy } = item;
-              const deadline = deadlineAt ? moment(deadlineAt).format('M月D日 周dd H:mm 截止') : '无截止时间';
-              return (
-                <div className={classes.todoItem} key={item.id}>
-                  <div className={classes.checkbox}>
-                    <Checkbox value="finished" checked={finished} onChange={this.handleClickTodo(id)} />
-                  </div>
-                  <div className={classes.body}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      style={finished ? { textDecoration: 'line-through', color: '#9b9b9b' } : {}}
-                    >
-                      {content}
-                    </Typography>
-                    <Typography variant="body1" gutterBottom>
-                      {deadline}
-                    </Typography>
-                    <div className={classes.timeContainer}>
-                      <Typography variant="body2">{createdBy ? createdBy : '我'}</Typography>
-                      <Typography style={{ margin: '0 12px', fontWeight: 'lighter' }} variant="body2">
-                        |
-                      </Typography>
-                      <Typography variant="body2">{moment(createdAt).fromNow()}</Typography>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className={classes.moreContainer}>
-          <div className={classes.line} />
-
-          <Typography variant="body2" className={classes.moreDetail}>
-            今天也是心情棒棒哒一天
-          </Typography>
-          <div className={classes.line} />
         </div>
 
         <SpeedDial
@@ -216,29 +129,27 @@ class Home extends Component {
           ariaLabel="action"
         >
           <SpeedDialAction
-            key={'add todo'}
+            key="add todo"
             classes={{ button: classes.toolButtonYellow }}
             icon={<TodoIcon />}
-            tooltipTitle={'添加作业'}
-            onClick={this.openAddTodo}
+            tooltipTitle="添加作业"
+            onClick={this.toggleDialog('todo')}
           />
           <SpeedDialAction
             classes={{ button: classes.toolButtonGreen }}
-            key={'add todolist'}
+            key="add todolist"
             icon={<TodoListIcon />}
-            tooltipTitle={'添加列表'}
-            onClick={this.openAddTodoList}
+            tooltipTitle="添加列表"
+            onClick={this.toggleDialog('todoList')}
           />
         </SpeedDial>
 
-        <AddTodo open={this.state.addTodoOpen} onClose={this.closeAddTodo} />
-
-        <HomeDrawer open={this.state.drawerOpen} handleClose={this.toggleDrawer(false)} />
+        <AddTodo open={this.state.dialogOpen === 'todo'} onClose={this.toggleDialog('')} />
 
         <AddListDialog
-          open={this.state.addTodoListOpen}
+          open={this.state.dialogOpen === 'todoList'}
           handleClose={() => {
-            this.setState({ addTodoListOpen: false });
+            this.toggleDialog('');
           }}
           handleAdd={this.handleAddTodoList}
         />

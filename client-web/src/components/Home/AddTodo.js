@@ -261,7 +261,7 @@ class ListDialog extends Component {
 
     return (
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>"设置添加到列表"</DialogTitle>
+        <DialogTitle>设置添加到列表</DialogTitle>
         <DialogContent>
           <RadioGroup style={{ width: 230 }} value={selectedValue.toString()} onChange={handleChange}>
             {options.map(option => (
