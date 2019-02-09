@@ -5,6 +5,23 @@ export class TodoListStore {
   @observable
   todoLists = undefined;
 
+  @observable
+  currentTodo = undefined;
+
+  @observable
+  todoOpen = false;
+
+  @action
+  openTodo(todo) {
+    this.currentTodo = todo;
+    this.todoOpen = true;
+  }
+
+  @action
+  closeTodo() {
+    this.todoOpen = false;
+  }
+
   @action
   loadTodos() {
     return agent.TodoList.get().then(
@@ -43,6 +60,17 @@ export class TodoListStore {
     return agent.Todo.toggle(todo.id, !todo.finished).then(
       action(({ task }) => {
         todo.finished = task.finished;
+      })
+    );
+  }
+
+  @action
+  deleteTodo(todo) {
+    return agent.Todo.delete(todo.id).then(
+      action(() => {
+        this.todoLists.forEach(list => {
+          list.tasks.remove(todo);
+        });
       })
     );
   }

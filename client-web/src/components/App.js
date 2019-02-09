@@ -79,8 +79,9 @@ class App extends Component {
           </div>
 
           <Snackbar
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             open={snackbarOpen}
+            autoHideDuration={2000}
             onClose={this.handleCloseSnackbar}
           >
             <MySnackbarContent

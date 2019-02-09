@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
-import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 import moment from 'moment';
@@ -11,23 +10,26 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import MoreIcon from '@material-ui/icons/MoreHorizRounded';
 
+import classNames from 'classnames';
 const styles = {
-  todoItem: {
-    backgroundColor: 'white',
-    borderBottom: 'solid 0.5px #eeeeee',
-    display: 'flex',
-    flexDirection: 'row',
+  listItem: {
+    borderBottom: 'solid 0.75px #eeeeee',
     paddingBottom: 20,
     paddingTop: 20
   },
-  timeContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
+  list: {
+    backgroundColor: 'white'
   },
   progress: {
     padding: 12
+  },
+  finished: {
+    textDecoration: 'line-through',
+    color: '#9b9b9b'
   }
 };
 
@@ -54,49 +56,43 @@ class TodoList extends Component {
     item.isLoading = true;
     this.props.todoListStore.toggleTodo(item).then(() => {
       item.isLoading = false;
-      this.props.commonStore.toggleSnackbar('设置成功');
       this.setState({ drawerOpen: false });
     });
+  };
+
+  openTodoDetail = item => () => {
+    this.props.todoListStore.openTodo(item);
   };
 
   render() {
     const { classes, tasks } = this.props;
     return (
       <div>
-        {tasks.map(item => {
-          const { finished, content, deadlineAt, createdAt, createdBy } = item;
-          const deadline = deadlineAt ? moment(deadlineAt).format('M月D日 周dd H:mm 截止') : '无截止时间';
-          return (
-            <div className={classes.todoItem} key={item.id}>
-              <div>
+        <List disablePadding={true} classes={{ root: classes.list }}>
+          {tasks.map(item => {
+            const { finished, content, deadlineAt } = item;
+            const deadline = deadlineAt ? moment(deadlineAt).format('M月D日 周dd H:mm 截止') : '无截止时间';
+            return (
+              <ListItem classes={{ root: classes.listItem }} button key={item.id} onClick={this.handleToggleTodo(item)}>
                 {item.isLoading ? (
                   <CircularProgress size={24} className={classes.progress} />
                 ) : (
-                  <Checkbox value="finished" checked={finished} onChange={this.handleToggleTodo(item)} />
+                  <Checkbox value="finished" checked={finished} />
                 )}
-              </div>
-              <div className={classes.body}>
-                <Typography
-                  variant="subtitle1"
-                  gutterBottom
-                  style={finished ? { textDecoration: 'line-through', color: '#9b9b9b' } : {}}
-                >
-                  {content}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  {deadline}
-                </Typography>
-                <div className={classes.timeContainer}>
-                  <Typography variant="body2">{createdBy ? createdBy : '我'}</Typography>
-                  <Typography style={{ margin: '0 12px', fontWeight: 'lighter' }} variant="body2">
-                    |
-                  </Typography>
-                  <Typography variant="body2">{moment(createdAt).fromNow()}</Typography>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+                <ListItemText
+                  classes={{ primary: classNames({ [classes.finished]: item.finished }) }}
+                  primary={content}
+                  secondary={deadline}
+                />
+                <ListItemSecondaryAction>
+                  <IconButton onClick={this.openTodoDetail(item)}>
+                    <MoreIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+        </List>
 
         <Drawer anchor="bottom" open={this.state.drawerOpen} onClose={this.toggleDrawer(false)}>
           <div>

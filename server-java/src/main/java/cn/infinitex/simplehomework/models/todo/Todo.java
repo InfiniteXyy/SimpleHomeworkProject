@@ -38,4 +38,23 @@ public class Todo {
   public void setFinished(Boolean finished) {
     this.finished = finished;
   }
+
+  public void update(Long listId, String content, String deadlineAt, String imageUrl,
+      String noticeAt) {
+    if (0 != listId) {
+      this.listId = listId;
+    }
+    if (!"".equals(content)) {
+      this.content = content;
+    }
+    if (!"".equals(deadlineAt)) {
+      this.deadlineAt = deadlineAt;
+    }
+    if (!"".equals(imageUrl)) {
+      this.imageUrl = imageUrl;
+    }
+    if (!"".equals(noticeAt)) {
+      this.noticeAt = noticeAt;
+    }
+  }
 }

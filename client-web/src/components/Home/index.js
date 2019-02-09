@@ -18,6 +18,7 @@ import Button from '@material-ui/core/Button';
 import Tab from '@material-ui/core/Tab';
 import SwipeableViews from 'react-swipeable-views';
 import TodoList from './TodoList';
+import TodoDetail from './TodoDetail';
 
 const styles = theme => ({
   fab: {
@@ -38,6 +39,10 @@ const styles = theme => ({
     '&:hover': {
       backgroundColor: '#F5A623'
     }
+  },
+  root: {
+    height: '100%',
+    boxSizing: 'border-box'
   }
 });
 
@@ -144,13 +149,13 @@ class Home extends Component {
           />
         </SpeedDial>
 
+        <TodoDetail open={this.props.todoListStore.todoOpen} />
+
         <AddTodo open={this.state.dialogOpen === 'todo'} onClose={this.toggleDialog('')} />
 
         <AddListDialog
           open={this.state.dialogOpen === 'todoList'}
-          handleClose={() => {
-            this.toggleDialog('');
-          }}
+          handleClose={this.toggleDialog('')}
           handleAdd={this.handleAddTodoList}
         />
       </div>

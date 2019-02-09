@@ -21,7 +21,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import { inject, observer } from 'mobx-react';
-import { SlideTransition } from '../utils';
+import { FullScreenDialog } from '../utils';
 
 const styles = theme => ({
   root: {
@@ -128,13 +128,7 @@ class AddTodo extends Component {
   render() {
     const { classes, open } = this.props;
     return (
-      <Dialog
-        open={open}
-        fullScreen
-        transitionDuration={300}
-        TransitionComponent={SlideTransition}
-        onEnter={this.handlePayload}
-      >
+      <FullScreenDialog open={open} onEnter={this.handlePayload}>
         <div style={{ backgroundColor: '#fafafa', flex: 1 }}>
           <div className={classes.header}>
             <div className={classes.headerContainer}>
@@ -221,7 +215,7 @@ class AddTodo extends Component {
             selectedValue={this.state.linkListId}
           />
         </div>
-      </Dialog>
+      </FullScreenDialog>
     );
   }
 }
