@@ -22,6 +22,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Drawer from '@material-ui/core/Drawer';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/EditOutlined';
+import AddTodo from './AddTodo';
 
 const styles = {
   root: {
@@ -45,7 +46,8 @@ const styles = {
 class TodoDetail extends Component {
   state = {
     drawerOpen: false,
-    alertOpen: false
+    alertOpen: false,
+    editOpen: false
   };
 
   toggleDrawer = drawerOpen => () => {
@@ -66,6 +68,10 @@ class TodoDetail extends Component {
 
   toggleAlert = (type, callback) => () => {
     this.setState({ alertOpen: type, drawerOpen: false }, callback);
+  };
+
+  toggleEdit = type => () => {
+    this.setState({ editOpen: type, drawerOpen: false });
   };
 
   onDelete = () => {
@@ -143,19 +149,21 @@ class TodoDetail extends Component {
 
           <div style={{ marginTop: 12 }} className={classNames('border-vert', 'background-white')}>
             <List subheader={<ListSubheader>备注</ListSubheader>}>
-              <ListItem>
-                <ListItemText primary="记得早上刷牙" />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="记得早上刷牙" />
-              </ListItem>
+              {task.remarks.map((i, index) => (
+                <ListItem key={index.toString()}>
+                  <ListItemIcon>
+                    <div>{index + 1}</div>
+                  </ListItemIcon>
+                  <ListItemText primary={i} />
+                </ListItem>
+              ))}
             </List>
           </div>
         </div>
 
         <Drawer open={this.state.drawerOpen} anchor="bottom" onClose={this.toggleDrawer(false)}>
           <List>
-            <ListItem button onClick={() => {}}>
+            <ListItem button onClick={this.toggleEdit(true)}>
               <ListItemIcon>
                 <EditIcon className="gray" />
               </ListItemIcon>
@@ -177,6 +185,8 @@ class TodoDetail extends Component {
           title="删除任务"
           content={`你确定要删除这条任务吗，这将无法复原`}
         />
+
+        <AddTodo open={this.state.editOpen} onClose={this.toggleEdit(false)} payload={task} isEdit />
       </FullScreenDialog>
     );
   }

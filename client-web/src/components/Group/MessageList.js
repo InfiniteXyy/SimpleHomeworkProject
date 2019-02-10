@@ -1,6 +1,6 @@
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import MoreIcon from '@material-ui/icons/ExpandMoreRounded';
+import AddIcon from '@material-ui/icons/PlaylistAddRounded';
 import ExpandIcon from '@material-ui/icons/MoreHorizRounded';
 import AlarmIcon from '@material-ui/icons/AlarmOutlined';
 import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
@@ -37,7 +37,7 @@ const Message = props => {
       <div className="message-payload">
         <div className="payload-type">
           {typeNames[payload.type]}
-          <ExpandIcon className="more-icon" onClick={handleAdd} />
+          <AddIcon className="more-icon" onClick={handleAdd} />
         </div>
         <div className="payload-content">
           <AssignmentIcon className={classNames('brown', 'icon')} />
@@ -65,7 +65,7 @@ const Message = props => {
         </div>
 
         <div className="more-icon-container">
-          <MoreIcon className="more-icon" onClick={handleExpand} />
+          <ExpandIcon className="more-icon" onClick={handleExpand} />
         </div>
       </div>
 
@@ -95,7 +95,10 @@ class MessageList extends React.Component {
 
   toggleDrawer = (type, payload = undefined) => () => {
     if (!payload) this.setState({ drawerOpen: type });
-    else this.setState({ drawerOpen: type, payload });
+    else
+      this.setState({ payload }, () => {
+        this.setState({ drawerOpen: type });
+      });
   };
 
   render() {
@@ -116,7 +119,7 @@ class MessageList extends React.Component {
             item={i}
             key={i.id}
             handleExpand={this.toggleDrawer('message')}
-            handleAdd={this.toggleDrawer('add', i.payload)}
+            handleAdd={this.toggleDrawer('addTodo', i.payload)}
           />
         ))}
         <Drawer anchor="bottom" open={this.state.drawerOpen === 'message'} onClose={this.toggleDrawer('')}>
@@ -127,15 +130,6 @@ class MessageList extends React.Component {
               </ListItem>
               <ListItem button>
                 <ListItemText primary="举报这条信息" />
-              </ListItem>
-            </List>
-          </div>
-        </Drawer>
-        <Drawer anchor="bottom" open={this.state.drawerOpen === 'add'} onClose={this.toggleDrawer('')}>
-          <div>
-            <List>
-              <ListItem button onClick={this.toggleDrawer('addTodo')}>
-                <ListItemText primary="添加到我的列表" />
               </ListItem>
             </List>
           </div>

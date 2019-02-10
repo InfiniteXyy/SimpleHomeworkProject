@@ -1,8 +1,11 @@
 package cn.infinitex.simplehomework.api.response;
 
 import cn.infinitex.simplehomework.models.todo.Todo;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -24,6 +27,13 @@ public class TodoData {
       put("deadlineAt", todo.getDeadlineAt());
       put("noticeAt", todo.getNoticeAt());
       put("finished", todo.getFinished());
+      put("remarks", todo.getRemarks() == null ?
+          new ArrayList() :
+          Arrays.stream(todo
+              .getRemarks()
+              .split("\n"))
+              .filter(i -> !"".equals(i))
+              .collect(Collectors.toList()));
     }};
   }
 

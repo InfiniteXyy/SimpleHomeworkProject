@@ -77,8 +77,13 @@ public class TodoApi {
           throw new Exception("list doesn't belongs to you");
         }
       }
-      Todo todo = new Todo(newTodoParam.getListId(), newTodoParam.getContent(),
-          newTodoParam.getDeadlineAt(), newTodoParam.getNoticeAt(), newTodoParam.getImageUrl());
+      Todo todo = new Todo(
+          newTodoParam.getListId(),
+          newTodoParam.getContent(),
+          newTodoParam.getDeadlineAt(),
+          newTodoParam.getNoticeAt(),
+          newTodoParam.getImageUrl(),
+          newTodoParam.getRemarks());
       todoRepository.save(todo);
       return ResponseEntity.ok(new TodoData(todo).getJson());
     } catch (Exception e) {
@@ -136,8 +141,13 @@ public class TodoApi {
         throw new Exception("list not exists");
       }
 
-      todo.update(todoParam.getListId(), todoParam.getContent(), todoParam.getDeadlineAt(),
-          todoParam.getImageUrl(), todoParam.getNoticeAt());
+      todo.update(
+          todoParam.getListId(),
+          todoParam.getContent(),
+          todoParam.getDeadlineAt(),
+          todoParam.getImageUrl(),
+          todoParam.getNoticeAt(),
+          todoParam.getRemarks());
       todoRepository.save(todo);
       return ResponseEntity.ok(new TodoData(todo).getJson());
     } catch (Exception e) {
@@ -148,7 +158,7 @@ public class TodoApi {
 }
 
 @Getter
-@JsonRootName("task")
+@JsonRootName("todo")
 class UpdateTodoParam {
 
   @NotBlank
@@ -158,4 +168,5 @@ class UpdateTodoParam {
   private String deadlineAt = "";
   private String noticeAt = "";
   private String imageUrl = "";
+  private String remarks = "";
 }

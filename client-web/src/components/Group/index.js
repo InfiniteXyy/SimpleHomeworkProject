@@ -16,25 +16,8 @@ const styles = {
   root: {
     width: '100%'
   },
-  search: {
-    padding: '0 16px 0',
-    display: 'flex'
-  },
-  inputRoot: {
-    flex: 1,
-    backgroundColor: 'RGBA(142,142,147,0.12)',
-    borderRadius: 10,
-    height: 36,
-    boxSizing: 'border-box'
-  },
-  inputInput: {
-    margin: '0 16px',
-    boxSizing: 'border-box'
-  },
   list: {
-    marginTop: 16,
-    marginBottom: 16,
-    padding: 0
+    marginBottom: 16
   },
   bigList: {
     fontSize: 16,
@@ -89,7 +72,7 @@ class Group extends React.Component {
     return (
       <div>
         <div className={classes.root}>
-          <List className={classes.list}>
+          <List className={classes.list} disablePadding>
             <ListItem button style={styles.listItem} onClick={this.handleSetting}>
               <ListItemIcon>
                 <PeopleIcon color="primary" />

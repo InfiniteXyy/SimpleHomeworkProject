@@ -17,10 +17,9 @@ import Header from './Header';
 
 const styles = {
   root: {
-    marginBottom: 56,
-    marginLeft: -8,
-    marginRight: -8,
-    marginTop: 56
+    margin: -8,
+    paddingTop: 48,
+    paddingBottom: 48
   }
 };
 

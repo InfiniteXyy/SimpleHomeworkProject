@@ -19,6 +19,7 @@ public class NewTodoParam {
   private String deadlineAt = "";
   private String noticeAt = "";
   private String imageUrl = "";
+  private String remarks = "";
 
 
 }

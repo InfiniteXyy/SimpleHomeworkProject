@@ -41,8 +41,10 @@ const styles = theme => ({
     }
   },
   root: {
+    marginTop: 10,
     height: '100%',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    borderTop: '0.75px solid #eeeeee'
   }
 });
 
@@ -62,15 +64,15 @@ class Home extends Component {
     };
   }
   handleChange = (event, value) => {
-    this.setState({ curListId: value });
+    this.setState({ curListId: value, speedDialOpen: false });
   };
 
   handleChangeIndex = index => {
-    this.setState({ curListId: index });
+    this.setState({ curListId: index, speedDialOpen: false });
   };
 
   toggleDialog = title => () => {
-    this.setState({ dialogOpen: title });
+    this.setState({ dialogOpen: title, speedDialOpen: false });
   };
 
   handleAddTodoList = title => {

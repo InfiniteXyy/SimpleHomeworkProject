@@ -60,14 +60,21 @@ const TodoList = {
 };
 
 const Todo = {
-  add: (listId, content, deadlineAt) => requests.post('/todo/', { todo: { listId, content, deadlineAt } }),
+  add: (listId, content, deadlineAt, remarks) =>
+    requests.post('/todo/', { todo: { listId, content, deadlineAt, remarks } }),
   toggle: (todoId, type) => requests.post(`/todo/${todoId}?type=${type}`),
-  delete: (todoId) => requests.del(`/todo/${todoId}`),
-  update: (todoId, listId, content, deadlineAt, imageUrl, noticeAt) => requests.put(`/todo/${todoId}`, {
-    todo: {
-      listId, content, deadlineAt, imageUrl, noticeAt
-    }
-  })
+  delete: todoId => requests.del(`/todo/${todoId}`),
+  update: (todoId, listId, content, deadlineAt, remarks, imageUrl, noticeAt) =>
+    requests.put(`/todo/${todoId}`, {
+      todo: {
+        listId,
+        content,
+        deadlineAt,
+        imageUrl,
+        noticeAt,
+        remarks
+      }
+    })
 };
 
 const Group = {

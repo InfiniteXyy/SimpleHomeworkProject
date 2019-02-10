@@ -10,16 +10,17 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import MoreIcon from '@material-ui/icons/MoreHorizRounded';
+import MessageIcon from '@material-ui/icons/MessageRounded';
+import PhotoIcon from '@material-ui/icons/PhotoRounded';
 
 import classNames from 'classnames';
+
 const styles = {
   listItem: {
     borderBottom: 'solid 0.75px #eeeeee',
-    paddingBottom: 20,
-    paddingTop: 20
+    paddingTop: 16,
+    paddingBottom: 16
   },
   list: {
     backgroundColor: 'white'
@@ -28,8 +29,34 @@ const styles = {
     padding: 12
   },
   finished: {
-    textDecoration: 'line-through',
-    color: '#9b9b9b'
+    color: '#9b9b9b',
+    textDecoration: 'line-through'
+  },
+  unfinished: {
+    color: '#4a4a4a'
+  },
+  primaryItem: {
+    fontSize: 16,
+    fontWeight: '500',
+    transitionDuration: "0.4s"
+  },
+  smallIcon: {
+    color: '#dedede',
+    fontSize: 16,
+    marginRight: 6
+  },
+  smallText: {
+    fontSize: 12,
+    color: '#9e9e9e'
+  },
+  smallContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: 20
+  },
+  detailContainer: {
+    marginTop: 10,
+    display: 'flex'
   }
 };
 
@@ -73,21 +100,47 @@ class TodoList extends Component {
             const { finished, content, deadlineAt } = item;
             const deadline = deadlineAt ? moment(deadlineAt).format('M月D日 周dd H:mm 截止') : '无截止时间';
             return (
-              <ListItem classes={{ root: classes.listItem }} button key={item.id} onClick={this.handleToggleTodo(item)}>
-                {item.isLoading ? (
-                  <CircularProgress size={24} className={classes.progress} />
-                ) : (
-                  <Checkbox value="finished" checked={finished} />
-                )}
+              <ListItem
+                onClick={this.openTodoDetail(item)}
+                alignItems="flex-start"
+                classes={{ root: classes.listItem }}
+                button
+                key={item.id}
+              >
                 <ListItemText
-                  classes={{ primary: classNames({ [classes.finished]: item.finished }) }}
+                  classes={{
+                    primary: classNames(classes.primaryItem, {
+                      [classes.finished]: item.finished,
+                      [classes.unfinished]: !item.finished
+                    })
+                  }}
                   primary={content}
-                  secondary={deadline}
+                  secondary={
+                    <React.Fragment>
+                      {deadline}
+                      <span className={classes.detailContainer}>
+                        {item.imageUrl && (
+                          <span className={classes.smallContainer}>
+                            <PhotoIcon className={classes.smallIcon} />
+                            <span className={classes.smallText}>1张照片</span>
+                          </span>
+                        )}
+                        {item.remarks.length !== 0 && (
+                          <span className={classes.smallContainer}>
+                            <MessageIcon className={classes.smallIcon} />
+                            <span className={classes.smallText}>{`${item.remarks.length}条备注`}</span>
+                          </span>
+                        )}
+                      </span>
+                    </React.Fragment>
+                  }
                 />
                 <ListItemSecondaryAction>
-                  <IconButton onClick={this.openTodoDetail(item)}>
-                    <MoreIcon />
-                  </IconButton>
+                  {item.isLoading ? (
+                    <CircularProgress size={24} className={classes.progress} />
+                  ) : (
+                    <Checkbox onChange={this.handleToggleTodo(item)} value="finished" checked={finished} />
+                  )}
                 </ListItemSecondaryAction>
               </ListItem>
             );

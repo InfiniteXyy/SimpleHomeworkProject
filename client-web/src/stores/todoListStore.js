@@ -43,8 +43,8 @@ export class TodoListStore {
   }
 
   @action
-  addTodo(listId, content, deadlineAt) {
-    return agent.Todo.add(listId, content, deadlineAt).then(
+  addTodo(listId, content, deadlineAt, remarks) {
+    return agent.Todo.add(listId, content, deadlineAt, remarks).then(
       action(({ task }) => {
         this.todoLists.forEach(i => {
           if (i.id.toString() === listId) {
@@ -70,6 +70,25 @@ export class TodoListStore {
       action(() => {
         this.todoLists.forEach(list => {
           list.tasks.remove(todo);
+        });
+      })
+    );
+  }
+
+  @action
+  updateTodo(listId, content, deadlineAt, remarks) {
+    return agent.Todo.update(this.currentTodo.id, listId, content, deadlineAt, remarks).then(
+      action(({ task }) => {
+        this.currentTodo.listId = task.listId;
+        this.currentTodo.content = task.content;
+        this.currentTodo.deadlineAt = task.deadlineAt;
+        this.currentTodo.remarks = task.remarks;
+        this.todoLists.forEach(list => {
+          let temp = list.tasks.find(i => i.id === this.currentTodo.id);
+          list.tasks.remove(temp);
+          if (list.id.toString() === listId) {
+            list.tasks.push(task);
+          }
         });
       })
     );

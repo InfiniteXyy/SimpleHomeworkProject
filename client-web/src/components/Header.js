@@ -63,7 +63,7 @@ class Header extends React.Component {
     const TitleNames = {
       '/': '简记作业',
       '/group': '群组',
-      '/signIn': moment().format('M月d日 dddd')
+      '/signIn': moment().format('M月D日 dddd')
     };
 
     return (

@@ -23,9 +23,11 @@ public class Todo {
   private String noticeAt;
   private String imageUrl;
   private Boolean finished;
+  private String remarks;
+
 
   public Todo(long listId, String content, String deadlineAt, String noticeAt,
-      String imageUrl) {
+      String imageUrl, String remarks) {
     this.listId = listId;
     this.content = content;
     this.deadlineAt = deadlineAt;
@@ -33,6 +35,7 @@ public class Todo {
     this.noticeAt = noticeAt;
     this.imageUrl = imageUrl;
     this.finished = false;
+    this.remarks = remarks;
   }
 
   public void setFinished(Boolean finished) {
@@ -40,7 +43,7 @@ public class Todo {
   }
 
   public void update(Long listId, String content, String deadlineAt, String imageUrl,
-      String noticeAt) {
+      String noticeAt, String remarks) {
     if (0 != listId) {
       this.listId = listId;
     }
@@ -55,6 +58,9 @@ public class Todo {
     }
     if (!"".equals(noticeAt)) {
       this.noticeAt = noticeAt;
+    }
+    if (!"".equals(remarks)) {
+      this.remarks = remarks;
     }
   }
 }

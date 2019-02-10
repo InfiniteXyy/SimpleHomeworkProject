@@ -20,11 +20,12 @@ const styles = {
 };
 
 const FullScreenDialog = withStyles(styles)(props => {
-  const { children, open, classes } = props;
+  const { children, open, classes, white } = props;
+  const _props = { ...props, white: undefined };
   return (
     <Dialog
-      {...props}
-      classes={{ paper: classes.paper }}
+      {..._props}
+      classes={{ paper: white ? '' : classes.paper }}
       fullScreen
       open={open}
       transitionDuration={300}
@@ -37,7 +38,12 @@ const FullScreenDialog = withStyles(styles)(props => {
 
 FullScreenDialog.propTypes = {
   children: PropTypes.node.isRequired,
-  open: PropTypes.bool.isRequired
+  open: PropTypes.bool.isRequired,
+  white: PropTypes.bool
+};
+
+FullScreenDialog.defaultProps = {
+  white: false
 };
 
 const ConfirmDialog = props => {
