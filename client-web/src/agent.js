@@ -82,7 +82,8 @@ const Group = {
   get: nameId => requests.get(`/group/${encode(nameId)}`),
   getMyGroups: () => requests.get('/group'),
   join: groupId => requests.post(`/group/join?groupId=${groupId}`),
-  leave: groupId => requests.post(`/group/leave?groupId=${groupId}`)
+  leave: groupId => requests.post(`/group/leave?groupId=${groupId}`),
+  search: (nameId = '', title = '') => requests.get(`/group/search?nameId=${encode(nameId)}&title=${encode(title)}`)
 };
 
 const Card = {

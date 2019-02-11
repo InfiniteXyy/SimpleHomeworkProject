@@ -33,3 +33,16 @@
 .gray {
   color: #757575;
 }
+
+.highlight {
+  color: dodgerblue;
+  margin-right: 2px;
+}
+
+.blue {
+  color: dodgerblue;
+}
+
+.button {
+  margin-right: 16px;
+}

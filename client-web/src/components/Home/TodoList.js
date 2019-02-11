@@ -23,6 +23,7 @@ const styles = {
     paddingBottom: 16
   },
   list: {
+    borderRight: 'solid 0.75px #eeeeee',
     backgroundColor: 'white'
   },
   progress: {

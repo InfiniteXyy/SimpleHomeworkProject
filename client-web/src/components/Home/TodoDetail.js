@@ -149,14 +149,18 @@ class TodoDetail extends Component {
 
           <div style={{ marginTop: 12 }} className={classNames('border-vert', 'background-white')}>
             <List subheader={<ListSubheader>备注</ListSubheader>}>
-              {task.remarks.map((i, index) => (
-                <ListItem key={index.toString()}>
-                  <ListItemIcon>
-                    <div>{index + 1}</div>
-                  </ListItemIcon>
-                  <ListItemText primary={i} />
-                </ListItem>
-              ))}
+              {task.remarks.length === 0 ? (
+                <div className="empty-tip">没有备注</div>
+              ) : (
+                task.remarks.map((i, index) => (
+                  <ListItem key={index.toString()}>
+                    <ListItemIcon>
+                      <div>{index + 1}</div>
+                    </ListItemIcon>
+                    <ListItemText primary={i} />
+                  </ListItem>
+                ))
+              )}
             </List>
           </div>
         </div>

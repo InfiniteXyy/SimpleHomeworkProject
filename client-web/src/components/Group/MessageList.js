@@ -1,20 +1,17 @@
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import AddIcon from '@material-ui/icons/PlaylistAddRounded';
-import ExpandIcon from '@material-ui/icons/MoreHorizRounded';
 import AlarmIcon from '@material-ui/icons/AlarmOutlined';
 import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 
 import './MessageList.css';
-import Drawer from '@material-ui/core/Drawer';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
-import ListItemText from '@material-ui/core/ListItemText';
 import { Divider } from '@material-ui/core';
+import reactStringReplace from 'react-string-replace';
 
 import classNames from 'classnames';
 import moment from 'moment';
 import AddTodo from '../Home/AddTodo';
+import StarIcon from '@material-ui/icons/StarBorderRounded';
 
 const defaultValue = {
   avatar: 'https://i0.wp.com/ebus.ca/wp-content/uploads/2017/08/profile-placeholder.jpg?ssl=1'
@@ -24,7 +21,7 @@ const typeNames = {
   todo: '新的作业'
 };
 const Message = props => {
-  const { item, handleExpand, handleAdd } = props;
+  const { item, handleLike, handleAdd } = props;
   let { payload } = item;
   if (payload !== undefined && payload !== '' && payload !== null) {
     payload = JSON.parse(payload);
@@ -65,14 +62,19 @@ const Message = props => {
         </div>
 
         <div className="more-icon-container">
-          <ExpandIcon className="more-icon" onClick={handleExpand} />
+          <StarIcon className="more-icon" onClick={handleLike} />
         </div>
       </div>
 
       <div className="message-body">
-        <p>{item.body}</p>
+        <p>
+          {reactStringReplace(item.body, /(#.*?#)/g, (match, i) => (
+            <span key={i} className="highlight">
+              {match}
+            </span>
+          ))}
+        </p>
       </div>
-
       {bottomContainer}
     </div>
   );
@@ -118,22 +120,10 @@ class MessageList extends React.Component {
           <Message
             item={i}
             key={i.id}
-            handleExpand={this.toggleDrawer('message')}
+            handleLike={this.toggleDrawer('message')}
             handleAdd={this.toggleDrawer('addTodo', i.payload)}
           />
         ))}
-        <Drawer anchor="bottom" open={this.state.drawerOpen === 'message'} onClose={this.toggleDrawer('')}>
-          <div>
-            <List>
-              <ListItem button>
-                <ListItemText primary="设为收藏" />
-              </ListItem>
-              <ListItem button>
-                <ListItemText primary="举报这条信息" />
-              </ListItem>
-            </List>
-          </div>
-        </Drawer>
 
         <AddTodo
           open={this.state.drawerOpen === 'addTodo'}

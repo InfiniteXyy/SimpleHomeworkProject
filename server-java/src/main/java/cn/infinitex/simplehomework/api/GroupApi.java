@@ -173,6 +173,37 @@ public class GroupApi {
     }
   }
 
+  @RequestMapping(value = "search", method = RequestMethod.GET)
+  public ResponseEntity findGroups(
+      @RequestParam(value = "nameId", defaultValue = "") String nameId,
+      @RequestParam(value = "title", defaultValue = "") String title
+  ) {
+    try {
+      if (!"".equals(nameId)) {
+        Optional<Group> groupOptional = groupRepository.findByNameId(nameId);
+        if (!groupOptional.isPresent()) {
+          throw new Exception("wrong nameId");
+        }
+        Group group = groupOptional.get();
+        User creator = userRepository.findById(group.getCreatorId()).get();
+        return ResponseEntity.ok(new GroupData(group, creator).getJson());
+      } else if (!"".equals(title)) {
+        List<Group> groupList = groupRepository.findByTitleIgnoreCaseContaining(title);
+        return ResponseEntity.ok(JsonHelper.object("groups",
+            groupList.stream()
+                .map(i -> new GroupData(i, userRepository.findById(i.getCreatorId()).get())
+                    .getData())
+                .collect(Collectors.toList()))
+        );
+      } else {
+        throw new Exception("please specify nameId or title");
+      }
+    } catch (Exception e) {
+      return ResponseEntity.status(401)
+          .body(ValidationHandler.wrapErrorRoot(JsonHelper.object("validation", e.getMessage())));
+    }
+  }
+
 }
 
 @JsonRootName("group")

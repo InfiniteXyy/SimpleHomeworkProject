@@ -14,6 +14,26 @@ export class GroupStore {
   @observable
   groupMessages = undefined;
 
+  @observable
+  searchedGroups = [];
+
+  @observable
+  isSearching = false;
+
+  @action
+  searchGroup(title = '', nameId = '') {
+    this.isSearching = true;
+    return agent.Group.search(nameId, title).then(
+      action(({ groups }) => {
+        this.searchedGroups = groups;
+        this.isSearching = false;
+        this.searchedGroups.forEach(i => {
+          i.hasJoined = this.groups.findIndex(j => j.id === i.id) !== -1;
+        });
+      })
+    );
+  }
+
   @action
   createGroup(title, nameId) {
     return agent.Group.add(title, nameId).then(action(({ list }) => {}));
