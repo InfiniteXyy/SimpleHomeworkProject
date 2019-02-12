@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-  Avatar,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  withStyles
-} from '@material-ui/core';
+import { Avatar, Card, CardActionArea, CardContent, CardHeader, CardMedia, withStyles } from '@material-ui/core';
 
 import HumanIcon from '@material-ui/icons/PersonOutline';
 import DateIcon from '@material-ui/icons/AccessTimeOutlined';
-import Chip from '@material-ui/core/Chip';
 
 const styles = {
   root: {

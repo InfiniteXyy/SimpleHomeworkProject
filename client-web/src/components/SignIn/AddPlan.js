@@ -30,7 +30,8 @@ const styles = theme => ({
     paddingTop: '56.25%' // 16:9
   },
   card: {
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    boxShadow: '0 11px 20px -10px rgba(0, 0, 0, .17);'
   },
   paper: {
     backgroundColor: '#fafafa'
