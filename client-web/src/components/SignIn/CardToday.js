@@ -5,7 +5,7 @@ import StackHeader from '../StackHeader';
 import List from '@material-ui/core/List';
 import { inject, observer } from 'mobx-react';
 import ListItemText from '@material-ui/core/ListItemText';
-import CheckIcon from '@material-ui/icons/CheckRounded';
+import CheckIcon from '@material-ui/icons/CheckCircleOutlined';
 
 const styles = {
   root: {
@@ -65,6 +65,8 @@ class CardToday extends Component {
             })}
           </List>
         </div>
+        <div style={{ margin: 20, color: '#9b9b9b', fontSize: 14 }}>通过点击右侧图标来取消打卡</div>
+
         <ConfirmDialog
           title="取消打卡"
           content="如果时间已经过了，你将无法再次打卡"

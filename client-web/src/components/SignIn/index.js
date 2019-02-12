@@ -15,8 +15,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import TimerIcon from '@material-ui/icons/TimerRounded';
 import TabIcon from '@material-ui/icons/TabRounded';
 import ShopIcon from '@material-ui/icons/ShopRounded';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVertRounded';
 
 import './SignIn.css';
 import CardToday from './CardToday';
@@ -35,6 +33,19 @@ const styles = theme => ({
   button: {
     marginTop: theme.spacing.unit,
     marginRight: theme.spacing.unit
+  },
+  cardTitle: {
+    fontSize: 20,
+    color: '#4a4a4a',
+    fontWeight: 'bold'
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    color: '#9b9b9b'
+  },
+  card: {
+    boxShadow: '0 3px 10px -5px rgba(0, 0, 0, .5);',
+    borderRadius: 0
   },
   actionsContainer: {
     marginBottom: theme.spacing.unit * 2
@@ -139,8 +150,13 @@ class CardStep extends Component {
               <span style={{ color: '#9b9b9b', marginLeft: 10 }}>{card.daytime}</span>
             </StepLabel>
             <StepContent>
-              <Card>
-                <CardHeader title={card.title} subheader={`来自 ${card.creatorTitle} 的打卡`} />
+              <Card classes={{ root: classes.card }}>
+                <CardHeader
+                  titleTypographyProps={{ className: classes.cardTitle }}
+                  subheaderTypographyProps={{ className: classes.cardSubtitle }}
+                  title={card.title}
+                  subheader={`来自 ${card.creatorTitle} 的打卡`}
+                />
                 {card.coverImg ? <CardMedia className={classes.media} image={card.coverImg} /> : <div />}
                 <CardActions>
                   {card.isChecking ? (

@@ -82,51 +82,53 @@ class Home extends Component {
   render() {
     const { classes } = this.props;
     const todoLists = this.props.todoListStore.todoLists;
+    let list;
     if (todoLists === undefined) {
-      return <div className="empty-tip">加载中 ...</div>;
+      list = <div className="empty-tip">加载中 ...</div>;
+    } else if (todoLists.length === 0) {
+      list = <div className="empty-tip">请先添加一个列表</div>;
+    } else {
+      list = (
+        <div className={classes.root}>
+          <Tabs
+            style={{ backgroundColor: 'white' }}
+            variant="scrollable"
+            scrollButtons="auto"
+            value={this.state.curListId}
+            onChange={this.handleChange}
+          >
+            {todoLists.map((item, index) => {
+              return (
+                <Tab
+                  key={item.id}
+                  value={index}
+                  disableRipple
+                  label={
+                    <Badge badgeContent={item.tasks.filter(i => !i.finished).length} color="primary">
+                      {item.title}
+                    </Badge>
+                  }
+                />
+              );
+            })}
+          </Tabs>
+          <SwipeableViews
+            index={this.state.curListId}
+            onChangeIndex={this.handleChangeIndex}
+            containerStyle={{ height: '100%' }}
+            style={{ height: '100%' }}
+          >
+            {todoLists.map(item => (
+              <TodoList key={item.id} tasks={item.tasks} />
+            ))}
+          </SwipeableViews>
+        </div>
+      );
     }
-    if (todoLists.length === 0) {
-      return <div className="empty-tip">请先添加一个列表</div>;
-    }
+
     return (
       <div>
-        <div className={classes.root}>
-          <div className={classes.listRoot}>
-            <Tabs
-              style={{ backgroundColor: 'white' }}
-              variant="scrollable"
-              scrollButtons="auto"
-              value={this.state.curListId}
-              onChange={this.handleChange}
-            >
-              {todoLists.map((item, index) => {
-                return (
-                  <Tab
-                    key={item.id}
-                    value={index}
-                    disableRipple
-                    label={
-                      <Badge badgeContent={item.tasks.filter(i => !i.finished).length} color="primary">
-                        {item.title}
-                      </Badge>
-                    }
-                  />
-                );
-              })}
-            </Tabs>
-            <SwipeableViews
-              index={this.state.curListId}
-              onChangeIndex={this.handleChangeIndex}
-              containerStyle={{ height: '100%' }}
-              style={{ height: '100%' }}
-            >
-              {todoLists.map(item => (
-                <TodoList key={item.id} tasks={item.tasks} />
-              ))}
-            </SwipeableViews>
-          </div>
-        </div>
-
+        {list}
         <SpeedDial
           className={classes.fab}
           icon={<SpeedDialIcon />}

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Avatar, Dialog, List, ListItemAvatar, ListItemText, withStyles } from '@material-ui/core';
+import { Avatar, List, ListItemAvatar, ListItemText, withStyles } from '@material-ui/core';
 import { inject, observer } from 'mobx-react';
 import SwipeableViews from 'react-swipeable-views';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { SlideTransition } from '../utils';
+import { FullScreenDialog } from '../utils';
 import StackHeader from '../StackHeader';
 import ListItem from '@material-ui/core/ListItem';
 
@@ -15,6 +15,8 @@ import Fab from '@material-ui/core/Fab';
 
 import AddIcon from '@material-ui/icons/Add';
 import AddMessage from './AddMessage';
+import GroupCardList from './elements/GroupCardList';
+import GroupCardHome from './elements/GroupCardHome';
 
 const canEdit = {
   creator: true,
@@ -23,9 +25,8 @@ const canEdit = {
 const styles = theme => ({
   root: {
     width: '100%',
-    height: '100%',
-    paddingTop: 102,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    paddingTop: 94.75
   },
   tab: {
     position: 'fixed',
@@ -39,9 +40,6 @@ const styles = theme => ({
     position: 'fixed',
     bottom: theme.spacing.unit * 2,
     right: theme.spacing.unit * 2
-  },
-  main: {
-    backgroundColor: '#fafafa'
   }
 });
 
@@ -96,54 +94,40 @@ class GroupHomePage extends Component {
     const { classes, open, group, groupStore, handleClose } = this.props;
     if (!group) return <div />;
     return (
-      <Dialog
-        open={open}
-        fullScreen
-        transitionDuration={300}
-        TransitionComponent={SlideTransition}
-        onExited={this.reset}
-        onEnter={this.onEnter}
-        classes={{ paper: classes.main }}
-      >
-        <div style={{ height: '100%' }}>
-          <StackHeader handleClickLeft={handleClose} title={group.title} />
-          <Tabs
-            className={classes.tab}
-            value={this.state.value}
-            onChange={this.handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="fullWidth"
-          >
-            <Tab label="最新消息" disableRipple />
-            <Tab label="打卡任务" disableRipple />
-            <Tab label="群组成员" disableRipple />
-          </Tabs>
-          <div className={classes.root}>
-            <SwipeableViews
-              index={this.state.value}
-              onChangeIndex={this.handleChangeIndex}
-              containerStyle={{ height: '100%' }}
-              style={{ height: '100%' }}
-            >
-              <MessageList messages={groupStore.groupMessages} loadItems={groupStore.loadMore(group.id)} />
-              <div />
-              <MemberList detail={groupStore.groupDetail} />
-            </SwipeableViews>
-            {canEdit[group.tag] ? (
-              <Zoom in={this.state.value === 0} timeout={100} unmountOnExit>
-                <Fab className={classes.fab} color="primary" onClick={this.toggleDialog('message')}>
-                  <AddIcon />
-                </Fab>
-              </Zoom>
-            ) : (
-              <div />
-            )}
-          </div>
+      <FullScreenDialog open={open} onExited={this.reset} onEnter={this.onEnter}>
+        <StackHeader handleClickLeft={handleClose} title={group.title} />
+        <Tabs
+          className={classes.tab}
+          value={this.state.value}
+          onChange={this.handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+        >
+          <Tab label="最新消息" disableRipple />
+          <Tab label="打卡任务" disableRipple />
+          <Tab label="群组成员" disableRipple />
+        </Tabs>
+        <div className={classes.root}>
+          <SwipeableViews index={this.state.value} onChangeIndex={this.handleChangeIndex}>
+            <MessageList messages={groupStore.groupMessages} loadItems={groupStore.loadMore(group.id)} />
+            <GroupCardList handleDetail={() => this.toggleDialog('card-detail')} />
+            <MemberList detail={groupStore.groupDetail} />
+          </SwipeableViews>
+          {canEdit[group.tag] ? (
+            <Zoom in={this.state.value === 0} timeout={100} unmountOnExit>
+              <Fab className={classes.fab} color="primary" onClick={this.toggleDialog('message')}>
+                <AddIcon />
+              </Fab>
+            </Zoom>
+          ) : (
+            <div />
+          )}
         </div>
 
         <AddMessage open={this.state.dialogOpen === 'message'} handleClose={this.toggleDialog('')} />
-      </Dialog>
+        <GroupCardHome open={this.state.dialogOpen === 'card-detail'} handleClose={this.toggleDialog('')} />
+      </FullScreenDialog>
     );
   }
 }
@@ -166,4 +150,5 @@ const MemberList = props => {
     </List>
   );
 };
+
 export default withStyles(styles)(GroupHomePage);
