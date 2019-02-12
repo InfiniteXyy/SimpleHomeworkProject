@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CardRepository extends JpaRepository<Card, Long> {
   public List<Card> findByUserId(Long userId);
 
+  public List<Card> findByGroupCardId(Long groupCardId);
+
 }

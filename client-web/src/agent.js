@@ -89,7 +89,10 @@ const Group = {
 const Card = {
   get: () => requests.get('/card'),
   create: (title, creatorTitle, weekdays, daytime, coverImg, groupId = '0') =>
-    requests.post('/card/', { card: { title, creatorTitle, weekdays, daytime, coverImg, groupId } })
+    requests.post('/card/', { card: { title, creatorTitle, weekdays, daytime, coverImg, groupId } }),
+  check: cardId => requests.post(`/card/log?cardId=${cardId}`),
+  getLogs: () => requests.get('/card/log'),
+  deleteLog: logId => requests.del(`/card/log/${logId}`)
 };
 
 const Profile = {

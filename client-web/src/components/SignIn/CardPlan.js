@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import {
   CardContent,
+  CardMedia,
   Collapse,
-  Dialog,
   List,
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
   withStyles
 } from '@material-ui/core';
-import { SlideTransition } from '../utils';
+import { FullScreenDialog } from '../utils';
 import StackHeader from '../StackHeader';
 import Avatar from '@material-ui/core/Avatar';
 
@@ -27,7 +27,7 @@ import { inject, observer } from 'mobx-react';
 const styles = theme => ({
   root: {
     width: '100%',
-    paddingTop: 46
+    marginTop: 46
   },
   numberCircle: {
     color: '#fff',
@@ -35,9 +35,6 @@ const styles = theme => ({
   },
   active: {
     backgroundColor: 'dodgerblue'
-  },
-  paper: {
-    backgroundColor: '#fafafa'
   },
   media: {
     height: 0,
@@ -49,12 +46,9 @@ const styles = theme => ({
     paddingBottom: 16
   },
   card: {
-    border: '0.5px solid #e7e7e7',
+    border: '0.5px solid #bbbbbb',
     marginTop: 16,
     borderRadius: 8
-  },
-  avatar: {
-    borderRadius: 4
   },
   secondaryText: {
     color: '#9b9b9b'
@@ -79,13 +73,13 @@ class DetailedCard extends React.Component {
     return (
       <Card className={classes.card} elevation={0} key={card.id}>
         <CardHeader
-          avatar={<Avatar src={card.coverImg} className={classes.avatar} />}
           action={<IconButton onClick={this.toggleShowMore}>{showMore ? <LessIcon /> : <MoreIcon />}</IconButton>}
           title={card.title}
-          titleTypographyProps={{ style: { color: '#4a4a4a' } }}
+          titleTypographyProps={{ style: { color: '#4a4a4a', fontSize: 18 } }}
           subheader={`来自 ${card.creatorTitle} 的打卡`}
         />
         <Collapse in={showMore}>
+          {card.coverImg ? <CardMedia className={classes.media} image={card.coverImg} /> : <div />}
           <CardContent>
             <List disablePadding={true}>
               <ListItem>
@@ -116,7 +110,7 @@ class CardPlan extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentDay: 1,
+      currentDay: props.cardStore.today,
       dialogOpen: ''
     };
   }
@@ -137,52 +131,42 @@ class CardPlan extends Component {
       return <div />;
     }
     return (
-      <Dialog
-        classes={{ paper: classes.paper }}
-        open={open}
-        fullScreen
-        transitionDuration={300}
-        TransitionComponent={SlideTransition}
-      >
-        <div>
-          <StackHeader
-            title="设定打卡"
-            handleClickLeft={onClose}
-            rightTitle="添加"
-            handleClickRight={this.toggleDialog('add')}
-            rightEnabled={true}
-          />
-          <div className={classes.root}>
-            <div className={classNames('week-titles', 'border-vert')}>
-              {weekTitles.map((i, index) => (
-                <div className={classNames('week-title-container')} key={i} onClick={this.toggleWeekday(index)}>
-                  <div className="week-title">{i}</div>
-                  <Avatar
-                    className={classNames([classes.numberCircle, { [classes.active]: currentDay === index + 1 }])}
-                  >
-                    {
-                      cards.filter(card => {
-                        return card.weekdays.indexOf(index + 1) !== -1;
-                      }).length
-                    }
-                  </Avatar>
-                </div>
-              ))}
-            </div>
+      <FullScreenDialog open={open}>
+        <StackHeader
+          title="设定打卡"
+          handleClickLeft={onClose}
+          rightTitle="添加"
+          handleClickRight={this.toggleDialog('add')}
+          rightEnabled={true}
+        />
+        <div className={classes.root}>
+          <div className={classNames('week-titles', 'border-vert')}>
+            {weekTitles.map((i, index) => (
+              <div className={classNames('week-title-container')} key={i} onClick={this.toggleWeekday(index)}>
+                <div className="week-title">{i}</div>
+                <Avatar className={classNames([classes.numberCircle, { [classes.active]: currentDay === index + 1 }])}>
+                  {
+                    cards.filter(card => {
+                      return card.weekdays.indexOf(index + 1) !== -1;
+                    }).length
+                  }
+                </Avatar>
+              </div>
+            ))}
+          </div>
 
-            <div className={classes.detailContainer}>
-              {cards
-                .filter(card => {
-                  return card.weekdays.indexOf(currentDay) !== -1;
-                })
-                .map(card => (
-                  <DetailedCard card={card} key={card.id} />
-                ))}
-            </div>
+          <div className={classes.detailContainer}>
+            {cards
+              .filter(card => {
+                return card.weekdays.indexOf(currentDay) !== -1;
+              })
+              .map(card => (
+                <DetailedCard card={card} key={card.id} />
+              ))}
           </div>
         </div>
         <AddPlan open={this.state.dialogOpen === 'add'} handleClose={this.toggleDialog('')} />
-      </Dialog>
+      </FullScreenDialog>
     );
   }
 }

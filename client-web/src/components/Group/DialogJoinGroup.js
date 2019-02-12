@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Card,
   CircularProgress,
   Dialog,
   List,
@@ -22,7 +21,6 @@ import InputBase from '@material-ui/core/InputBase';
 import { inject, observer } from 'mobx-react';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
 import classNames from 'classnames';
 
 const styles = {
@@ -135,10 +133,10 @@ class JoinByID extends Component {
 }
 
 const JoinByName = withStyles(styles)(props => {
-  const { classes, open, handleClose, content, onChange, onSearch, data, isSearching } = props;
+  const { classes, open, handleClose, content, onChange, onSearch, data, isSearching, reset } = props;
 
   return (
-    <FullScreenDialog open={open} white>
+    <FullScreenDialog open={open} white onExited={reset}>
       <StackHeader title="" handleClickLeft={handleClose} leftTitle="取消" />
       <div style={styles.root}>
         <div style={styles.paddingGroup}>
@@ -211,6 +209,10 @@ class DialogJoinGroup extends React.Component {
     }
   };
 
+  reset = () => {
+    this.props.groupStore.resetSearch();
+    this.setState({ content: '' });
+  };
   handleChange = event => {
     this.setState({ content: event.target.value });
   };
@@ -257,6 +259,7 @@ class DialogJoinGroup extends React.Component {
           data={this.props.groupStore.searchedGroups}
           open={this.state.dialogOpen === 'name'}
           handleClose={this.toggleDialog(false)}
+          reset={this.reset}
           isSearching={this.props.groupStore.isSearching}
         />
         <JoinByNear open={this.state.dialogOpen === 'near'} handleClose={this.toggleDialog(false)} />

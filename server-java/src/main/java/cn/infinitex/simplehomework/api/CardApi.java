@@ -50,7 +50,7 @@ public class CardApi {
       Card card = new Card(
           user.getId(),
           newCardParam.getTitle(),
-          Long.valueOf(newCardParam.getGroupId()),
+          Long.valueOf(newCardParam.getGroupCardId()),
           newCardParam.getCreatorTitle(),
           newCardParam.getWeekdays(),
           newCardParam.getDaytime(),
@@ -86,9 +86,10 @@ public class CardApi {
 @Getter
 @JsonRootName("card")
 class NewCardParam {
+
   @NotBlank
   private String title;
-  private String groupId = "0";
+  private String groupCardId = "0";
   private String creatorTitle;
   @NotBlank
   private String weekdays;

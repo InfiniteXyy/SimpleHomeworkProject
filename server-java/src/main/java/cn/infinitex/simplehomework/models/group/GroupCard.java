@@ -1,6 +1,5 @@
-package cn.infinitex.simplehomework.models.card;
+package cn.infinitex.simplehomework.models.group;
 
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,18 +10,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Card {
-
+public class GroupCard {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  private long userId;
+
+  private long groupId;
 
   private String title;
-
-  private Long groupCardId;
-
-  private String creatorTitle;
 
   private String weekdays;
 
@@ -30,12 +25,10 @@ public class Card {
 
   private String coverImg;
 
-  public Card(long userId, String title, Long groupCardId, String creatorTitle, String weekdays,
-      String daytime, String coverImg) {
-    this.userId = userId;
+  public GroupCard(long groupId, String title, String weekdays, String daytime,
+      String coverImg) {
+    this.groupId = groupId;
     this.title = title;
-    this.groupCardId = groupCardId;
-    this.creatorTitle = creatorTitle;
     this.weekdays = weekdays;
     this.daytime = daytime;
     this.coverImg = coverImg;

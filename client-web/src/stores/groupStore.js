@@ -35,6 +35,11 @@ export class GroupStore {
   }
 
   @action
+  resetSearch() {
+    this.searchedGroups = [];
+  }
+
+  @action
   createGroup(title, nameId) {
     return agent.Group.add(title, nameId).then(action(({ list }) => {}));
   }
