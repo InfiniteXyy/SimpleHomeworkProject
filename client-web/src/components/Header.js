@@ -12,12 +12,14 @@ import InboxIcon from '@material-ui/icons/InboxRounded';
 import MailIcon from '@material-ui/icons/MailRounded';
 import SettingIcon from '@material-ui/icons/SettingsRounded';
 import ListAltIcon from '@material-ui/icons/ListAltRounded';
+import ProfileIcon from '@material-ui/icons/PersonRounded';
 import Divider from '@material-ui/core/Divider';
 import { inject, observer } from 'mobx-react';
 import ManageList from './Dialogs/ManageList';
 import Setting from './Dialogs/Setting';
 import Avatar from '@material-ui/core/Avatar';
 import moment from 'moment';
+import Profile from './Dialogs/Profile';
 
 const styles = {
   root: {
@@ -82,6 +84,12 @@ class Header extends React.Component {
             </div>
             <Divider />
             <List>
+              <ListItem button onClick={this.toggleDialog('profile')}>
+                <ListItemIcon>
+                  <ProfileIcon />
+                </ListItemIcon>
+                <ListItemText primary="个人主页" />
+              </ListItem>
               <ListItem button onClick={this.toggleDialog('manageList')}>
                 <ListItemIcon>
                   <ListAltIcon />
@@ -112,6 +120,7 @@ class Header extends React.Component {
 
         <ManageList open={this.state.dialogOpen === 'manageList'} handleClose={this.toggleDialog('')} />
         <Setting open={this.state.dialogOpen === 'setting'} handleClose={this.toggleDialog('')} />
+        <Profile open={this.state.dialogOpen === 'profile'} handleClose={this.toggleDialog('')} />
       </div>
     );
   }

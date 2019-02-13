@@ -10,13 +10,13 @@ import { inject, observer } from 'mobx-react';
 import './Setting.css';
 
 import AccountIcon from '@material-ui/icons/AccountCircleRounded';
-import SchoolIcon from '@material-ui/icons/SchoolRounded';
 import SunIcon from '@material-ui/icons/WbSunnyRounded';
 import ThemeIcon from '@material-ui/icons/ToysRounded';
 import CodeIcon from '@material-ui/icons/CodeRounded';
 import MoreIcon from '@material-ui/icons/MoreRounded';
 import StackHeader from '../StackHeader';
 import { SlideTransition } from '../utils';
+import ProfileSetting from './ProfileSetting';
 
 const styles = theme => ({
   root: {
@@ -56,6 +56,13 @@ const styles = theme => ({
 @inject('routingStore', 'authStore')
 @observer
 class Setting extends Component {
+  state = {
+    dialogOpen: ''
+  };
+
+  toggleDialog = dialogOpen => () => {
+    this.setState({ dialogOpen });
+  };
   handleLogout = () => {
     this.props.authStore.logout();
   };
@@ -68,17 +75,11 @@ class Setting extends Component {
           <StackHeader title="设置" handleClickLeft={handleClose} />
           <p className="list-subtitle">账号设置</p>
           <List className={classes.listContainer}>
-            <ListItem className={classes.listItem}>
+            <ListItem className={classes.listItem} button onClick={this.toggleDialog('setting')}>
               <ListItemIcon>
                 <AccountIcon />
               </ListItemIcon>
               <ListItemText primary="账号与安全" />
-            </ListItem>
-            <ListItem className={classes.listItem}>
-              <ListItemIcon>
-                <SchoolIcon />
-              </ListItemIcon>
-              <ListItemText primary="学期设置" />
             </ListItem>
           </List>
           <p className="list-subtitle">基本设置</p>
@@ -121,6 +122,7 @@ class Setting extends Component {
             退出当前帐号
           </div>
         </div>
+        <ProfileSetting open={this.state.dialogOpen === 'setting'} handleClose={this.toggleDialog('')} />
       </Dialog>
     );
   }

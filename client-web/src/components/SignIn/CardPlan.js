@@ -46,9 +46,9 @@ const styles = theme => ({
     paddingBottom: 16
   },
   card: {
-    border: '0.5px solid #bbbbbb',
+    boxShadow: '0 6px 20px -10px rgba(0, 0, 0, .17);',
     marginTop: 16,
-    borderRadius: 8
+    borderRadius: 0
   },
   secondaryText: {
     color: '#9b9b9b'
