@@ -17,6 +17,11 @@ import MoreIcon from '@material-ui/icons/MoreRounded';
 import StackHeader from '../StackHeader';
 import { SlideTransition } from '../utils';
 import ProfileSetting from './ProfileSetting';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Switch from '@material-ui/core/Switch';
+import About from './About';
+import OpenSource from './OpenSource';
+import ThemeDialog from './ThemeDialog';
 
 const styles = theme => ({
   root: {
@@ -89,8 +94,11 @@ class Setting extends Component {
                 <SunIcon />
               </ListItemIcon>
               <ListItemText primary="夜间模式" />
+              <ListItemSecondaryAction>
+                <Switch />
+              </ListItemSecondaryAction>
             </ListItem>
-            <ListItem className={classes.listItem}>
+            <ListItem className={classes.listItem} button onClick={this.toggleDialog('theme')}>
               <ListItemIcon>
                 <ThemeIcon />
               </ListItemIcon>
@@ -100,13 +108,13 @@ class Setting extends Component {
 
           <p className="list-subtitle">其它</p>
           <List className={classes.listContainer}>
-            <ListItem className={classes.listItem}>
+            <ListItem className={classes.listItem} button onClick={this.toggleDialog('openSource')}>
               <ListItemIcon>
                 <CodeIcon />
               </ListItemIcon>
               <ListItemText primary="开源库" />
             </ListItem>
-            <ListItem className={classes.listItem}>
+            <ListItem className={classes.listItem} button onClick={this.toggleDialog('about')}>
               <ListItemIcon>
                 <MoreIcon />
               </ListItemIcon>
@@ -123,6 +131,9 @@ class Setting extends Component {
           </div>
         </div>
         <ProfileSetting open={this.state.dialogOpen === 'setting'} handleClose={this.toggleDialog('')} />
+        <About open={this.state.dialogOpen === 'about'} handleClose={this.toggleDialog('')} />
+        <OpenSource open={this.state.dialogOpen === 'openSource'} handleClose={this.toggleDialog('')} />
+        <ThemeDialog open={this.state.dialogOpen === 'theme'} handleClose={this.toggleDialog('')} />
       </Dialog>
     );
   }

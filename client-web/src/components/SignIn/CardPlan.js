@@ -50,6 +50,13 @@ const styles = theme => ({
     marginTop: 16,
     borderRadius: 0
   },
+  cardContent: {
+    padding: '8px 0 0',
+    '&:last-child': {
+      paddingBottom: 12
+    }
+  },
+
   secondaryText: {
     color: '#9b9b9b'
   }
@@ -80,21 +87,23 @@ class DetailedCard extends React.Component {
         />
         <Collapse in={showMore}>
           {card.coverImg ? <CardMedia className={classes.media} image={card.coverImg} /> : <div />}
-          <CardContent>
-            <List disablePadding={true}>
-              <ListItem>
-                <ListItemText primary="打卡天" />
-                <ListItemSecondaryAction>
-                  <ListItemText classes={{ primary: classes.secondaryText }} primary={weekdaysStr} />
-                </ListItemSecondaryAction>
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="时间" />
-                <ListItemSecondaryAction>
-                  <ListItemText classes={{ primary: classes.secondaryText }} primary={card.daytime} />
-                </ListItemSecondaryAction>
-              </ListItem>
-            </List>
+          <CardContent classes={{ root: classes.cardContent }}>
+            <div>
+              <List disablePadding={true}>
+                <ListItem>
+                  <ListItemText primary="打卡天" />
+                  <ListItemSecondaryAction>
+                    <ListItemText classes={{ primary: classes.secondaryText }} primary={weekdaysStr} />
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="时间" />
+                  <ListItemSecondaryAction>
+                    <ListItemText classes={{ primary: classes.secondaryText }} primary={card.daytime} />
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+            </div>
           </CardContent>
         </Collapse>
       </Card>

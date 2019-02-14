@@ -102,12 +102,6 @@ class Header extends React.Component {
                 </ListItemIcon>
                 <ListItemText primary="我的私信" />
               </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="收集箱" />
-              </ListItem>
               <ListItem button onClick={this.toggleDialog('setting')}>
                 <ListItemIcon>
                   <SettingIcon />

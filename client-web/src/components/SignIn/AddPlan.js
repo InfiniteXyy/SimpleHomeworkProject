@@ -31,7 +31,7 @@ const styles = theme => ({
   },
   card: {
     boxSizing: 'border-box',
-    boxShadow: '0 11px 20px -10px rgba(0, 0, 0, .17);'
+    boxShadow: '0 6px 25px -10px rgba(0,0,0,0.46)'
   },
   paper: {
     backgroundColor: '#fafafa'
