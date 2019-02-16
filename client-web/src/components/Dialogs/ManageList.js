@@ -82,7 +82,7 @@ const styles = {
     justifyContent: 'space-between'
   },
   progress: {
-    height: 4,
+    height: 3,
     backgroundColor: '#eaeaea'
   },
   progressMain: {
@@ -107,59 +107,73 @@ class ManageList extends Component {
     });
   };
 
+  toggleExpand = item => () => {
+    item.expanded = !item.expanded;
+  };
+
   render() {
     const { open, handleClose, classes } = this.props;
-    if (this.props.todoListStore.todoLists === undefined) return <div />;
+    let listsComponent;
+    const todoLists = this.props.todoListStore.todoLists;
+    if (todoLists === undefined) listsComponent = <div />;
+    else {
+      listsComponent = todoLists.map((i, index) => {
+        const { tasks } = i;
+        const finishedStatus =
+          tasks.length === 0 ? '无任务' : `${tasks.filter(i => i.finished).length} / ${tasks.length}`;
+        const finishedRate = (tasks.filter(i => i.finished).length / tasks.length) * 100;
+        return (
+          <Card key={index.toString()} classes={{ root: classes.card }}>
+            <CardHeader
+              classes={{ root: classes.cardHeader, avatar: classes.avatar }}
+              avatar={
+                <IconButton onClick={this.toggleExpand(i)}>
+                  {i.expanded ? <UpIcon className={classes.avatar} /> : <DownIcon className={classes.avatar} />}
+                </IconButton>
+              }
+              action={
+                <div className={classes.iconContainer}>
+                  {!i && <div className={classes.font4}>{finishedStatus}</div>}
+                  <IconButton>
+                    <MenuIcon className={classes.icon} />
+                  </IconButton>
+                </div>
+              }
+              title={
+                <div className={classes.font1}>
+                  {i.title}
+                  {i.archived && <span className={classes.font3}>已归档</span>}
+                </div>
+              }
+            />
+            <Collapse in={i.expanded}>
+              <CardContent className={classes.container2}>
+                <div>
+                  <div className={classes.container1}>
+                    <CalendarIcon className={classes.icon3} />
+                    <div className={classes.font2}>2018年9月25日</div>
+                  </div>
+                  <div className={classes.container1}>
+                    <TaskIcon className={classes.icon3} />
+                    <div className={classes.font2}>{finishedStatus}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Collapse>
+            <LinearProgress
+              classes={{ root: classes.progress, barColorPrimary: classes.progressMain }}
+              variant="determinate"
+              value={finishedRate}
+            />
+          </Card>
+        );
+      });
+    }
+
     return (
       <FullScreenDialog open={open}>
         <StackHeader title="清单列表" handleClickLeft={handleClose} />
-        <div className={classes.root}>
-          {[true, false].map((i, index) => (
-            <Card key={index.toString()} classes={{ root: classes.card }}>
-              <CardHeader
-                classes={{ root: classes.cardHeader, avatar: classes.avatar }}
-                avatar={
-                  <IconButton>
-                    {i ? <UpIcon className={classes.avatar} /> : <DownIcon className={classes.avatar} />}
-                  </IconButton>
-                }
-                action={
-                  <div className={classes.iconContainer}>
-                    {!i && <div className={classes.font4}>10 / 10</div>}
-                    <IconButton>
-                      <MenuIcon className={classes.icon} />
-                    </IconButton>
-                  </div>
-                }
-                title={
-                  <div className={classes.font1}>
-                    第三周
-                    {!i && <span className={classes.font3}>已归档</span>}
-                  </div>
-                }
-              />
-              <Collapse in={i}>
-                <CardContent className={classes.container2}>
-                  <div>
-                    <div className={classes.container1}>
-                      <CalendarIcon className={classes.icon3} />
-                      <div className={classes.font2}>2018年9月25日</div>
-                    </div>
-                    <div className={classes.container1}>
-                      <TaskIcon className={classes.icon3} />
-                      <div className={classes.font2}>8 / 10</div>
-                    </div>
-                  </div>
-                </CardContent>
-                <LinearProgress
-                  classes={{ root: classes.progress, barColorPrimary: classes.progressMain }}
-                  variant="determinate"
-                  value={80}
-                />
-              </Collapse>
-            </Card>
-          ))}
-        </div>
+        <div className={classes.root}>{listsComponent}</div>
         <Drawer anchor="bottom" open={this.state.drawerOpen} onClose={this.toggleDrawer(false)}>
           <div>
             <List subheader={<ListSubheader>{this.state.drawerFor.title}</ListSubheader>}>

@@ -34,11 +34,11 @@ const styles = {
   }
 };
 
-const roles = {
+export const ROLES = {
   creator: '群主'
 };
 
-@inject('routingStore', 'groupStore')
+@inject('groupStore')
 @observer
 class GroupList extends Component {
   constructor(props) {
@@ -88,7 +88,7 @@ class GroupList extends Component {
               <ListItem style={styles.groupItem} button key={i.id} onClick={this.openGroup(i)}>
                 <ListItemText primary={i.title} />
                 <ListItemSecondaryAction>
-                  <ListItemText classes={{ primary: classes.secondaryText }} primary={roles[i.tag]} />
+                  <ListItemText classes={{ primary: classes.secondaryText }} primary={ROLES[i.tag]} />
                 </ListItemSecondaryAction>
               </ListItem>
             ))}

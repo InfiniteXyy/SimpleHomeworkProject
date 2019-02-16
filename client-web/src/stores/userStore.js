@@ -27,7 +27,7 @@ class UserStore {
           this.currentUser = user;
         })
       )
-      .finally(
+      .then(
         action(() => {
           this.updatingUser = false;
         })

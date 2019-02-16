@@ -23,4 +23,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
   @Query(value = "SELECT * from message where group_id = ?1 order by created_at DESC LIMIT ?2", nativeQuery = true)
   List<Message> findTopMessagesByGroupId(long groupId, int limit);
+
+  @Query(value = "SELECT * from message where user_id = ?1 order by created_at DESC", nativeQuery = true)
+  List<Message> findTopMessagesByUserId(long user_id);
 }

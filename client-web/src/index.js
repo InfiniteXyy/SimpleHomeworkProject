@@ -9,6 +9,7 @@ import commonStore from './stores/commonStore';
 import authStore from './stores/authStore';
 import todoListStore from './stores/todoListStore';
 import groupStore from './stores/groupStore';
+import profileStore from './stores/profileStore';
 import cardStore from './stores/cardStore';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router';
@@ -54,7 +55,8 @@ const stores = {
   authStore,
   todoListStore,
   groupStore,
-  cardStore
+  cardStore,
+  profileStore
 };
 
 window.stores = stores;

@@ -1,9 +1,12 @@
 import React from 'react';
-import { Avatar, withStyles } from '@material-ui/core';
+import { Avatar, List, ListItem, ListItemSecondaryAction, ListItemText, withStyles } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import StackHeader from '../StackHeader';
 import { FullScreenDialog } from '../utils';
+import { MessageList } from '../Group/MessageList';
+import { inject, observer } from 'mobx-react';
+import { ROLES } from '../Group/GroupList';
 
 const styles = {
   root: {
@@ -29,6 +32,10 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center'
   },
+  container3: {
+    width: '100%',
+    marginTop: 10
+  },
   font1: {
     marginTop: 25,
     fontSize: 22,
@@ -44,6 +51,10 @@ const styles = {
     fontSize: 12,
     color: '#9b9b9b',
     marginTop: 3
+  },
+  font4: {
+    fontSize: 14,
+    color: '#9b9b9b'
   },
   tabsRoot: {
     width: '100%',
@@ -71,6 +82,9 @@ const styles = {
     backgroundColor: '#EFEFEF'
   }
 };
+
+@inject('profileStore')
+@observer
 class Profile extends React.Component {
   state = {
     value: 0
@@ -78,17 +92,29 @@ class Profile extends React.Component {
   handleChange = (event, value) => {
     this.setState({ value });
   };
+
   render() {
     const { classes, open, handleClose } = this.props;
-    return (
-      <FullScreenDialog open={open} white>
-        <StackHeader title="" handleClickLeft={handleClose} />
+    const user = this.props.profileStore.userProfile;
+    let main = <div />;
+    if (user !== undefined) {
+      const messageTab = <MessageList messages={user.messages.slice(0, 1)} />;
+      const groupTab = (
+        <List>
+          {user.groups.map(i => (
+            <ListItem key={i.joinAt}>
+              <ListItemText primary={i.group.title} />
+              <ListItemSecondaryAction>
+                <ListItemText classes={{ primary: classes.font4 }} primary={ROLES[i.tag]} />
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
+      );
+      main = (
         <div className={classes.root}>
-          <Avatar
-            className={classes.avatar}
-            src="http://timeline.infinitex.cn/img/02/97e88c79a15cab3bd3262066d4d49b.jpg"
-          />
-          <div className={classes.font1}>InfiniteX</div>
+          <Avatar className={classes.avatar} src={user.image} />
+          <div className={classes.font1}>{user.username}</div>
           <div className={classes.container1}>
             <div className={classes.container2}>
               <div className={classes.font2}>17</div>
@@ -109,7 +135,15 @@ class Profile extends React.Component {
             <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="群组" />
           </Tabs>
           <div className={classes.divider} />
+          <div className={classes.container3}>{this.state.value === 0 ? messageTab : groupTab}</div>
         </div>
+      );
+    }
+
+    return (
+      <FullScreenDialog open={open} white>
+        <StackHeader title="" handleClickLeft={handleClose} />
+        {main}
       </FullScreenDialog>
     );
   }

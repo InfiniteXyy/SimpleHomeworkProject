@@ -96,7 +96,7 @@ const Card = {
 };
 
 const Profile = {
-  get: username => requests.get(`/profiles/${username}`)
+  get: username => requests.get(`/profile/${username}`)
 };
 
 export default {

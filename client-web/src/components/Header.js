@@ -42,7 +42,7 @@ const styles = {
   }
 };
 
-@inject('userStore', 'routingStore')
+@inject('userStore', 'routingStore', 'profileStore')
 @observer
 class Header extends React.Component {
   state = {
@@ -54,6 +54,9 @@ class Header extends React.Component {
     this.setState({ drawerOpen });
   };
   toggleDialog = title => () => {
+    if (title === 'profile') {
+      this.props.profileStore.toggleProfile(this.props.userStore.currentUser.username);
+    }
     this.setState({ dialogOpen: title });
   };
 

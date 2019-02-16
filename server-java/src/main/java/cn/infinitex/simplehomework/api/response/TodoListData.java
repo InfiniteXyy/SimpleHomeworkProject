@@ -26,11 +26,7 @@ public class TodoListData {
 
   public Map<String, Object> getJson() {
     return new HashMap<String, Object>() {{
-      put("list", new HashMap<String, Object>() {{
-        put("id", todoList.getId());
-        put("title", todoList.getTitle());
-        put("tasks", _tasks);
-      }});
+      put("list", getData());
     }};
   }
 
@@ -39,6 +35,7 @@ public class TodoListData {
       put("id", todoList.getId());
       put("title", todoList.getTitle());
       put("tasks", _tasks);
+      put("archived", todoList.isArchived());
     }};
   }
 }

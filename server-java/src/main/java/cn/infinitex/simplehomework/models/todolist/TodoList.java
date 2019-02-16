@@ -17,9 +17,20 @@ public class TodoList {
   private long id;
   private long userId;
   private String title;
+  private boolean isArchived;
 
   public TodoList(long userId, String title) {
     this.userId = userId;
     this.title = title;
+    this.isArchived = false;
   }
+
+  public void update(String title) {
+    this.title = title;
+  }
+
+  public void toggle(boolean isArchived) {
+    this.isArchived = isArchived;
+  }
+
 }
