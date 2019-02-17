@@ -75,7 +75,7 @@ class GroupCardList extends React.Component {
             <CardActionArea onClick={handleDetail()}>
               <CardMedia
                 className={classes.media}
-                image="https://etcn.nl/wp-content/uploads/NIMA-study-with-laptop-1.jpg"
+                image="http://timeline.infinitex.cn/img/c1/eb2b41496b21bf258ac976b4d31462.jpg"
               />
               <CardContent>
                 <div className={classes.cardDetailContainer}>

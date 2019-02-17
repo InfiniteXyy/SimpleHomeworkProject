@@ -115,7 +115,7 @@ class MessageList extends React.Component {
     }
     return (
       // <InfiniteScroll initialLoad={false} loadMore={loadItems} hasMore={false} loader={loader}>
-      <div>
+      <div className="message-list-container">
         {messages.map(i => (
           <Message
             item={i}

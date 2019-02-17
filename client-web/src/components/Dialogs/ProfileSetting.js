@@ -3,6 +3,7 @@ import { Avatar, List, ListItem, ListItemSecondaryAction, withStyles } from '@ma
 import RightIcon from '@material-ui/icons/ChevronRightRounded';
 import { FullScreenDialog } from '../utils';
 import StackHeader from '../StackHeader';
+import { inject, observer } from 'mobx-react';
 
 const styles = {
   root: {
@@ -36,9 +37,13 @@ const styles = {
     color: '#4a4a4a'
   }
 };
+
+@inject('userStore')
+@observer
 class ProfileSetting extends React.Component {
   render() {
     const { classes, open, handleClose } = this.props;
+    const user = this.props.userStore.currentUser;
     return (
       <FullScreenDialog open={open} white>
         <StackHeader title="个人设置" handleClickLeft={handleClose} />
@@ -48,19 +53,7 @@ class ProfileSetting extends React.Component {
               <div className={classes.font2}>更换头像</div>
               <ListItemSecondaryAction>
                 <div className={classes.rightContainer}>
-                  <Avatar
-                    className={classes.avatar}
-                    src="http://timeline.infinitex.cn/img/02/97e88c79a15cab3bd3262066d4d49b.jpg"
-                  />
-                  <RightIcon className={classes.icon} />
-                </div>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem className={classes.listItem}>
-              <div className={classes.font2}>个人简介</div>
-              <ListItemSecondaryAction>
-                <div className={classes.rightContainer}>
-                  <div className={classes.font1}>唔</div>
+                  <Avatar className={classes.avatar} src={user.image} />
                   <RightIcon className={classes.icon} />
                 </div>
               </ListItemSecondaryAction>
@@ -69,7 +62,15 @@ class ProfileSetting extends React.Component {
               <div className={classes.font2}>昵称</div>
               <ListItemSecondaryAction>
                 <div className={classes.rightContainer}>
-                  <div className={classes.font1}>InfiniteX</div>
+                  <div className={classes.font1}>{user.username}</div>
+                  <RightIcon className={classes.icon} />
+                </div>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem className={classes.listItem}>
+              <div className={classes.font2}>修改密码</div>
+              <ListItemSecondaryAction>
+                <div className={classes.rightContainer}>
                   <RightIcon className={classes.icon} />
                 </div>
               </ListItemSecondaryAction>

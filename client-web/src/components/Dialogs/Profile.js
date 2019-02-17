@@ -11,16 +11,17 @@ import { ROLES } from '../Group/GroupList';
 const styles = {
   root: {
     paddingTop: 46,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    margin: '0 16px',
-    boxSizing: 'border-box'
+    margin: '0 16px'
   },
   avatar: {
     height: 90,
     width: 90,
     marginTop: 50
+  },
+  headerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   container1: {
     width: 200,
@@ -98,11 +99,11 @@ class Profile extends React.Component {
     const user = this.props.profileStore.userProfile;
     let main = <div />;
     if (user !== undefined) {
-      const messageTab = <MessageList messages={user.messages.slice(0, 1)} />;
+      const messageTab = <MessageList messages={user.messages.slice(0, 3)} />;
       const groupTab = (
         <List>
           {user.groups.map(i => (
-            <ListItem key={i.joinAt}>
+            <ListItem key={i.joinAt} button>
               <ListItemText primary={i.group.title} />
               <ListItemSecondaryAction>
                 <ListItemText classes={{ primary: classes.font4 }} primary={ROLES[i.tag]} />
@@ -113,16 +114,18 @@ class Profile extends React.Component {
       );
       main = (
         <div className={classes.root}>
-          <Avatar className={classes.avatar} src={user.image} />
-          <div className={classes.font1}>{user.username}</div>
-          <div className={classes.container1}>
-            <div className={classes.container2}>
-              <div className={classes.font2}>17</div>
-              <div className={classes.font3}>参与群组</div>
-            </div>
-            <div className={classes.container2}>
-              <div className={classes.font2}>3</div>
-              <div className={classes.font3}>创建群组</div>
+          <div className={classes.headerContainer}>
+            <Avatar className={classes.avatar} src={user.image} />
+            <div className={classes.font1}>{user.username}</div>
+            <div className={classes.container1}>
+              <div className={classes.container2}>
+                <div className={classes.font2}>{user.messages.length}</div>
+                <div className={classes.font3}>发布动态</div>
+              </div>
+              <div className={classes.container2}>
+                <div className={classes.font2}>{user.groups.length}</div>
+                <div className={classes.font3}>参与群组</div>
+              </div>
             </div>
           </div>
 

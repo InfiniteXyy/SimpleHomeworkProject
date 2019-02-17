@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { Card, CardContent, CardHeader, Collapse, IconButton, LinearProgress, withStyles } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Collapse,
+  Fade,
+  IconButton,
+  LinearProgress,
+  withStyles
+} from '@material-ui/core';
 import UpIcon from '@material-ui/icons/ExpandLessRounded';
 import DownIcon from '@material-ui/icons/ExpandMoreRounded';
 import MenuIcon from '@material-ui/icons/DehazeRounded';
@@ -79,7 +88,10 @@ const styles = {
   container2: {
     paddingTop: 0,
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    '&:last-child': {
+      paddingBottom: 16
+    }
   },
   progress: {
     height: 3,
@@ -89,6 +101,74 @@ const styles = {
     backgroundColor: '#89C3EB'
   }
 };
+
+class TodoListCard extends Component {
+  state = {
+    expanded: false
+  };
+
+  toggleExpand = () => {
+    this.setState(prev => {
+      return { expanded: !prev.expanded };
+    });
+  };
+  render() {
+    const i = this.props.todoList;
+    const classes = this.props.classes;
+    const { tasks } = i;
+    const finishedStatus = tasks.length === 0 ? '无任务' : `${tasks.filter(i => i.finished).length} / ${tasks.length}`;
+    const finishedRate = (tasks.filter(i => i.finished).length / tasks.length) * 100;
+    return (
+      <Card classes={{ root: classes.card }}>
+        <CardHeader
+          classes={{ root: classes.cardHeader, avatar: classes.avatar }}
+          avatar={
+            <IconButton onClick={this.toggleExpand}>
+              {this.state.expanded ? <UpIcon className={classes.avatar} /> : <DownIcon className={classes.avatar} />}
+            </IconButton>
+          }
+          action={
+            <div className={classes.iconContainer}>
+              <Fade in={!this.state.expanded}>
+                <div className={classes.font3}>{finishedStatus}</div>
+              </Fade>
+              <IconButton>
+                <MenuIcon className={classes.icon} />
+              </IconButton>
+            </div>
+          }
+          title={
+            <div className={classes.font1}>
+              {i.title}
+              {i.archived && <span className={classes.font3}>已归档</span>}
+            </div>
+          }
+        />
+        <Collapse in={this.state.expanded}>
+          <CardContent className={classes.container2}>
+            <div>
+              <div className={classes.container1}>
+                <CalendarIcon className={classes.icon3} />
+                <div className={classes.font2}>2018年9月25日</div>
+              </div>
+              <div className={classes.container1}>
+                <TaskIcon className={classes.icon3} />
+                <div className={classes.font2}>{finishedStatus}</div>
+              </div>
+            </div>
+          </CardContent>
+        </Collapse>
+        <LinearProgress
+          classes={{ root: classes.progress, barColorPrimary: classes.progressMain }}
+          variant="determinate"
+          value={finishedRate}
+        />
+      </Card>
+    );
+  }
+}
+
+TodoListCard = withStyles(styles)(TodoListCard);
 
 @inject('todoListStore')
 @observer
@@ -107,73 +187,20 @@ class ManageList extends Component {
     });
   };
 
-  toggleExpand = item => () => {
-    item.expanded = !item.expanded;
-  };
-
   render() {
     const { open, handleClose, classes } = this.props;
     let listsComponent;
     const todoLists = this.props.todoListStore.todoLists;
     if (todoLists === undefined) listsComponent = <div />;
     else {
-      listsComponent = todoLists.map((i, index) => {
-        const { tasks } = i;
-        const finishedStatus =
-          tasks.length === 0 ? '无任务' : `${tasks.filter(i => i.finished).length} / ${tasks.length}`;
-        const finishedRate = (tasks.filter(i => i.finished).length / tasks.length) * 100;
-        return (
-          <Card key={index.toString()} classes={{ root: classes.card }}>
-            <CardHeader
-              classes={{ root: classes.cardHeader, avatar: classes.avatar }}
-              avatar={
-                <IconButton onClick={this.toggleExpand(i)}>
-                  {i.expanded ? <UpIcon className={classes.avatar} /> : <DownIcon className={classes.avatar} />}
-                </IconButton>
-              }
-              action={
-                <div className={classes.iconContainer}>
-                  {!i && <div className={classes.font4}>{finishedStatus}</div>}
-                  <IconButton>
-                    <MenuIcon className={classes.icon} />
-                  </IconButton>
-                </div>
-              }
-              title={
-                <div className={classes.font1}>
-                  {i.title}
-                  {i.archived && <span className={classes.font3}>已归档</span>}
-                </div>
-              }
-            />
-            <Collapse in={i.expanded}>
-              <CardContent className={classes.container2}>
-                <div>
-                  <div className={classes.container1}>
-                    <CalendarIcon className={classes.icon3} />
-                    <div className={classes.font2}>2018年9月25日</div>
-                  </div>
-                  <div className={classes.container1}>
-                    <TaskIcon className={classes.icon3} />
-                    <div className={classes.font2}>{finishedStatus}</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Collapse>
-            <LinearProgress
-              classes={{ root: classes.progress, barColorPrimary: classes.progressMain }}
-              variant="determinate"
-              value={finishedRate}
-            />
-          </Card>
-        );
-      });
+      listsComponent = todoLists.map((i, index) => <TodoListCard key={index} todoList={i} />);
     }
 
     return (
       <FullScreenDialog open={open}>
-        <StackHeader title="清单列表" handleClickLeft={handleClose} />
+        <StackHeader title="清单列表" handleClickLeft={handleClose} rightTitle="添加" />
         <div className={classes.root}>{listsComponent}</div>
+
         <Drawer anchor="bottom" open={this.state.drawerOpen} onClose={this.toggleDrawer(false)}>
           <div>
             <List subheader={<ListSubheader>{this.state.drawerFor.title}</ListSubheader>}>

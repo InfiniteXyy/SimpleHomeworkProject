@@ -7,8 +7,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
-
-import InboxIcon from '@material-ui/icons/InboxRounded';
 import MailIcon from '@material-ui/icons/MailRounded';
 import SettingIcon from '@material-ui/icons/SettingsRounded';
 import ListAltIcon from '@material-ui/icons/ListAltRounded';
@@ -20,6 +18,7 @@ import Setting from './Dialogs/Setting';
 import Avatar from '@material-ui/core/Avatar';
 import moment from 'moment';
 import Profile from './Dialogs/Profile';
+import ChatList from './Dialogs/ChatList';
 
 const styles = {
   root: {
@@ -99,11 +98,11 @@ class Header extends React.Component {
                 </ListItemIcon>
                 <ListItemText primary="管理清单" />
               </ListItem>
-              <ListItem button>
+              <ListItem button onClick={this.toggleDialog('chat')}>
                 <ListItemIcon>
                   <MailIcon />
                 </ListItemIcon>
-                <ListItemText primary="我的私信" />
+                <ListItemText primary="私信" />
               </ListItem>
               <ListItem button onClick={this.toggleDialog('setting')}>
                 <ListItemIcon>
@@ -118,6 +117,7 @@ class Header extends React.Component {
         <ManageList open={this.state.dialogOpen === 'manageList'} handleClose={this.toggleDialog('')} />
         <Setting open={this.state.dialogOpen === 'setting'} handleClose={this.toggleDialog('')} />
         <Profile open={this.state.dialogOpen === 'profile'} handleClose={this.toggleDialog('')} />
+        <ChatList open={this.state.dialogOpen === 'chat'} handleClose={this.toggleDialog('')} />
       </div>
     );
   }
