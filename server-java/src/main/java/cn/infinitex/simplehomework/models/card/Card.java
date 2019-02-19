@@ -30,8 +30,10 @@ public class Card {
 
   private String coverImg;
 
+  private String place;
+
   public Card(long userId, String title, Long groupCardId, String creatorTitle, String weekdays,
-      String daytime, String coverImg) {
+      String daytime, String coverImg, String place) {
     this.userId = userId;
     this.title = title;
     this.groupCardId = groupCardId;
@@ -39,5 +41,6 @@ public class Card {
     this.weekdays = weekdays;
     this.daytime = daytime;
     this.coverImg = coverImg;
+    this.place = place;
   }
 }

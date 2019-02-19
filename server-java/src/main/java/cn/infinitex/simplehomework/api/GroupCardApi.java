@@ -2,6 +2,7 @@ package cn.infinitex.simplehomework.api;
 
 import cn.infinitex.simplehomework.api.response.GroupCardData;
 import cn.infinitex.simplehomework.models.card.Card;
+import cn.infinitex.simplehomework.models.card.CardLogRepository;
 import cn.infinitex.simplehomework.models.card.CardRepository;
 import cn.infinitex.simplehomework.models.group.Group;
 import cn.infinitex.simplehomework.models.group.GroupCard;
@@ -10,14 +11,18 @@ import cn.infinitex.simplehomework.models.group.GroupRepository;
 import cn.infinitex.simplehomework.models.user.User;
 import cn.infinitex.simplehomework.models.user.UserRepository;
 import cn.infinitex.simplehomework.service.Auth;
+import cn.infinitex.simplehomework.utils.DateHelper;
 import cn.infinitex.simplehomework.utils.JsonHelper;
+import cn.infinitex.simplehomework.utils.Pair;
 import cn.infinitex.simplehomework.utils.ValidationHandler;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -35,6 +40,7 @@ public class GroupCardApi {
   private Auth auth;
   private GroupCardRepository groupCardRepository;
   private CardRepository cardRepository;
+  private CardLogRepository cardLogRepository;
   private GroupRepository groupRepository;
   private UserRepository userRepository;
 
@@ -42,11 +48,13 @@ public class GroupCardApi {
   public GroupCardApi(Auth auth,
       GroupCardRepository groupCardRepository,
       CardRepository cardRepository,
+      CardLogRepository cardLogRepository,
       GroupRepository groupRepository,
       UserRepository userRepository) {
     this.auth = auth;
     this.groupCardRepository = groupCardRepository;
     this.cardRepository = cardRepository;
+    this.cardLogRepository = cardLogRepository;
     this.groupRepository = groupRepository;
     this.userRepository = userRepository;
   }
@@ -60,14 +68,21 @@ public class GroupCardApi {
       if (!groupRepository.findById(groupId).isPresent()) {
         throw new Exception("groupId wrong");
       }
+      Pair<DateTime> dateRange = DateHelper.getDateRange(new DateTime());
+      String from = dateRange.getLeft().toString();
+      String to = dateRange.getRight().toString();
       return ResponseEntity.ok(JsonHelper.object("cards",
           groupCardRepository.findByGroupId(groupId).stream()
               .map(i -> new GroupCardData(
                   i,
+                  userRepository.findById(i.getCreatorId()).get(),
                   cardRepository.findByGroupCardId(i.getId()).stream()
                       .map(Card::getUserId)
                       .map(id -> userRepository.findById(id).get())
-                      .collect(Collectors.toList())
+                      .collect(Collectors.toList()),
+                  cardLogRepository.findByCardIdInAndCheckTimeBetween(
+                      cardRepository.findByGroupCardId(i.getId()).stream()
+                          .map(Card::getId).collect(Collectors.toList()), from, to)
               ))
               .map(GroupCardData::getData)
               .collect(Collectors.toList())
@@ -105,10 +120,13 @@ public class GroupCardApi {
           newGroupCardApi.getTitle(),
           newGroupCardApi.getWeekdays(),
           newGroupCardApi.getDaytime(),
-          newGroupCardApi.getCoverImg()
+          newGroupCardApi.getCoverImg(),
+          newGroupCardApi.getDescription(),
+          user.getId(),
+          newGroupCardApi.getPlace()
       );
       groupCardRepository.save(groupCard);
-      return ResponseEntity.ok(new GroupCardData(groupCard).getJson());
+      return ResponseEntity.ok(new GroupCardData(groupCard, user).getJson());
 
     } catch (Exception e) {
       return ResponseEntity.status(401)
@@ -130,7 +148,9 @@ class NewGroupCardApi {
   private String title;
   @NotBlank
   private String weekdays;
+  private String description = "";
   @NotBlank
   private String daytime;
   private String coverImg = "";
+  private String place = "";
 }

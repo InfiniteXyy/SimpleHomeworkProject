@@ -16,9 +16,11 @@ public class CardLog {
   private long id;
   private long cardId;
   private String checkTime;
+  private long userId;
 
-  public CardLog(long cardId, String checkTime) {
+  public CardLog(long cardId, String checkTime, long userId) {
     this.cardId = cardId;
     this.checkTime = checkTime;
+    this.userId = userId;
   }
 }

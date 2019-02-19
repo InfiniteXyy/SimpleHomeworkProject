@@ -33,6 +33,7 @@ public class ProfileData {
     return new HashMap<String, Object>() {{
       put("username", user.getUsername());
       put("image", user.getImage());
+      put("id", user.getId());
       if (messages != null) {
         put("messages", messages.stream().map(MessageData::getData));
       }

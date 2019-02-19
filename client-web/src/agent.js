@@ -99,8 +99,13 @@ const Profile = {
   get: username => requests.get(`/profile/${username}`)
 };
 
+const GroupCard = {
+  get: groupId => requests.get(`/group/card?groupId=${groupId}`)
+};
+
 export default {
   Group,
+  GroupCard,
   Message,
   Auth,
   Profile,

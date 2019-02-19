@@ -56,7 +56,7 @@ public class CardLogApi {
         throw new Exception("card doesn't belong to you");
       }
 
-      CardLog cardLog = new CardLog(card.getId(), new DateTime().toString());
+      CardLog cardLog = new CardLog(card.getId(), new DateTime().toString(), user.getId());
       cardLogRepository.save(cardLog);
       return ResponseEntity.ok(new CardLogData(cardLog).getJson());
     } catch (Exception e) {

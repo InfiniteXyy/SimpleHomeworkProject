@@ -4,18 +4,21 @@ import {
   Card,
   CardContent,
   CardMedia,
+  IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  withStyles,
-  IconButton
+  Tab,
+  Tabs,
+  withStyles
 } from '@material-ui/core';
 
 import PlaceIcon from '@material-ui/icons/LocationOnOutlined';
 import DateIcon from '@material-ui/icons/AccessTimeOutlined';
 import { FullScreenDialog } from '../../utils';
 import BackIcon from '@material-ui/icons/ChevronLeftRounded';
+import moment from 'moment';
 
 const styles = {
   root: {
@@ -103,23 +106,52 @@ const styles = {
     }
   }
 };
+
+const UserList = ({ users }) => (
+  <List>
+    {users.map(user => {
+      let textProps = {};
+      if (user.finished) {
+        textProps = { secondary: moment(user.finished).fromNow() };
+      }
+      return (
+        <ListItem key={user.username}>
+          <ListItemAvatar>
+            <Avatar src={user.image} />
+          </ListItemAvatar>
+          <ListItemText primary={user.username} {...textProps} />
+        </ListItem>
+      );
+    })}
+  </List>
+);
+
 class GroupCardHome extends React.Component {
+  state = {
+    tabIndex: 0
+  };
+
+  handleChange = (event, value) => {
+    this.setState({ tabIndex: value });
+  };
+
   render() {
-    const { classes, open, handleClose } = this.props;
-    return (
-      <FullScreenDialog open={open}>
+    const { classes, open, handleClose, card } = this.props;
+    let main;
+    if (card === undefined) main = <div />;
+    else {
+      const finished = card.members.filter(i => i.finished !== '');
+      const unfinished = card.members.filter(i => i.finished === '');
+      main = (
         <div className={classes.root}>
           <IconButton className={classes.closeButton} onClick={handleClose}>
             <BackIcon style={{ color: 'white' }} />
           </IconButton>
           <Card elevation={0} className={classes.card}>
-            <CardMedia
-              className={classes.media}
-              image="http://timeline.infinitex.cn/img/c1/eb2b41496b21bf258ac976b4d31462.jpg"
-            />
+            <CardMedia className={classes.media} image={card.coverImg} />
             <CardContent>
               <div className={classes.container1}>
-                <div className={classes.title}>晚自习</div>
+                <div className={classes.title}>{card.title}</div>
                 <div className={classes.chip}>参与</div>
               </div>
               <div className={classes.container2}>
@@ -135,26 +167,32 @@ class GroupCardHome extends React.Component {
           <List className={classes.list}>
             <ListItem>
               <ListItemAvatar>
-                <Avatar>1</Avatar>
+                <Avatar src={card.creator.image} />
               </ListItemAvatar>
               <ListItemText
                 classes={{ primary: classes.itemPrimary, secondary: classes.itemSecondary }}
-                primary="InfiniteX"
-                secondary="创建于 2018年9月"
+                primary={card.creator.username}
               />
             </ListItem>
           </List>
           <div className={classes.aboutContainer}>
             <div className={classes.aboutTitle}>简介</div>
             <div className={classes.line} />
-            <p style={{ fontSize: 16, lineHeight: 1.6 }}>
-              在任务大厅中可以看到当前比较热门的活动、
-              比赛。同时大厅里有4个不同类型的任务列表，服务方根据自身的技能情况选择不同类型的任务，点击任务卡片可以查看任务详情，里面详细介绍了任务的报酬，设计类型，具体价格，任务简介，同时还能看到任务状态：发布情况，竞标情况，评论等等。遇到满意的任务还可以点击收藏，进一步关注。
-            </p>
+            <p style={{ fontSize: 16, lineHeight: 1.6 }}>{card.description}</p>
+          </div>
+          <div className={classes.aboutContainer}>
+            <div className={classes.aboutTitle}>成员今日</div>
+            <div className={classes.line} />
+            <Tabs value={this.state.tabIndex} onChange={this.handleChange}>
+              <Tab label={`已完成(${finished.length})`} />
+              <Tab label={`未完成(${unfinished.length})`} />
+            </Tabs>
+            <div>{this.state.tabIndex === 0 ? <UserList users={finished} /> : <UserList users={unfinished} />}</div>
           </div>
         </div>
-      </FullScreenDialog>
-    );
+      );
+    }
+    return <FullScreenDialog open={open}>{main}</FullScreenDialog>;
   }
 }
 

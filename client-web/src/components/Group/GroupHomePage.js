@@ -14,9 +14,9 @@ import Zoom from '@material-ui/core/Zoom';
 import Fab from '@material-ui/core/Fab';
 
 import AddIcon from '@material-ui/icons/Add';
+import AddCardIcon from '@material-ui/icons/LibraryAddOutlined';
 import AddMessage from './AddMessage';
 import GroupCardList from './elements/GroupCardList';
-import GroupCardHome from './elements/GroupCardHome';
 
 const canEdit = {
   creator: true,
@@ -66,6 +66,7 @@ class GroupHomePage extends Component {
         this.props.groupStore.loadMessage();
         return;
       case 1:
+        this.props.groupStore.loadCards();
         return;
       case 2:
         this.props.groupStore.loadDetail();
@@ -91,6 +92,19 @@ class GroupHomePage extends Component {
   };
 
   render() {
+    const fabs = [
+      {
+        color: 'primary',
+        icon: <AddIcon />,
+        onClick: this.toggleDialog('message')
+      },
+      {
+        color: 'primary',
+        icon: <AddCardIcon />,
+        onClick: this.toggleDialog('')
+      }
+    ];
+
     const { classes, open, group, groupStore, handleClose } = this.props;
     if (!group) return <div />;
     return (
@@ -111,22 +125,31 @@ class GroupHomePage extends Component {
         <div className={classes.root}>
           <SwipeableViews index={this.state.value} onChangeIndex={this.handleChangeIndex}>
             <MessageList messages={groupStore.groupMessages} loadItems={groupStore.loadMore(group.id)} />
-            <GroupCardList handleDetail={() => this.toggleDialog('card-detail')} />
+            <GroupCardList cards={groupStore.groupCards} />
             <MemberList detail={groupStore.groupDetail} />
           </SwipeableViews>
           {canEdit[group.tag] ? (
-            <Zoom in={this.state.value === 0} timeout={100} unmountOnExit>
-              <Fab className={classes.fab} color="primary" onClick={this.toggleDialog('message')}>
-                <AddIcon />
-              </Fab>
-            </Zoom>
+            fabs.map((fab, index) => (
+              <Zoom
+                key={index}
+                in={this.state.value === index}
+                timeout={100}
+                unmountOnExit
+                style={{
+                  transitionDelay: `${this.state.value === index ? 100 : 0}ms`
+                }}
+              >
+                <Fab className={classes.fab} color={fab.color} onClick={fab.onClick}>
+                  {fab.icon}
+                </Fab>
+              </Zoom>
+            ))
           ) : (
             <div />
           )}
         </div>
 
         <AddMessage open={this.state.dialogOpen === 'message'} handleClose={this.toggleDialog('')} />
-        <GroupCardHome open={this.state.dialogOpen === 'card-detail'} handleClose={this.toggleDialog('')} />
       </FullScreenDialog>
     );
   }

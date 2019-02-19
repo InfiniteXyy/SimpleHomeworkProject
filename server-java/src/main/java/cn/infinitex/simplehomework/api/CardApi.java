@@ -54,7 +54,9 @@ public class CardApi {
           newCardParam.getCreatorTitle(),
           newCardParam.getWeekdays(),
           newCardParam.getDaytime(),
-          newCardParam.getCoverImg());
+          newCardParam.getCoverImg(),
+          newCardParam.getPlace()
+      );
 
       cardRepository.save(card);
       return ResponseEntity.ok(new CardData(card).getJson());
@@ -96,4 +98,5 @@ class NewCardParam {
   @NotBlank
   private String daytime;
   private String coverImg = "";
+  private String place = "";
 }

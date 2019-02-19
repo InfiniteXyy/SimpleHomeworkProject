@@ -1,5 +1,7 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import agent from '../agent';
+import { createTransformer } from 'mobx-utils';
+import cardStore from './cardStore';
 
 export class GroupStore {
   @observable
@@ -13,6 +15,9 @@ export class GroupStore {
 
   @observable
   groupMessages = undefined;
+
+  @observable
+  groupCards = undefined;
 
   @observable
   searchedGroups = [];
@@ -77,6 +82,15 @@ export class GroupStore {
   }
 
   @action
+  loadCards() {
+    return agent.GroupCard.get(this.currentGroup.id).then(
+      action(({ cards }) => {
+        this.groupCards = cards;
+      })
+    );
+  }
+
+  @action
   loadMore() {
     return action(() => {
       if (!this.groupMessages || this.groupMessages.length === 0) return;
@@ -94,6 +108,7 @@ export class GroupStore {
     this.groupDetail = undefined;
     this.groupMessages = undefined;
     this.currentGroup = undefined;
+    this.groupCards = undefined;
   }
 
   @action
@@ -103,6 +118,17 @@ export class GroupStore {
         this.groupMessages.push(message);
       })
     );
+  }
+
+  @computed
+  get hasJoined() {
+    return createTransformer(groupCardId => {
+      if (cardStore.cards === undefined) {
+        cardStore.loadCards();
+        return false;
+      }
+      return cardStore.cards.findIndex(i => i.groupCardId === groupCardId) !== -1;
+    });
   }
 }
 

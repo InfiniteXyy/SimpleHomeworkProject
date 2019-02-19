@@ -23,6 +23,7 @@ public class CardData {
           .map(Integer::valueOf)
           .collect(Collectors.toList()));
       put("daytime", card.getDaytime());
+      put("place", card.getPlace());
     }};
   }
 

@@ -1,9 +1,12 @@
 import React from 'react';
-import { Avatar, Card, CardActionArea, CardContent, CardHeader, CardMedia, withStyles } from '@material-ui/core';
+import { Card, CardActionArea, CardContent, CardHeader, CardMedia, withStyles } from '@material-ui/core';
 
 import HumanIcon from '@material-ui/icons/PersonOutline';
 import DateIcon from '@material-ui/icons/AccessTimeOutlined';
+import GroupCardHome from './GroupCardHome';
+import { inject, observer } from 'mobx-react';
 
+import classNames from 'classnames';
 const styles = {
   root: {
     width: '100%',
@@ -46,52 +49,79 @@ const styles = {
     color: '#757575'
   },
   chip: {
-    margin: 16,
+    marginTop: 16,
     padding: '0 16px',
     borderRadius: 16,
     height: 25,
     lineHeight: '25px',
-    border: '1px solid #8B572A',
     color: '#8B572A',
     fontSize: 12,
     fontWeight: 'bold'
+  },
+  unjoined: {
+    border: '1px solid #8B572A'
   }
 };
+
+@inject('groupStore')
+@observer
 class GroupCardList extends React.Component {
+  state = {
+    dialogOpen: false,
+    payload: undefined
+  };
+
+  toggleDialog = (dialogOpen, payload) => () => {
+    if (payload) this.setState({ dialogOpen, payload });
+    else {
+      this.setState({ dialogOpen });
+    }
+  };
   render() {
-    const { classes, handleDetail } = this.props;
+    const { classes, cards } = this.props;
+    if (cards === undefined) {
+      return <div className="empty-tip">加载中...</div>;
+    }
+    if (cards.length === 0) {
+      return <div className="empty-tip">没有发布打卡任务...</div>;
+    }
     return (
       <div className={classes.root}>
-        {[1, 2, 3].map(i => (
-          <Card key={i.toString()} classes={{ root: classes.card }} elevation={0}>
-            <CardHeader
-              avatar={<Avatar>1</Avatar>}
-              action={<div className={classes.chip}>参与</div>}
-              title="晚自习"
-              subheader="由 健身爱好者 创建"
-              titleTypographyProps={{ className: classes.cardTitle }}
-              subheaderTypographyProps={{ className: classes.cardSubtitle }}
-            />
-            <CardActionArea onClick={handleDetail()}>
-              <CardMedia
-                className={classes.media}
-                image="http://timeline.infinitex.cn/img/c1/eb2b41496b21bf258ac976b4d31462.jpg"
+        {cards.map(i => {
+          const hasJoined = this.props.groupStore.hasJoined(i.id);
+          return (
+            <Card key={i.id} classes={{ root: classes.card }} elevation={0}>
+              <CardHeader
+                action={
+                  <div className={classNames(classes.chip, { [classes.unjoined]: !hasJoined })}>
+                    {hasJoined ? '已参与' : '参与'}
+                  </div>
+                }
+                title={i.title}
+                subheader={`由 ${i.creator.username} 创建`}
+                titleTypographyProps={{ className: classes.cardTitle }}
+                subheaderTypographyProps={{ className: classes.cardSubtitle }}
               />
-              <CardContent>
-                <div className={classes.cardDetailContainer}>
-                  <div className={classes.tipContainer}>
-                    <HumanIcon className={classes.icon} />
-                    <div className={classes.cardDetail}>50人参与</div>
+              <CardActionArea onClick={this.toggleDialog(true, i)}>
+                <CardMedia className={classes.media} image={i.coverImg} />
+                <CardContent>
+                  <div className={classes.cardDetailContainer}>
+                    <div className={classes.tipContainer}>
+                      <HumanIcon className={classes.icon} />
+                      <div className={classes.cardDetail}>{`${i.members.length}人参与`}</div>
+                    </div>
+                    <div className={classes.tipContainer}>
+                      <DateIcon className={classes.icon} />
+                      <div className={classes.cardDetail}>周一 ～ 周五 晚上 6:00</div>
+                    </div>
                   </div>
-                  <div className={classes.tipContainer}>
-                    <DateIcon className={classes.icon} />
-                    <div className={classes.cardDetail}>周一 ～ 周五 晚上 6:00</div>
-                  </div>
-                </div>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        ))}
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          );
+        })}
+
+        <GroupCardHome card={this.state.payload} open={this.state.dialogOpen} handleClose={this.toggleDialog(false)} />
       </div>
     );
   }

@@ -17,6 +17,8 @@ public class GroupCard {
 
   private long groupId;
 
+  private long creatorId;
+
   private String title;
 
   private String weekdays;
@@ -25,12 +27,19 @@ public class GroupCard {
 
   private String coverImg;
 
+  private String description;
+
+  private String place;
+
   public GroupCard(long groupId, String title, String weekdays, String daytime,
-      String coverImg) {
+      String coverImg, String description, long creatorId, String place) {
     this.groupId = groupId;
     this.title = title;
     this.weekdays = weekdays;
     this.daytime = daytime;
     this.coverImg = coverImg;
+    this.description = description;
+    this.creatorId = creatorId;
+    this.place = place;
   }
 }
