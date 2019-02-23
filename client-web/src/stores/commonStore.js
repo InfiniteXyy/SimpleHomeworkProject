@@ -6,6 +6,7 @@ class CommonStore {
   @observable appLoaded = false;
   @observable snackbarPayload = { content: '', type: 'info' };
   @observable snackbarOpen = false;
+  @observable notificationOpen = false;
 
   constructor() {
     reaction(
@@ -18,6 +19,11 @@ class CommonStore {
         }
       }
     );
+  }
+
+  @action
+  toggleNotification(toggle = true) {
+    this.notificationOpen = toggle;
   }
 
   @action

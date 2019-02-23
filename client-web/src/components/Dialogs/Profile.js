@@ -10,8 +10,7 @@ import { ROLES } from '../Group/GroupList';
 
 const styles = {
   root: {
-    paddingTop: 46,
-    margin: '0 16px'
+    paddingTop: 46
   },
   avatar: {
     height: 90,
@@ -81,6 +80,9 @@ const styles = {
     height: 1,
     width: '100%',
     backgroundColor: '#EFEFEF'
+  },
+  marginContainer: {
+    margin: '0 16px'
   }
 };
 
@@ -101,16 +103,18 @@ class Profile extends React.Component {
     if (user !== undefined) {
       const messageTab = <MessageList messages={user.messages.slice(0, 3)} />;
       const groupTab = (
-        <List>
-          {user.groups.map(i => (
-            <ListItem key={i.joinAt} button>
-              <ListItemText primary={i.group.title} />
-              <ListItemSecondaryAction>
-                <ListItemText classes={{ primary: classes.font4 }} primary={ROLES[i.tag]} />
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
+        <div className={classes.marginContainer}>
+          <List>
+            {user.groups.map(i => (
+              <ListItem key={i.joinAt} button>
+                <ListItemText primary={i.group.title} />
+                <ListItemSecondaryAction>
+                  <ListItemText classes={{ primary: classes.font4 }} primary={ROLES[i.tag]} />
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+        </div>
       );
       main = (
         <div className={classes.root}>
@@ -137,7 +141,9 @@ class Profile extends React.Component {
             <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="动态" />
             <Tab disableRipple classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label="群组" />
           </Tabs>
-          <div className={classes.divider} />
+          <div className={classes.marginContainer}>
+            <div className={classes.divider} />
+          </div>
           <div className={classes.container3}>{this.state.value === 0 ? messageTab : groupTab}</div>
         </div>
       );

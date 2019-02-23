@@ -14,6 +14,7 @@ import MySnackbarContent from './Snackbar';
 
 import './App.css';
 import Header from './Header';
+import Notification from './Notification';
 
 const styles = {
   root: {
@@ -89,6 +90,7 @@ class App extends Component {
               onClose={this.handleCloseSnackbar}
             />
           </Snackbar>
+          <Notification />
         </div>
       );
     }

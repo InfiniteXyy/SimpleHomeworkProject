@@ -1,17 +1,16 @@
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import AddIcon from '@material-ui/icons/PlaylistAddRounded';
 import AlarmIcon from '@material-ui/icons/AlarmOutlined';
 import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 
-import './MessageList.css';
-import { Divider } from '@material-ui/core';
+import { Card, CardContent, CardHeader, IconButton } from '@material-ui/core';
 import reactStringReplace from 'react-string-replace';
-
-import classNames from 'classnames';
 import moment from 'moment';
 import AddTodo from '../Home/AddTodo';
+import withStyles from '@material-ui/core/styles/withStyles';
+
 import StarIcon from '@material-ui/icons/StarBorderRounded';
+import ReadIcon from '@material-ui/icons/AssistantPhotoOutlined';
 
 const defaultValue = {
   avatar: 'https://i0.wp.com/ebus.ca/wp-content/uploads/2017/08/profile-placeholder.jpg?ssl=1'
@@ -20,65 +19,145 @@ const defaultValue = {
 const typeNames = {
   todo: '新的作业'
 };
-const Message = props => {
-  const { item, handleLike, handleAdd } = props;
+
+const styles = {
+  card: {
+    borderRadius: 8,
+    border: 'solid 0.5px #E7E7E7',
+    margin: '10px 10px 0'
+  },
+  cardContent: {
+    padding: '0 16px',
+    '&:last-child': {
+      paddingBottom: 16
+    }
+  },
+  icon: {},
+  title: {
+    color: "#000",
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  subtitle: {
+    fontSize: 13,
+    color: '#6a6a6a',
+    fontWeight: '400'
+  },
+  content: {
+    fontSize: 14
+  },
+  highlight: {
+    fontSize: 14,
+    color: '#4A90E2'
+  },
+  detail1: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: 14,
+    color: '#4a4a4a'
+  },
+  detail2: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: 14,
+    color: '#757575',
+    marginTop: 10
+  },
+  time: {
+    fontSize: 12,
+    color: '#9b9b9b'
+  },
+  font1: {
+    fontSize: 12,
+    color: '#757575',
+    marginLeft: 8
+  },
+  iconFlash: {
+    color: '#757575',
+    height: 16,
+    width: 16
+  },
+  container1: {
+    marginTop: 16,
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  container2: {
+    display: 'flex'
+  },
+  payload: {
+    marginTop: 16,
+    backgroundColor: '#fafafa',
+    borderRadius: 6,
+    padding: 16
+  },
+  assign: {
+    width: 16,
+    height: 16,
+    color: '#8B572A',
+    marginRight: 8
+  },
+  alarm: {
+    width: 16,
+    height: 16,
+    color: '#417505',
+    marginRight: 8
+  }
+};
+
+const Message = withStyles(styles)(props => {
+  const { item, handleLike, handleAdd, classes } = props;
   let { payload } = item;
   if (payload !== undefined && payload !== '' && payload !== null) {
     payload = JSON.parse(payload);
-    payload.deadlineFormat = moment(payload.deadlineAt).format('M月D日 周dd H:mm 截止');
+    payload.deadlineFormat = moment(payload.deadlineAt).format('截止时间：M月D日 周dd H:mm');
   }
 
-  const bottomContainer = payload ? (
-    <div>
-      <Divider />
-      <div className="message-payload">
-        <div className="payload-type">
-          {typeNames[payload.type]}
-          <AddIcon className="more-icon" onClick={handleAdd} />
-        </div>
-        <div className="payload-content">
-          <AssignmentIcon className={classNames('brown', 'icon')} />
-          {payload.content}
-        </div>
-        <div className="payload-content">
-          <AlarmIcon className={classNames('green', 'icon')} />
-          {payload.deadlineFormat}
-        </div>
-      </div>
-    </div>
-  ) : (
-    <div />
-  );
   return (
-    <div className="message-container">
-      <div className="message-header">
-        <Avatar
-          style={{ height: 44, width: 44 }}
-          src={item.author.image === '' ? defaultValue.avatar : item.author.image}
-        />
-        <div className="header-right">
-          <div className="author-name">{item.author.username}</div>
-          <div className="author-from">来自 {item.groupTitle}</div>
-        </div>
-
-        <div className="more-icon-container">
-          <StarIcon className="more-icon" onClick={handleLike} />
-        </div>
-      </div>
-
-      <div className="message-body">
-        <p>
+    <Card classes={{ root: classes.card }} elevation={0}>
+      <CardHeader
+        avatar={<Avatar src={item.author.image === '' ? defaultValue.avatar : item.author.image} />}
+        title={item.author.username}
+        subheader={`来自 ${item.groupTitle}`}
+        action={
+          <IconButton>
+            <StarIcon />
+          </IconButton>
+        }
+        titleTypographyProps={{ className: classes.title }}
+        subheaderTypographyProps={{ className: classes.subtitle }}
+      />
+      <CardContent classes={{ root: classes.cardContent }}>
+        <div className={classes.content}>
           {reactStringReplace(item.body, /(#.*?#)/g, (match, i) => (
-            <span key={i} className="highlight">
+            <span key={i} className={classes.highlight}>
               {match}
             </span>
           ))}
-        </p>
-      </div>
-      {bottomContainer}
-    </div>
+        </div>
+        {payload && (
+          <div className={classes.payload} onClick={handleAdd}>
+            <div className={classes.detail1}>
+              <AssignmentIcon className={classes.assign} />
+              {payload.content}
+            </div>
+            <div className={classes.detail2}>
+              <AlarmIcon className={classes.alarm} />
+              {payload.deadlineFormat}
+            </div>
+          </div>
+        )}
+        <div className={classes.container1}>
+          <div className={classes.container2}>
+            <ReadIcon className={classes.iconFlash} />
+            <div className={classes.font1}>标记为已读</div>
+          </div>
+          <div className={classes.time}>{moment(item.createdAt).fromNow()}</div>
+        </div>
+      </CardContent>
+    </Card>
   );
-};
+});
 
 // const loader = (
 //   <div className="empty-list" key="empty-list">
@@ -107,11 +186,11 @@ class MessageList extends React.Component {
     const { messages } = this.props;
 
     if (!messages) {
-      return <div className="empty-list">加载中 ...</div>;
+      return <div className="empty-tip">加载中 ...</div>;
     }
 
     if (messages.length === 0) {
-      return <div className="empty-list">空空如也</div>;
+      return <div className="empty-tip">空空如也</div>;
     }
     return (
       // <InfiniteScroll initialLoad={false} loadMore={loadItems} hasMore={false} loader={loader}>

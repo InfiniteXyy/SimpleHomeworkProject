@@ -91,7 +91,7 @@ class Group extends React.Component {
               button
               style={styles.listItem}
               onClick={() => {
-                this.props.commonStore.toggleSnackbar('123');
+                this.props.commonStore.toggleNotification();
               }}
             >
               <ListItemIcon>

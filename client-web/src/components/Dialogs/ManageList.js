@@ -25,6 +25,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 import EditIcon from '@material-ui/icons/EditRounded';
 import { inject, observer } from 'mobx-react';
+import AddListDialog from '../Home/AddListDialog';
 
 const styles = {
   root: {
@@ -177,7 +178,8 @@ class ManageList extends Component {
     super(props);
     this.state = {
       drawerFor: '',
-      drawerOpen: false
+      drawerOpen: false,
+      dialogOpen: false
     };
   }
   toggleDrawer = (type, list) => () => {
@@ -185,6 +187,9 @@ class ManageList extends Component {
       drawerFor: type ? list : '',
       drawerOpen: type
     });
+  };
+  toggleDialog = dialogOpen => () => {
+    this.setState({ dialogOpen });
   };
 
   render() {
@@ -197,8 +202,14 @@ class ManageList extends Component {
     }
 
     return (
-      <FullScreenDialog open={open}>
-        <StackHeader title="清单列表" handleClickLeft={handleClose} rightTitle="添加" />
+      <FullScreenDialog open={open} white>
+        <StackHeader
+          title="清单列表"
+          handleClickLeft={handleClose}
+          rightTitle="添加"
+          handleClickRight={this.toggleDialog(true)}
+          rightEnabled
+        />
         <div className={classes.root}>{listsComponent}</div>
 
         <Drawer anchor="bottom" open={this.state.drawerOpen} onClose={this.toggleDrawer(false)}>
@@ -219,6 +230,8 @@ class ManageList extends Component {
             </List>
           </div>
         </Drawer>
+
+        <AddListDialog open={this.state.dialogOpen} handleClose={this.toggleDialog(false)} />
       </FullScreenDialog>
     );
   }

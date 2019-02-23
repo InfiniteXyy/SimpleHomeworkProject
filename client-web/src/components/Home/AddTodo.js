@@ -23,6 +23,7 @@ import Radio from '@material-ui/core/Radio';
 import { inject, observer } from 'mobx-react';
 import { FullScreenDialog } from '../utils';
 import RemarkDialog from './RemarkDialog';
+import IconButton from '@material-ui/core/IconButton';
 
 const styles = theme => ({
   root: {
@@ -170,8 +171,11 @@ class AddTodo extends Component {
                 onChange={this.handleChange('content')}
               />
             </div>
+            <input accept="image/*" style={{ display: 'none' }} id="icon-button-file" type="file" />
             <div className="camera-container">
-              <CameraIcon style={{ color: '#9b9b9b' }} />
+              <label htmlFor="icon-button-file">
+                <CameraIcon style={{ color: '#9b9b9b' }} />
+              </label>
             </div>
           </div>
           <List className={classes.list}>
