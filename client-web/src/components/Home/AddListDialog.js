@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
-import {
-  IconButton,
-  Input,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  withStyles
-} from '@material-ui/core';
+import { IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, withStyles } from '@material-ui/core';
 import { FullScreenDialog } from '../utils';
 import StackHeader from '../StackHeader';
 import SearchIcon from '@material-ui/icons/SearchRounded';
 import DeleteIcon from '@material-ui/icons/Close';
-import CheckIcon from '@material-ui/icons/Check';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 

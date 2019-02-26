@@ -11,6 +11,7 @@ import MailIcon from '@material-ui/icons/MailRounded';
 import SettingIcon from '@material-ui/icons/SettingsRounded';
 import ListAltIcon from '@material-ui/icons/ListAltRounded';
 import ProfileIcon from '@material-ui/icons/PersonRounded';
+import NotifyIcon from '@material-ui/icons/NotificationsRounded';
 import Divider from '@material-ui/core/Divider';
 import { inject, observer } from 'mobx-react';
 import ManageList from './Dialogs/ManageList';
@@ -19,6 +20,7 @@ import Avatar from '@material-ui/core/Avatar';
 import moment from 'moment';
 import Profile from './Dialogs/Profile';
 import ChatList from './Dialogs/ChatList';
+import NotificationList from './Dialogs/NotificationList';
 
 const styles = {
   root: {
@@ -98,6 +100,12 @@ class Header extends React.Component {
                 </ListItemIcon>
                 <ListItemText primary="管理清单" />
               </ListItem>
+              <ListItem button onClick={this.toggleDialog('notify')}>
+                <ListItemIcon>
+                  <NotifyIcon />
+                </ListItemIcon>
+                <ListItemText primary="最近通知" />
+              </ListItem>
               <ListItem button onClick={this.toggleDialog('chat')}>
                 <ListItemIcon>
                   <MailIcon />
@@ -118,6 +126,7 @@ class Header extends React.Component {
         <Setting open={this.state.dialogOpen === 'setting'} handleClose={this.toggleDialog('')} />
         <Profile open={this.state.dialogOpen === 'profile'} handleClose={this.toggleDialog('')} />
         <ChatList open={this.state.dialogOpen === 'chat'} handleClose={this.toggleDialog('')} />
+        <NotificationList open={this.state.dialogOpen === 'notify'} handleClose={this.toggleDialog('')} />
       </div>
     );
   }

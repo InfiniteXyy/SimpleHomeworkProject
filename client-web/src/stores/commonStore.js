@@ -1,4 +1,7 @@
-import { action, observable, reaction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
+import cardStore from './cardStore';
+import todoListStore from './todoListStore';
+import moment from 'moment';
 
 class CommonStore {
   @observable appName = 'Simple Homework';
@@ -7,6 +10,7 @@ class CommonStore {
   @observable snackbarPayload = { content: '', type: 'info' };
   @observable snackbarOpen = false;
   @observable notificationOpen = false;
+  @observable hasNotified = false;
 
   constructor() {
     reaction(
@@ -24,6 +28,7 @@ class CommonStore {
   @action
   toggleNotification(toggle = true) {
     this.notificationOpen = toggle;
+    this.hasNotified = true;
   }
 
   @action
@@ -40,6 +45,39 @@ class CommonStore {
   @action
   setToken(token) {
     this.token = token;
+  }
+
+  @computed
+  get allTasks() {
+    let tasks = [];
+    if (todoListStore.todoLists) {
+      for (let list of todoListStore.todoLists) {
+        const title = list.title;
+        for (let task of list.tasks) {
+          tasks.push({
+            title: task.content,
+            time: task.deadlineAt,
+            type: 'task',
+            origin: title
+          });
+        }
+      }
+    }
+    if (cardStore.todayCards) {
+      tasks = [
+        ...tasks,
+        ...cardStore.todayCards.map(i => {
+          return {
+            title: i.title,
+            time: Date.parse(moment().format('M/D/YYYY ') + i.daytime),
+            type: 'card',
+            origin: i.creatorTitle,
+            place: i.place
+          };
+        })
+      ];
+    }
+    return tasks;
   }
 }
 

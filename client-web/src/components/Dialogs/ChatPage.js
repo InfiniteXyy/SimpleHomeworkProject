@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import InputBase from '@material-ui/core/InputBase';
-import { Button } from '@material-ui/core';
 import StackHeader from '../StackHeader';
 import { FullScreenDialog } from '../utils';
 

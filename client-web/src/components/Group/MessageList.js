@@ -16,10 +16,6 @@ const defaultValue = {
   avatar: 'https://i0.wp.com/ebus.ca/wp-content/uploads/2017/08/profile-placeholder.jpg?ssl=1'
 };
 
-const typeNames = {
-  todo: '新的作业'
-};
-
 const styles = {
   card: {
     borderRadius: 8,
@@ -34,7 +30,7 @@ const styles = {
   },
   icon: {},
   title: {
-    color: "#000",
+    color: '#000',
     fontSize: 16,
     fontWeight: 'bold'
   },
@@ -120,7 +116,7 @@ const Message = withStyles(styles)(props => {
         title={item.author.username}
         subheader={`来自 ${item.groupTitle}`}
         action={
-          <IconButton>
+          <IconButton onClick={handleLike}>
             <StarIcon />
           </IconButton>
         }

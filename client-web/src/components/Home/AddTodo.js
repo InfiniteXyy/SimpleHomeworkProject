@@ -23,7 +23,6 @@ import Radio from '@material-ui/core/Radio';
 import { inject, observer } from 'mobx-react';
 import { FullScreenDialog } from '../utils';
 import RemarkDialog from './RemarkDialog';
-import IconButton from '@material-ui/core/IconButton';
 
 const styles = theme => ({
   root: {
