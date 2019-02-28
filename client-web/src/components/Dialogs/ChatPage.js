@@ -5,6 +5,11 @@ import InputBase from '@material-ui/core/InputBase';
 import StackHeader from '../StackHeader';
 import { FullScreenDialog } from '../utils';
 
+import classNames from 'classnames';
+import moment from 'moment';
+import { inject, observer } from 'mobx-react';
+import { CircularProgress } from '@material-ui/core';
+
 const styles = {
   root: {
     paddingTop: 46
@@ -15,6 +20,11 @@ const styles = {
     height: 56,
     backgroundColor: 'white'
   },
+  search: {
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: 16
+  },
   inputRoot: {
     flex: 1,
     backgroundColor: '#fafafa',
@@ -24,7 +34,7 @@ const styles = {
     margin: '8px 16px'
   },
   inputInput: {
-    margin:  16,
+    margin: 16,
     boxSizing: 'border-box'
   },
   container: {
@@ -56,26 +66,65 @@ const styles = {
   }
 };
 
+@inject('chatStore')
+@observer
 class ChatPage extends React.Component {
+  state = {
+    content: '',
+    isSending: false
+  };
+  handleChange = event => {
+    this.setState({ content: event.target.value });
+  };
+  onSend = () => {
+    this.setState({ isSending: true });
+    this.props.chatStore.handleSend(this.state.content).then(() => {
+      this.setState({ isSending: false, content: '' });
+    });
+  };
   render() {
     const { classes, open, handleClose } = this.props;
+    const payload = this.props.chatStore.currentPage;
     return (
       <FullScreenDialog open={open} white>
-        <StackHeader title="消息" handleClickLeft={handleClose} />
+        <StackHeader title={payload ? payload.person : ''} handleClickLeft={handleClose} />
         <div className={classes.root}>
           <div className={classes.container}>
-            <div className={classes.bubble1 + ' ' + classes.bubble}>
-              <div className={classes.font1}>我在干嘛</div>
-              <div className={classes.font2}>1:55 PM</div>
-            </div>
-            <div className={classes.bubble2 + ' ' + classes.bubble}>
-              <div className={classes.font1}>你在做项目</div>
-              <div className={classes.font2}>1:55 PM</div>
-            </div>
+            {payload &&
+              payload.bubbles.map((i, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={classNames(
+                      { [classes.bubble1]: i.type === 'reply', [classes.bubble2]: i.type !== 'reply' },
+                      classes.bubble
+                    )}
+                  >
+                    <div className={classes.font1}>{i.content}</div>
+                    <div className={classes.font2}>{moment(i.createdAt).format('H:mm')}</div>
+                  </div>
+                );
+              })}
           </div>
         </div>
         <AppBar position="fixed" className={classes.appBar} elevation={0}>
-          <InputBase placeholder="输入内容…" classes={{ root: classes.inputRoot, input: classes.inputInput }} />
+          <div className={classes.search}>
+            <InputBase
+              value={this.state.content}
+              placeholder="输入内容…"
+              onChange={this.handleChange}
+              classes={{ root: classes.inputRoot, input: classes.inputInput }}
+            />
+            <div style={{ width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {this.state.isSending ? (
+                <CircularProgress size={22} />
+              ) : (
+                <div className="blue" onClick={this.onSend}>
+                  发送
+                </div>
+              )}
+            </div>
+          </div>
         </AppBar>
       </FullScreenDialog>
     );

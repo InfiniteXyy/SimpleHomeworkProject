@@ -48,13 +48,16 @@ const styles = theme => ({
   }
 });
 
-@inject('todoListStore', 'routingStore', 'commonStore')
+@inject('todoListStore', 'routingStore', 'commonStore', 'chatStore')
 @observer
 class Home extends Component {
   componentDidMount() {
     this.props.todoListStore.loadTodos().then(() => {
       if (!this.props.commonStore.hasNotified) {
         this.props.commonStore.toggleNotification();
+        setInterval(() => {
+          this.props.chatStore.loadBubbles();
+        }, 3000);
       }
     });
   }

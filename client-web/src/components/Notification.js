@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Avatar, Card, CardContent, CardHeader, Divider, IconButton } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Divider, IconButton } from '@material-ui/core';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
@@ -30,7 +30,7 @@ const styles = {
   },
   divider: {
     backgroundColor: '#EAEAEA',
-    height: 0.5
+    height: 0.75
   },
   title: {
     fontSize: 16,
@@ -106,15 +106,17 @@ class NotificationCard extends React.Component {
           titleTypographyProps={{ className: classes.title }}
           subheaderTypographyProps={{ className: classes.subtitle }}
           action={
-            <div className={classes.tip}>
-              <div className={classes.font4}>{time.fromNow()}</div>
-            </div>
+            notification.time && (
+              <div className={classes.tip}>
+                <div className={classes.font4}>{time.fromNow()}</div>
+              </div>
+            )
           }
         />
         <Divider className={classes.divider} />
         <CardContent className={classes.cardContent}>
-          <div className={classes.font1}>{notification.days || time.format('周dd')}</div>
-          <div className={classes.font2}>{time.format('H:mm')}</div>
+          {notification.time && <div className={classes.font1}>{notification.days || time.format('周dd')}</div>}
+          {notification.time && <div className={classes.font2}>{time.format('H:mm')}</div>}
           <div className={classes.container1}>
             <div className={classes.font2}>{notification.place || '无位置信息'}</div>
             <div className={classes.font3}>{`来自 ${notification.origin} ${

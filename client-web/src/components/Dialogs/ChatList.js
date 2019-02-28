@@ -12,6 +12,8 @@ import {
 import { FullScreenDialog } from '../utils';
 import StackHeader from '../StackHeader';
 import ChatPage from './ChatPage';
+import { inject, observer } from 'mobx-react';
+import moment from 'moment';
 
 const styles = {
   root: {
@@ -30,38 +32,52 @@ const styles = {
   }
 };
 
+@inject('chatStore')
+@observer
 class ChatList extends React.Component {
   state = {
     pageOpen: ''
   };
 
-  togglePage = pageOpen => () => {
+  togglePage = (pageOpen, index) => () => {
+    if (pageOpen) this.props.chatStore.togglePage(index);
     this.setState({ pageOpen });
   };
+
   render() {
     const { classes, handleClose, open } = this.props;
+    let main;
+    const chatPages = this.props.chatStore.chatPages;
+    if (chatPages === undefined) {
+      main = <div className="empty-tip">加载中...</div>;
+    } else if (chatPages.length === 0) {
+      main = <div className="empty-tip">空</div>;
+    } else {
+      main = chatPages.map((i, index) => {
+        const lastBubble = i.bubbles[i.bubbles.length - 1];
+        return (
+          <React.Fragment key={index}>
+            <ListItem button classes={{ root: classes.listItem }} onClick={this.togglePage('c', index)}>
+              <ListItemAvatar>
+                <Avatar src={i.avatar} />
+              </ListItemAvatar>
+              <ListItemText primary={i.person} secondary={lastBubble.content} />
+              <ListItemSecondaryAction>
+                <ListItemText classes={{ primary: classes.font1 }} primary={moment(lastBubble.createdAt).fromNow()} />
+              </ListItemSecondaryAction>
+            </ListItem>
+            <li>
+              <Divider classes={{ root: classes.divider }} variant="inset" />
+            </li>
+          </React.Fragment>
+        );
+      });
+    }
     return (
       <FullScreenDialog open={open} white>
         <div className={classes.root}>
           <StackHeader title="消息" handleClickLeft={handleClose} />
-          <List>
-            {[1, 2, 3, 4].map(i => (
-              <React.Fragment key={i}>
-                <ListItem button classes={{ root: classes.listItem }} onClick={this.togglePage('123')}>
-                  <ListItemAvatar>
-                    <Avatar src="https://i0.wp.com/ebus.ca/wp-content/uploads/2017/08/profile-placeholder.jpg?ssl=1" />
-                  </ListItemAvatar>
-                  <ListItemText primary="三千焱炎火" secondary="在吗" />
-                  <ListItemSecondaryAction>
-                    <ListItemText classes={{ primary: classes.font1 }} primary="下午8:00" />
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <li>
-                  <Divider classes={{ root: classes.divider }} variant="inset" />
-                </li>
-              </React.Fragment>
-            ))}
-          </List>
+          <List>{main}</List>
         </div>
         <ChatPage open={this.state.pageOpen !== ''} handleClose={this.togglePage('')} />
       </FullScreenDialog>

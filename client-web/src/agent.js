@@ -103,6 +103,11 @@ const GroupCard = {
   get: groupId => requests.get(`/group/card?groupId=${groupId}`)
 };
 
+const Chat = {
+  get: () => requests.get('/chat/'),
+  send: (content, destUsername) => requests.post('/chat/', { bubble: { content, destUsername } })
+};
+
 export default {
   Group,
   GroupCard,
@@ -111,5 +116,6 @@ export default {
   Profile,
   TodoList,
   Todo,
-  Card
+  Card,
+  Chat
 };
