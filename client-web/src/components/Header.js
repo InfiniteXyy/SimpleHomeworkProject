@@ -43,7 +43,7 @@ const styles = {
   }
 };
 
-@inject('userStore', 'routingStore', 'profileStore')
+@inject('userStore', 'routingStore', 'profileStore', 'chatStore')
 @observer
 class Header extends React.Component {
   state = {
@@ -57,6 +57,14 @@ class Header extends React.Component {
   toggleDialog = title => () => {
     if (title === 'profile') {
       this.props.profileStore.toggleProfile(this.props.userStore.currentUser.username);
+    }
+    if (title === 'chat') {
+      this.chatRefresh = setInterval(() => {
+        this.props.chatStore.loadBubbles();
+      }, 3000);
+    }
+    if (title === '') {
+      clearInterval(this.chatRefresh);
     }
     this.setState({ dialogOpen: title });
   };

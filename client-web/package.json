@@ -2,7 +2,7 @@
   "name": "simple-homework-web",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:6699",
+  "proxy": "http://sh.infinitex.cn",
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.3.0",
     "@craco/craco": "^3.4.0",

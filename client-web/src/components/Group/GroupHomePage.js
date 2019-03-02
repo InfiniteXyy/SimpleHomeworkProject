@@ -124,7 +124,7 @@ class GroupHomePage extends Component {
         </Tabs>
         <div className={classes.root}>
           <SwipeableViews index={this.state.value} onChangeIndex={this.handleChangeIndex}>
-            <MessageList messages={groupStore.groupMessages} loadItems={groupStore.loadMore(group.id)} />
+            <MessageList readStatus messages={groupStore.groupMessages} loadItems={groupStore.loadMore(group.id)} />
             <GroupCardList cards={groupStore.groupCards} />
             <MemberList detail={groupStore.groupDetail} />
           </SwipeableViews>

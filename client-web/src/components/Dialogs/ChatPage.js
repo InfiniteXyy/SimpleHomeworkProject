@@ -76,7 +76,9 @@ class ChatPage extends React.Component {
   handleChange = event => {
     this.setState({ content: event.target.value });
   };
+
   onSend = () => {
+    if (this.state.content === '') return;
     this.setState({ isSending: true });
     this.props.chatStore.handleSend(this.state.content).then(() => {
       this.setState({ isSending: false, content: '' });
@@ -119,7 +121,10 @@ class ChatPage extends React.Component {
               {this.state.isSending ? (
                 <CircularProgress size={22} />
               ) : (
-                <div className="blue" onClick={this.onSend}>
+                <div
+                  className={classNames({ blue: this.state.content !== '', gray: this.state.content === '' })}
+                  onClick={this.onSend}
+                >
                   发送
                 </div>
               )}

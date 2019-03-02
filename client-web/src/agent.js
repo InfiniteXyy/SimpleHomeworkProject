@@ -40,11 +40,13 @@ const requests = {
 };
 
 const Message = {
-  get: (groupId = '') => requests.get(`/messages?groupId=${groupId}`),
+  get: (groupId = '', like = false) => requests.get(`/messages?groupId=${groupId}&like=${like}`),
   delete: id => requests.del(`/messages/${encode(id)}`),
   update: (id, body) => requests.put(`/messages/${encode(id)}`, { message: { body } }),
   add: (groupId, payload, body) => requests.post('/messages/', { message: { body, groupId, payload } }),
-  loadMore: (from, groupId = '') => requests.get(`/messages?from=${encode(from)}&groupId=${groupId}`)
+  loadMore: (from, groupId = '') => requests.get(`/messages?from=${encode(from)}&groupId=${groupId}`),
+  relation: (messageId, like, read) => requests.post(`/messages/${messageId}?like=${like}&read=${read}`),
+  status: messageId => requests.get(`/messages/read/${messageId}`)
 };
 
 const Auth = {

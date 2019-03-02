@@ -55,9 +55,7 @@ class Home extends Component {
     this.props.todoListStore.loadTodos().then(() => {
       if (!this.props.commonStore.hasNotified) {
         this.props.commonStore.toggleNotification();
-        setInterval(() => {
-          this.props.chatStore.loadBubbles();
-        }, 3000);
+        this.props.chatStore.loadBubbles();
       }
     });
   }

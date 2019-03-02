@@ -6,11 +6,18 @@ import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 import { Card, CardContent, CardHeader, IconButton } from '@material-ui/core';
 import reactStringReplace from 'react-string-replace';
 import moment from 'moment';
-import AddTodo from '../Home/AddTodo';
+
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import StarIcon from '@material-ui/icons/StarBorderRounded';
-import ReadIcon from '@material-ui/icons/AssistantPhotoOutlined';
+import StarIcon from '@material-ui/icons/StarRounded';
+import StarBorder from '@material-ui/icons/StarBorderRounded';
+import ReadBorder from '@material-ui/icons/AssistantPhotoOutlined';
+import ReadIcon from '@material-ui/icons/AssistantPhotoRounded';
+import ListIcon from '@material-ui/icons/PagesOutlined';
+import AddTodo from '../Home/AddTodo';
+import agent from '../../agent';
+import ReadStatusPage from './elements/ReadStatusPage';
+import { inject, observer } from 'mobx-react';
 
 const defaultValue = {
   avatar: 'https://i0.wp.com/ebus.ca/wp-content/uploads/2017/08/profile-placeholder.jpg?ssl=1'
@@ -73,6 +80,11 @@ const styles = {
     height: 16,
     width: 16
   },
+  iconRead: {
+    color: '#89C3EB',
+    height: 16,
+    width: 16
+  },
   container1: {
     marginTop: 16,
     display: 'flex',
@@ -102,7 +114,7 @@ const styles = {
 };
 
 const Message = withStyles(styles)(props => {
-  const { item, handleLike, handleAdd, classes } = props;
+  const { item, handleLike, handleAdd, handleRead, classes, readStatus, handleStatus } = props;
   let { payload } = item;
   if (payload !== undefined && payload !== '' && payload !== null) {
     payload = JSON.parse(payload);
@@ -116,9 +128,7 @@ const Message = withStyles(styles)(props => {
         title={item.author.username}
         subheader={`来自 ${item.groupTitle}`}
         action={
-          <IconButton onClick={handleLike}>
-            <StarIcon />
-          </IconButton>
+          <IconButton onClick={handleLike}>{item.like ? <StarIcon color="primary" /> : <StarBorder />}</IconButton>
         }
         titleTypographyProps={{ className: classes.title }}
         subheaderTypographyProps={{ className: classes.subtitle }}
@@ -144,10 +154,17 @@ const Message = withStyles(styles)(props => {
           </div>
         )}
         <div className={classes.container1}>
-          <div className={classes.container2}>
-            <ReadIcon className={classes.iconFlash} />
-            <div className={classes.font1}>标记为已读</div>
-          </div>
+          {readStatus ? (
+            <div className={classes.container2} onClick={handleStatus}>
+              <ListIcon className={classes.iconFlash} />
+              <div className={classes.font1}>查看情况</div>
+            </div>
+          ) : (
+            <div className={classes.container2} onClick={handleRead}>
+              {item.read ? <ReadIcon className={classes.iconRead} /> : <ReadBorder className={classes.iconFlash} />}
+              <div className={classes.font1}>{item.read ? '已读' : '标记为已读'}</div>
+            </div>
+          )}
           <div className={classes.time}>{moment(item.createdAt).fromNow()}</div>
         </div>
       </CardContent>
@@ -161,14 +178,27 @@ const Message = withStyles(styles)(props => {
 //   </div>
 // );
 
+@inject('messageStore')
+@observer
 class MessageList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       drawerOpen: '',
-      payload: undefined
+      payload: undefined,
+      dialogOpen: false
     };
   }
+
+  toggleDialog = (dialogOpen, id) => () => {
+    if (dialogOpen) {
+      this.props.messageStore.loadReadStatus(id).then(() => {
+        this.setState({ dialogOpen });
+      });
+    } else {
+      this.setState({ dialogOpen });
+    }
+  };
 
   toggleDrawer = (type, payload = undefined) => () => {
     if (!payload) this.setState({ drawerOpen: type });
@@ -178,8 +208,24 @@ class MessageList extends React.Component {
       });
   };
 
+  handleLike = item => () => {
+    agent.Message.relation(item.id, !item.like, item.read).then(({ result }) => {
+      item.like = result.like;
+      item.read = result.read;
+      this.forceUpdate();
+    });
+  };
+
+  handleRead = item => () => {
+    agent.Message.relation(item.id, item.like, !item.read).then(({ result }) => {
+      item.like = result.like;
+      item.read = result.read;
+      this.forceUpdate();
+    });
+  };
+
   render() {
-    const { messages } = this.props;
+    const { messages, readStatus } = this.props;
 
     if (!messages) {
       return <div className="empty-tip">加载中 ...</div>;
@@ -190,13 +236,16 @@ class MessageList extends React.Component {
     }
     return (
       // <InfiniteScroll initialLoad={false} loadMore={loadItems} hasMore={false} loader={loader}>
-      <div className="message-list-container">
+      <div style={{ paddingBottom: 20 }}>
         {messages.map(i => (
           <Message
             item={i}
             key={i.id}
-            handleLike={this.toggleDrawer('message')}
+            handleLike={this.handleLike(i)}
             handleAdd={this.toggleDrawer('addTodo', i.payload)}
+            handleRead={this.handleRead(i)}
+            handleStatus={this.toggleDialog(true, i.id)}
+            readStatus={readStatus}
           />
         ))}
 
@@ -205,6 +254,7 @@ class MessageList extends React.Component {
           onClose={this.toggleDrawer('')}
           payload={this.state.payload}
         />
+        <ReadStatusPage open={this.state.dialogOpen} handleClose={this.toggleDialog(false)} />
       </div>
       // </InfiniteScroll>
     );

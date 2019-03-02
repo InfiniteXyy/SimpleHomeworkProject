@@ -11,6 +11,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
 import GroupList from './GroupList';
 import { SlideTransition } from '../utils';
+import LikeListDialog from './LikeListDialog';
 
 const styles = {
   root: {
@@ -55,7 +56,8 @@ class Group extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      groupListOpen: false
+      groupListOpen: false,
+      likeListOpen: false
     };
   }
 
@@ -64,6 +66,10 @@ class Group extends React.Component {
   };
   handleOpenGroupList = () => {
     this.setState({ groupListOpen: true });
+  };
+
+  toggleLikeList = (open = true) => () => {
+    this.setState({ likeListOpen: open });
   };
 
   render() {
@@ -87,13 +93,7 @@ class Group extends React.Component {
               </ListItemSecondaryAction>
             </ListItem>
 
-            <ListItem
-              button
-              style={styles.listItem}
-              onClick={() => {
-                this.props.commonStore.toggleNotification();
-              }}
-            >
+            <ListItem button style={styles.listItem} onClick={this.toggleLikeList()}>
               <ListItemIcon>
                 <StarIcon color="primary" style={{ color: '#F5A623' }} />
               </ListItemIcon>
@@ -115,6 +115,8 @@ class Group extends React.Component {
         >
           <GroupList groups={groups} onClose={this.handleCloseGroupList} />
         </Dialog>
+
+        <LikeListDialog open={this.state.likeListOpen} handleClose={this.toggleLikeList(false)} />
       </div>
     );
   }

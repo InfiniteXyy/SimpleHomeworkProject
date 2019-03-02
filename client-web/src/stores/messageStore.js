@@ -3,6 +3,8 @@ import agent from '../agent';
 
 export class MessageStore {
   @observable messages = undefined;
+  @observable likeMessages = undefined;
+  @observable readStatus = undefined;
 
   @action
   loadMessages() {
@@ -15,6 +17,20 @@ export class MessageStore {
       .catch(() => {
         this.messages = [];
       });
+  }
+
+  @action
+  loadLikeMessages() {
+    return agent.Message.get('', true).then(({ messages }) => {
+      this.likeMessages = messages;
+    });
+  }
+
+  @action
+  loadReadStatus(id) {
+    return agent.Message.status(id).then(users => {
+      this.readStatus = users;
+    });
   }
 
   @action
