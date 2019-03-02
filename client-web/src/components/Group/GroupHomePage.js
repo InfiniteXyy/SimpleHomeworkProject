@@ -17,6 +17,7 @@ import AddIcon from '@material-ui/icons/Add';
 import AddCardIcon from '@material-ui/icons/LibraryAddOutlined';
 import AddMessage from './AddMessage';
 import GroupCardList from './elements/GroupCardList';
+import AddGroupCard from './elements/AddGroupCard';
 
 const canEdit = {
   creator: true,
@@ -101,7 +102,7 @@ class GroupHomePage extends Component {
       {
         color: 'primary',
         icon: <AddCardIcon />,
-        onClick: this.toggleDialog('')
+        onClick: this.toggleDialog('card')
       }
     ];
 
@@ -150,6 +151,7 @@ class GroupHomePage extends Component {
         </div>
 
         <AddMessage open={this.state.dialogOpen === 'message'} handleClose={this.toggleDialog('')} />
+        <AddGroupCard open={this.state.dialogOpen === 'card'} handleClose={this.toggleDialog('')} />
       </FullScreenDialog>
     );
   }

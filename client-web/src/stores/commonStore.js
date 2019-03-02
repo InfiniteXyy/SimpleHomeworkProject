@@ -40,6 +40,8 @@ class CommonStore {
   @action
   setAppLoaded() {
     this.appLoaded = true;
+    todoListStore.loadTodos();
+    cardStore.loadCards();
   }
 
   @action

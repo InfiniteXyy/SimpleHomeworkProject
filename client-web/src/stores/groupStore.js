@@ -130,6 +130,16 @@ export class GroupStore {
       return cardStore.cards.findIndex(i => i.groupCardId === groupCardId) !== -1;
     });
   }
+
+  @action
+  submitGroupCard(title, weekdays, daytime, description, place, coverImg) {
+    return agent.GroupCard.add(this.currentGroup.id, title, weekdays, daytime, description, place, coverImg).then(
+      ({ card }) => {
+        card.members = [];
+        this.groupCards.push(card);
+      }
+    );
+  }
 }
 
 export default new GroupStore();

@@ -102,7 +102,9 @@ const Profile = {
 };
 
 const GroupCard = {
-  get: groupId => requests.get(`/group/card?groupId=${groupId}`)
+  get: groupId => requests.get(`/group/card?groupId=${groupId}`),
+  add: (groupId, title, weekdays, daytime, description, place, coverImg) =>
+    requests.post('/group/card', { card: { groupId, title, weekdays, daytime, description, place, coverImg } })
 };
 
 const Chat = {
