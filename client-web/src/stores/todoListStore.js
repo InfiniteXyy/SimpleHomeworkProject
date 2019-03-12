@@ -26,7 +26,7 @@ export class TodoListStore {
   loadTodos() {
     return agent.TodoList.get().then(
       action(({ lists }) => {
-        this.todoLists = lists;
+        this.todoLists = lists.sort((a, b) => (a.id - b.id));
         if (lists.length === 0) this.currentListId = 0;
         else if (this.currentListId === undefined) this.currentListId = lists[0].id;
       })
@@ -43,8 +43,8 @@ export class TodoListStore {
   }
 
   @action
-  addTodo(listId, content, deadlineAt, remarks) {
-    return agent.Todo.add(listId, content, deadlineAt, remarks).then(
+  addTodo(listId, content, deadlineAt, remarks, imageUrl) {
+    return agent.Todo.add(listId, content, deadlineAt, remarks, imageUrl).then(
       action(({ task }) => {
         this.todoLists.forEach(i => {
           if (i.id.toString() === listId) {

@@ -27,6 +27,7 @@ public class TodoData {
       put("deadlineAt", todo.getDeadlineAt());
       put("noticeAt", todo.getNoticeAt());
       put("finished", todo.getFinished());
+      put("imageUrl", todo.getImageUrl());
       put("remarks", todo.getRemarks() == null ?
           new ArrayList() :
           Arrays.stream(todo

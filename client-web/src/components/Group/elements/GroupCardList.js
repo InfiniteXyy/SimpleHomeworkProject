@@ -121,7 +121,7 @@ class GroupCardList extends React.Component {
           );
         })}
 
-        <GroupCardHome card={this.state.payload} open={this.state.dialogOpen} handleClose={this.toggleDialog(false)} />
+        <GroupCardHome card={this.state.payload} hasJoined={hasJoined} open={this.state.dialogOpen} handleClose={this.toggleDialog(false)} />
       </div>
     );
   }

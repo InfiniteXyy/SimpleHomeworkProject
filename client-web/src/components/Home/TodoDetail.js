@@ -23,6 +23,7 @@ import Drawer from '@material-ui/core/Drawer';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/EditOutlined';
 import AddTodo from './AddTodo';
+import { CardMedia } from '@material-ui/core';
 
 const styles = {
   root: {
@@ -38,6 +39,17 @@ const styles = {
   },
   progress: {
     padding: 12
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%' // 16:9
+  },
+  cardContent: {
+    paddingLeft: 0,
+    paddingRight: 0
+  },
+  card: {
+    borderRadius: 0
   }
 };
 
@@ -102,7 +114,7 @@ class TodoDetail extends Component {
           handleClickRight={this.toggleDrawer(true)}
         />
         <div className={classes.root}>
-          <Card elevation={0} className="border-vert">
+          <Card elevation={0} className="border-vert" classes={{ root: classes.card }}>
             <CardHeader
               avatar={
                 task.isLoading ? (
@@ -117,7 +129,8 @@ class TodoDetail extends Component {
                 </Typography>
               }
             />
-            <CardContent>
+            {task.imageUrl && <CardMedia className={classes.media} image={task.imageUrl} />}
+            <CardContent classes={{ root: classes.cardContent }}>
               <List disablePadding>
                 <ListItem>
                   <ListItemIcon>

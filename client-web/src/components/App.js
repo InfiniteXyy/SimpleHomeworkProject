@@ -48,12 +48,26 @@ class App extends Component {
 
   render() {
     const { classes } = this.props;
+    let main;
     if (this.props.commonStore.appLoaded) {
       if (!this.props.userStore.currentUser) {
-        return (
-          <div className={classes.root}>
-            <Login />
-          </div>
+        main = <Login />;
+      } else {
+        main = (
+          <Switch>
+            <Route path="/group/:id" component={GroupHomePage} exact />
+            <Route path="*">
+              <div>
+                <Header />
+                <Switch>
+                  <Route path="/" component={Home} exact />
+                  <Route path="/group" component={Group} />
+                  <Route path="/signIn" component={SignIn} />
+                </Switch>
+                <Navigation />
+              </div>
+            </Route>
+          </Switch>
         );
       }
 
@@ -61,22 +75,7 @@ class App extends Component {
 
       return (
         <div>
-          <div className={classes.root}>
-            <Switch>
-              <Route path="/group/:id" component={GroupHomePage} exact />
-              <Route path="*">
-                <div>
-                  <Header />
-                  <Switch>
-                    <Route path="/" component={Home} exact />
-                    <Route path="/group" component={Group} />
-                    <Route path="/signIn" component={SignIn} />
-                  </Switch>
-                  <Navigation />
-                </div>
-              </Route>
-            </Switch>
-          </div>
+          <div className={classes.root}>{main}</div>
 
           <Snackbar
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

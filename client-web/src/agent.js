@@ -16,6 +16,10 @@ const tokenPlugin = req => {
   }
 };
 
+const uploadToken = req => {
+  req.set('authorization', 'bearer ILoveInfinitex.cn');
+};
+
 const requests = {
   del: url =>
     superagent
@@ -62,8 +66,8 @@ const TodoList = {
 };
 
 const Todo = {
-  add: (listId, content, deadlineAt, remarks) =>
-    requests.post('/todo/', { todo: { listId, content, deadlineAt, remarks } }),
+  add: (listId, content, deadlineAt, remarks, imageUrl) =>
+    requests.post('/todo/', { todo: { listId, content, deadlineAt, remarks, imageUrl } }),
   toggle: (todoId, type) => requests.post(`/todo/${todoId}?type=${type}`),
   delete: todoId => requests.del(`/todo/${todoId}`),
   update: (todoId, listId, content, deadlineAt, remarks, imageUrl, noticeAt) =>
@@ -112,6 +116,15 @@ const Chat = {
   send: (content, destUsername) => requests.post('/chat/', { bubble: { content, destUsername } })
 };
 
+const Upload = {
+  image: body =>
+    superagent
+      .post(`/cdn/api/upload`, body)
+      .use(uploadToken)
+      .then(responseBody)
+};
+
+
 export default {
   Group,
   GroupCard,
@@ -121,5 +134,6 @@ export default {
   TodoList,
   Todo,
   Card,
-  Chat
+  Chat,
+  Upload
 };

@@ -79,6 +79,12 @@ class CommonStore {
         })
       ];
     }
+    tasks.sort((a, b) => {
+      if (b.time === '') {
+        return -1;
+      }
+      return moment(a.time).diff(moment(b.time));
+    });
     return tasks;
   }
 }

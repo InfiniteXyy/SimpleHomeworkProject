@@ -97,6 +97,7 @@ class NotificationCard extends React.Component {
       task: '任务'
     };
     const { classes, notification } = this.props;
+    if (notification === undefined) return <div />;
     const time = moment(notification.time);
     return (
       <Card classes={{ root: classes.card }} elevation={0}>

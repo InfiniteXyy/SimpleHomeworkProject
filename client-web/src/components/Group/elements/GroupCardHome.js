@@ -136,7 +136,7 @@ class GroupCardHome extends React.Component {
   };
 
   render() {
-    const { classes, open, handleClose, card } = this.props;
+    const { classes, open, handleClose, card, hasJoined } = this.props;
     let main;
     if (card === undefined) main = <div />;
     else {
@@ -152,7 +152,7 @@ class GroupCardHome extends React.Component {
             <CardContent>
               <div className={classes.container1}>
                 <div className={classes.title}>{card.title}</div>
-                <div className={classes.chip}>参与</div>
+                <div className={classes.chip}>{hasJoined ? '参与' : '未参与'}</div>
               </div>
               <div className={classes.container2}>
                 <DateIcon className={classes.icon} />

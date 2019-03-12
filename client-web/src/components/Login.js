@@ -61,7 +61,7 @@ function Transition(props) {
   return <Slide direction="right" {...props} />;
 }
 
-@inject('authStore')
+@inject('authStore', 'commonStore')
 @observer
 class Login extends Component {
   constructor(props) {
@@ -92,7 +92,9 @@ class Login extends Component {
     event.preventDefault();
     this.props.authStore.setEmail(this.state.email);
     this.props.authStore.setPassword(this.state.password);
-    this.props.authStore.login();
+    this.props.authStore.login().catch(() => {
+      this.props.commonStore.toggleSnackbar('用户名或密码输入错误！', 'error');
+    });
   };
 
   render() {

@@ -23,6 +23,8 @@ import Radio from '@material-ui/core/Radio';
 import { inject, observer } from 'mobx-react';
 import { FullScreenDialog } from '../utils';
 import RemarkDialog from './RemarkDialog';
+import agent from '../../agent';
+import lrz from 'lrz';
 
 const styles = theme => ({
   root: {
@@ -70,7 +72,8 @@ class AddTodo extends Component {
       deadlineAt: '',
       linkListId: '',
       remarks: [],
-      dialogOpen: false
+      dialogOpen: false,
+      imageUrl: ''
     };
   }
 
@@ -93,11 +96,11 @@ class AddTodo extends Component {
   };
 
   handleAdd = () => {
-    const { content, deadlineAt, linkListId, remarks } = this.state;
+    const { content, deadlineAt, linkListId, remarks, imageUrl } = this.state;
     const { isEdit } = this.props;
     const _remarks = remarks.join('\n');
     if (!isEdit) {
-      this.props.todoListStore.addTodo(linkListId, content, deadlineAt, _remarks).then(() => {
+      this.props.todoListStore.addTodo(linkListId, content, deadlineAt, _remarks, imageUrl).then(() => {
         this.props.onClose();
         this.props.commonStore.toggleSnackbar('添加成功');
       });
@@ -130,6 +133,23 @@ class AddTodo extends Component {
       deadlineAt: payload.deadlineAt,
       linkListId: payload.listId ? payload.listId.toString() : '',
       remarks: payload.remarks || []
+    });
+  };
+
+  handleImageChosen = e => {
+    const image = e.target.files[0];
+    lrz(image).then(rst => {
+      const formData = new FormData();
+      let blob = rst.file;
+      if (typeof blob.name !== 'string') {
+        blob = new File([blob], 'foo.jpg', {
+          type: blob.type
+        });
+      }
+      formData.append('file', blob);
+      agent.Upload.image(formData).then(res => {
+        this.setState({ imageUrl: `http://timeline.infinitex.cn/img${res.data.path}` });
+      });
     });
   };
 
@@ -170,11 +190,21 @@ class AddTodo extends Component {
                 onChange={this.handleChange('content')}
               />
             </div>
-            <input accept="image/*" style={{ display: 'none' }} id="icon-button-file" type="file" />
+            <input
+              accept="image/*"
+              style={{ display: 'none' }}
+              id="icon-button-file"
+              type="file"
+              onChange={this.handleImageChosen}
+            />
             <div className="camera-container">
-              <label htmlFor="icon-button-file">
-                <CameraIcon style={{ color: '#9b9b9b' }} />
-              </label>
+              {!this.state.imageUrl ? (
+                <label htmlFor="icon-button-file">
+                  <CameraIcon style={{ color: '#9b9b9b' }} />
+                </label>
+              ) : (
+                <img style={{ height: 80 }} alt="" src={this.state.imageUrl} />
+              )}
             </div>
           </div>
           <List className={classes.list}>

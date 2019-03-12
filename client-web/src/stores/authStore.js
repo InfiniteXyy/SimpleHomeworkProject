@@ -49,7 +49,7 @@ class AuthStore {
           throw err;
         })
       )
-      .finally(
+      .then(
         action(() => {
           this.inProgress = false;
         })
@@ -69,7 +69,7 @@ class AuthStore {
           throw err;
         })
       )
-      .finally(
+      .then(
         action(() => {
           this.inProgress = false;
         })
